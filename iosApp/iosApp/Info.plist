@@ -44,5 +44,20 @@
 	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<key>GIDServerClientID</key>
+    <string>908009107434-4cd2v3hd33gi5s910mal0ai7b45bve84.apps.googleusercontent.com</string>
+
+    <key>GIDClientID</key>
+    <string>908009107434-4cd2v3hd33gi5s910mal0ai7b45bve84.apps.googleusercontent.com</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.908009107434-4cd2v3hd33gi5s910mal0ai7b45bve84</string>
+        </array>
+      </dict>
+    </array>
+
 </dict>
 </plist>
