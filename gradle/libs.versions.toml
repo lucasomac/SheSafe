@@ -9,9 +9,11 @@ firebaseCrashlytics = "3.0.3"
 google-service = "4.4.2"
 firebaseAnalytics = "22.4.0"
 firebaseAuth = "23.2.0"
+navigationCompose = "2.8.9"
 
 
 [libraries]
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
