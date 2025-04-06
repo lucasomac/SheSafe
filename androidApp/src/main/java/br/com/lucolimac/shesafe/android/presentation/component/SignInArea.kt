@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
+import br.com.lucolimac.shesafe.route.NavigationItem
 import com.mmk.kmpauth.firebase.apple.AppleButtonUiContainer
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.apple.AppleSignInButton
@@ -17,8 +20,20 @@ import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import dev.gitlive.firebase.auth.FirebaseUser
 
 @Composable
-fun SignInArea(modifier: Modifier = Modifier) {
-    val onFirebaseResult: (Result<FirebaseUser?>) -> Unit = {}
+fun SignInArea(navController: NavController, modifier: Modifier = Modifier) {
+    val onFirebaseResult: (Result<FirebaseUser?>) -> Unit = {
+        // Handle the result of the sign-in process
+        it.fold(onSuccess = { user ->
+            //Should be navigate to home screen
+            // Handle successful sign-in
+            navController.navigate(NavigationItem.Home.route)
+
+        }, onFailure = { exception ->
+            // Handle sign-in failure
+            // You can show an error message or take appropriate action
+            navController.navigate(NavigationItem.Error.route)
+        })
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier
     ) {
@@ -38,6 +53,6 @@ fun SignInArea(modifier: Modifier = Modifier) {
 @Composable
 fun PreviewSignInArea() {
     SheSafeTheme {
-        SignInArea()
+        SignInArea(navController = NavController(LocalContext.current))
     }
 }
