@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.jetbrainsCompose)
 }
 
 kotlin {
@@ -25,11 +27,15 @@ kotlin {
             isStatic = true
         }
     }
-
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
-            api(libs.firebase.analytics)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            // KmpAuth
             api(libs.kmpauth.google) //Google One Tap Sign-In
             api(libs.kmpauth.firebase) //Integrated Authentications with Firebase
             api(libs.kmpauth.uihelper) //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
@@ -43,7 +49,7 @@ kotlin {
 
 android {
     namespace = "br.com.lucolimac.shesafe"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         minSdk = 26
     }

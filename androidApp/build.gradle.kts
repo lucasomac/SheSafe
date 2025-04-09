@@ -42,8 +42,8 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.auth.ktx)
-    implementation (libs.androidx.navigation.compose)
+    implementation(libs.google.firebase.analytics)
     debugImplementation(libs.compose.ui.tooling)
+    //Navigation
+    implementation(libs.androidx.navigation.compose)
 }
