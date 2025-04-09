@@ -14,9 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 import br.com.lucolimac.shesafe.route.NavigationItem
-import com.mmk.kmpauth.firebase.apple.AppleButtonUiContainer
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
-import com.mmk.kmpauth.uihelper.apple.AppleSignInButton
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import dev.gitlive.firebase.auth.FirebaseUser
 
@@ -42,12 +40,8 @@ fun SignInArea(navController: NavController, modifier: Modifier = Modifier) {
     ) {
         AppLogo()
         Spacer(modifier = Modifier.height(32.dp))
-        GoogleButtonUiContainerFirebase(linkAccount = true, onResult = onFirebaseResult) {
+        GoogleButtonUiContainerFirebase(linkAccount = false, onResult = onFirebaseResult) {
             GoogleSignInButton(modifier = Modifier.fillMaxWidth()) { this.onClick() }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        AppleButtonUiContainer(linkAccount = true, onResult = onFirebaseResult) {
-            AppleSignInButton(modifier = Modifier.fillMaxWidth()) { this.onClick() }
         }
     }
 }
