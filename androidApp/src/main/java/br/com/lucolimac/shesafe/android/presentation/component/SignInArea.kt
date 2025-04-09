@@ -1,5 +1,6 @@
 package br.com.lucolimac.shesafe.android.presentation.component
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,12 +27,14 @@ fun SignInArea(navController: NavController, modifier: Modifier = Modifier) {
         it.fold(onSuccess = { user ->
             //Should be navigate to home screen
             // Handle successful sign-in
+            Log.d("SignInArea", "User signed in: ${user?.uid}")
             navController.navigate(NavigationItem.Home.route)
 
         }, onFailure = { exception ->
+            Log.e("SignInArea", "Sign-in failed: $exception")
             // Handle sign-in failure
             // You can show an error message or take appropriate action
-            navController.navigate(NavigationItem.Error.route)
+//            navController.navigate(NavigationItem.Error.route)
         })
     }
     Column(
