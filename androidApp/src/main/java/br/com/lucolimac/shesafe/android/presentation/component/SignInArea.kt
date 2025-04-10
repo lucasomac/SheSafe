@@ -26,7 +26,7 @@ fun SignInArea(navController: NavController, modifier: Modifier = Modifier) {
             //Should be navigate to home screen
             // Handle successful sign-in
             Log.d("SignInArea", "User signed in: ${user?.uid}")
-            navController.navigate(SheSafeDestination.Home.route)
+            navController.navigate(SheSafeDestination.Home.route.name)
 
         }, onFailure = { exception ->
             Log.e("SignInArea", "Sign-in failed: $exception")

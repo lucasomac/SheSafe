@@ -33,12 +33,13 @@ val MenuItems = listOf(
 @Composable
 fun SheSafeApp(
     navController: NavHostController,
+    isShownBottomBar: Boolean = true,
     bottomAppBarItemSelected: NavigationItem = MenuItems[1],
     onBottomAppBarItemSelectedChange: (NavigationItem) -> Unit = {},
 ) {
     Scaffold(
         bottomBar = {
-            SheSafeBottomBar(
+            if (isShownBottomBar) SheSafeBottomBar(
                 selected = bottomAppBarItemSelected,
                 menus = MenuItems,
                 onBottomAppBarItemSelectedChange = onBottomAppBarItemSelectedChange
@@ -47,7 +48,7 @@ fun SheSafeApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = SheSafeDestination.Home.route.name,
+            startDestination = SheSafeDestination.Login.route.name,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)

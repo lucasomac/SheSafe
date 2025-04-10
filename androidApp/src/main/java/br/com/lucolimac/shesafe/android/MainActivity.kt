@@ -46,10 +46,15 @@ class MainActivity : ComponentActivity() {
                         } ?: MenuItems[1]
                         mutableStateOf(item)
                     }
-
+                    val isShownBottomBar = currentDestination?.route.let { route ->
+                        MenuItems.find {
+                            it.sheSafeDestination.route.name == route
+                        }
+                    } != null
 
                     SheSafeApp(
                         navController = navController,
+                        isShownBottomBar = isShownBottomBar,
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
                             val route = it.sheSafeDestination.route.name
