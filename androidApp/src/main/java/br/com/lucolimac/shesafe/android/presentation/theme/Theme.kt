@@ -13,6 +13,7 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = Color.White,  // Text on primary color (pink)
     onBackground = Color.Black, // Text on light gray background
     onSurface = Color.Black,   // Text on white surface
+    primaryContainer = SheSafeLightGray, // Container background for primary color
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

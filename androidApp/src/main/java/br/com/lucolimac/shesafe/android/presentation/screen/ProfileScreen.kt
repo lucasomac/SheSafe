@@ -17,7 +17,7 @@ import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun ProfileScreen(navController: NavController, modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -26,7 +26,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
         CenterAlignedTopAppBar(
             title = {
                 Text(
-                    text = "Home Screen",
+                    text = "Profile Screen",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = modifier.padding(bottom = 16.dp)
                 )
@@ -36,6 +36,6 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun HomeScreenPreview() {
-    ContactsScreen(rememberNavController())
+fun ProfileScreenPreview() {
+    ProfileScreen(rememberNavController())
 }
