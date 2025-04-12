@@ -1,9 +1,15 @@
 # SheSafe: Your Personal Safety Companion
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.9.21-blue)](https://kotlinlang.org/)
-[![Android](https://img.shields.io/badge/Android-14-green)](https://www.android.com/)
+[![Android API](https://img.shields.io/badge/API-24+-green.svg?style=flat)](https://android-arsenal.com/api?level=24)
 [![Compose](https://img.shields.io/badge/Compose-1.5.1-purple)](https://developer.android.com/jetpack/compose)
+[![Kotlin Multiplatform](https://img.shields.io/badge/Kotlin%20Multiplatform-1.9.21-orange)](https://kotlinlang.org/docs/multiplatform.html)
+[![Google Sign-In](https://img.shields.io/badge/Google%20Sign--In-1.0.0-red)](https://developers.google.com/identity/sign-in/android/start-integrating)
+[![Material3](https://img.shields.io/badge/Material3-1.0.0-blue)](https://m3.material.io/)
+[![Android CI](https://github.com/your-username/your-repository/actions/workflows/android.yml/badge.svg)](https://github.com/your-username/your-repository/actions/workflows/android.yml)
+[![Codecov](https://codecov.io/gh/your-username/your-repository/branch/main/graph/badge.svg)](https://codecov.io/gh/your-username/your-repository)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 
 ## Overview
 
