@@ -1,15 +1,19 @@
 # SheSafe: Your Personal Safety Companion
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9.21-blue)](https://kotlinlang.org/)
-[![Android API](https://img.shields.io/badge/API-24+-green.svg?style=flat)](https://android-arsenal.com/api?level=24)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.1.20-blue)](https://kotlinlang.org/)
+[![Android API](https://img.shields.io/badge/API-24+-green.svg?style=flat)](https://android-arsenal.com/api?level=26)
+[![Android](https://img.shields.io/badge/Android-API%2024+-green)](https://developer.android.com/)
+[![Gradle](https://img.shields.io/badge/Gradle-8.2.1-blue)](https://gradle.org/)
+[![Kotlin Coroutines](https://img.shields.io/badge/Kotlin%20Coroutines-1.7.3-blue)](https://kotlinlang.org/docs/coroutines-overview.html)
+[![Jetpack](https://img.shields.io/badge/Jetpack-2.7.0-blue)](https://developer.android.com/jetpack)
+[![AndroidX](https://img.shields.io/badge/AndroidX-1.8.0-blue)](https://developer.android.com/jetpack/androidx)
+[![Lifecycle](https://img.shields.io/badge/Lifecycle-2.6.2-blue)](https://developer.android.com/topic/libraries/architecture/lifecycle)
+[![Navigation](https://img.shields.io/badge/Navigation-2.7.0-blue)](https://developer.android.com/guide/navigation)
 [![Compose](https://img.shields.io/badge/Compose-1.5.1-purple)](https://developer.android.com/jetpack/compose)
 [![Kotlin Multiplatform](https://img.shields.io/badge/Kotlin%20Multiplatform-1.9.21-orange)](https://kotlinlang.org/docs/multiplatform.html)
 [![Google Sign-In](https://img.shields.io/badge/Google%20Sign--In-1.0.0-red)](https://developers.google.com/identity/sign-in/android/start-integrating)
 [![Material3](https://img.shields.io/badge/Material3-1.0.0-blue)](https://m3.material.io/)
-[![Android CI](https://github.com/your-username/your-repository/actions/workflows/android.yml/badge.svg)](https://github.com/your-username/your-repository/actions/workflows/android.yml)
-[![Codecov](https://codecov.io/gh/your-username/your-repository/branch/main/graph/badge.svg)](https://codecov.io/gh/your-username/your-repository)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
 
 ## Overview
 
@@ -76,9 +80,9 @@ This project is licensed under the [MIT License](LICENSE).
 
 If you have any questions or suggestions, please feel free to reach out:
 
-*   [Your Name/Team Name]
-*   [Your Email Address]
-*   [Your Social Media (Optional)]
+*   [Lucas Macedo]
+*   [lucasomac@outlook.com]
+*   [https://linkedin.com/in/lucasomac]
 
 ---
 
