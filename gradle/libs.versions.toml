@@ -1,6 +1,6 @@
 [versions]
 compileSdk = "35"
-agp = "8.10.0-rc02"
+agp = "8.10.0-rc03"
 firebaseAuthKtxVersion = "33.0.0"
 firebaseBom = "33.12.0"
 kotlin = "2.1.20"
@@ -13,6 +13,7 @@ google-service = "4.4.2"
 firebaseAnalytics = "22.4.0"
 firebaseAuth = "23.2.0"
 kotlinxSerializationJson = "1.7.3"
+mapsCompose = "2.2.1"
 navigationCompose = "2.8.9"
 androidx-core-ktx = "1.16.0"
 androidx-test-junit = "1.2.1"
@@ -26,6 +27,8 @@ compose-plugin = "1.7.0"
 androidxCredential = "1.5.0"
 googleIdIdentity = "1.1.1"
 koin = "4.0.2"
+playServicesLocation = "21.3.0"
+playServicesMaps = "19.2.0"
 
 
 [libraries]
@@ -64,6 +67,9 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
+maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
