@@ -54,7 +54,7 @@ fun SheSafeApp(
                 .padding(innerPadding)
         ) {
             composable(SheSafeDestination.Login.route.name) { LoginScreen(navController) }
-            composable(SheSafeDestination.Home.route.name) { HomeScreen(navController) }
+            composable(SheSafeDestination.Home.route.name) { HomeScreen() }
             composable(SheSafeDestination.Contacts.route.name) { ContactsScreen(navController) }
             composable(SheSafeDestination.Profile.route.name) { ProfileScreen(navController) }
 //                composable(NavigationItem.Settings.route) { SettingsScreen(navController) }) {}
