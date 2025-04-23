@@ -10,10 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 
 @Composable
@@ -22,11 +20,11 @@ fun RoundedButton(text: String, modifier: Modifier = Modifier, onClick: () -> Un
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(50.dp),
+            .height(48.dp),
         shape = RoundedCornerShape(24.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary) // Replace with your color resource
     ) {
-        Text(text = text, color = Color.White, style = TextStyle(fontSize = 16.sp))
+        Text(text = text, color = Color.White, style = MaterialTheme.typography.bodyMedium)
     }
 }
 
@@ -35,9 +33,7 @@ fun RoundedButton(text: String, modifier: Modifier = Modifier, onClick: () -> Un
 fun RoundedButtonPreview() {
     SheSafeTheme {
         RoundedButton(
-            text = "Clique aqui",
-            onClick = { /*TODO*/ },
-            modifier = Modifier
+            text = "Clique aqui", onClick = {}, modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
         )

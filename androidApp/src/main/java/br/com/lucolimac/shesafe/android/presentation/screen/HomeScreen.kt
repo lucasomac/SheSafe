@@ -6,16 +6,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.android.R
+import br.com.lucolimac.shesafe.android.presentation.actions.ScreenAction
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
 import br.com.lucolimac.shesafe.android.presentation.component.RoundedButton
 import br.com.lucolimac.shesafe.android.presentation.component.SearchBar
+import br.com.lucolimac.shesafe.android.presentation.component.SheSafeDialog
 import br.com.lucolimac.shesafe.android.presentation.component.geolocation.LocationPermissionRequester
 import br.com.lucolimac.shesafe.android.presentation.component.geolocation.rememberLocation
+import br.com.lucolimac.shesafe.android.presentation.model.DialogModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -32,8 +39,14 @@ import com.google.maps.android.compose.rememberCameraPositionState
  * map based on the device's location.
  */
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onOrderHelp: () -> Unit, modifier: Modifier = Modifier) {
     val userLocation = rememberLocation()
+    var showDialog by remember { mutableStateOf(false) }
+    var doNotAskAgain by remember { mutableStateOf(false) }
+    var hasSecureContacts by remember { mutableStateOf(false) } // TODO("Replace with logic in viewModel to check if the user has secure contacts")
+    var dialogModel by remember { mutableStateOf<DialogModel?>(null) }
+
+    val screenAction = ScreenAction()
     LocationPermissionRequester {
         val cameraPositionState = rememberCameraPositionState {
             position = if (userLocation != null) {
@@ -87,7 +100,15 @@ fun HomeScreen() {
                 RoundedButton(
                     text = stringResource(R.string.request_help),
                     onClick = {
-                        TODO("Implement click action")
+                        dialogModel =
+                            screenAction.chooseDialogModel(hasSecureContacts, onConfirm = {
+                                onOrderHelp()
+                            }, onDismiss = {
+                                showDialog = false
+                            }, onCheckboxCheckedChange = { isChecked ->
+                                doNotAskAgain = isChecked
+                            })
+                        showDialog = true
                     },
                     modifier = Modifier
                         .align(Alignment.BottomCenter) // Align at the bottom center
@@ -95,5 +116,11 @@ fun HomeScreen() {
                 )
             }
         }
+    }
+    if (showDialog && dialogModel != null) {
+        SheSafeDialog(
+            dialogModel = dialogModel!!, onDismissRequest = {
+                showDialog = false
+            })
     }
 }

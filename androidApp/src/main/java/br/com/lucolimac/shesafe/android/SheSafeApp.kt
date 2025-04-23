@@ -54,10 +54,32 @@ fun SheSafeApp(
                 .padding(innerPadding)
         ) {
             composable(SheSafeDestination.Login.route.name) { LoginScreen(navController) }
-            composable(SheSafeDestination.Home.route.name) { HomeScreen() }
-            composable(SheSafeDestination.Contacts.route.name) { ContactsScreen(navController) }
-            composable(SheSafeDestination.Profile.route.name) { ProfileScreen(navController) }
+            composable(SheSafeDestination.Home.route.name) {
+                HomeScreen({
+                    navigateTo(
+                        navController, SheSafeDestination.Contacts
+                    )
+                })
+            }
+            composable(SheSafeDestination.Contacts.route.name) { ContactsScreen() }
+            composable(SheSafeDestination.Profile.route.name) { ProfileScreen() }
 //                composable(NavigationItem.Settings.route) { SettingsScreen(navController) }) {}
         }
+    }
+}
+
+fun navigateTo(
+    navController: NavHostController,
+    destination: SheSafeDestination,
+    popUpTo: SheSafeDestination? = null
+) {
+    navController.navigate(destination.route.name) {
+        popUpTo?.let {
+            popUpTo(it.route.name) {
+                saveState = true
+            }
+        }
+        launchSingleTop = true
+        restoreState = true
     }
 }
