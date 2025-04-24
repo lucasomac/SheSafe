@@ -4,8 +4,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,6 +22,7 @@ import br.com.lucolimac.shesafe.android.presentation.screen.ContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.LoginScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.ProfileScreen
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ContactsViewModel
 import br.com.lucolimac.shesafe.route.SheSafeDestination
 
 val MenuItems = listOf(
@@ -33,18 +38,37 @@ val MenuItems = listOf(
 @Composable
 fun SheSafeApp(
     navController: NavHostController,
+    contactsViewModel: ContactsViewModel,
     isShownBottomBar: Boolean = true,
+    isShowFab: Boolean = false,
     bottomAppBarItemSelected: NavigationItem = MenuItems[1],
     onBottomAppBarItemSelectedChange: (NavigationItem) -> Unit = {},
 ) {
     Scaffold(
         bottomBar = {
-            if (isShownBottomBar) SheSafeBottomBar(
-                selected = bottomAppBarItemSelected,
-                menus = MenuItems,
-                onBottomAppBarItemSelectedChange = onBottomAppBarItemSelectedChange
-            )
-        }, modifier = Modifier.fillMaxSize()
+            if (isShownBottomBar) {
+                SheSafeBottomBar(
+                    selected = bottomAppBarItemSelected,
+                    menus = MenuItems,
+                    onBottomAppBarItemSelectedChange = onBottomAppBarItemSelectedChange
+                )
+            }
+        },
+        floatingActionButton = {
+            if (isShowFab) {
+                FloatingActionButton(
+                    {},
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    content = {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Add Icon",
+                        )
+                    },
+                )
+            }
+        },
+        modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -61,8 +85,9 @@ fun SheSafeApp(
                     )
                 })
             }
-            composable(SheSafeDestination.Contacts.route.name) { ContactsScreen() }
+            composable(SheSafeDestination.Contacts.route.name) { ContactsScreen(contactsViewModel) }
             composable(SheSafeDestination.Profile.route.name) { ProfileScreen() }
+            composable(SheSafeDestination.RegisterContact.route.name) { }
 //                composable(NavigationItem.Settings.route) { SettingsScreen(navController) }) {}
         }
     }

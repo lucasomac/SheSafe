@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -40,15 +41,15 @@ fun SearchBar(
             Icon(
                 imageVector = Icons.Filled.Search,
                 contentDescription = "Search Icon",
-                tint = Color.Gray
+                tint = MaterialTheme.colorScheme.background
             )
         },
         shape = RoundedCornerShape(32.dp),
         colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-            unfocusedIndicatorColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-            focusedContainerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
-            unfocusedContainerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface
         ),
     )
 }

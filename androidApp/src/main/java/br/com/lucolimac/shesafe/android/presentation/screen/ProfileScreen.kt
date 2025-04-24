@@ -12,12 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun ProfileScreen(modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -37,5 +35,5 @@ fun ProfileScreen(navController: NavController, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen(rememberNavController())
+    ProfileScreen()
 }

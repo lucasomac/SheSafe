@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ContactsViewModel
+import br.com.lucolimac.shesafe.route.SheSafeDestination
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +53,13 @@ class MainActivity : ComponentActivity() {
                             it.sheSafeDestination.route.name == route
                         }
                     } != null
-
+                    val isShownFab =
+                        currentDestination?.route == SheSafeDestination.Contacts.route.name
                     SheSafeApp(
                         navController = navController,
+                        contactsViewModel = ContactsViewModel(),
                         isShownBottomBar = isShownBottomBar,
+                        isShowFab = isShownFab,
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
                             val route = it.sheSafeDestination.route.name
