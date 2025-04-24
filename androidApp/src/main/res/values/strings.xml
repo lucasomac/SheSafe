@@ -2,4 +2,5 @@
 <resources>
     <string name="appName">SheSafe</string>
     <string name="title_home">HOME\n</string>
+    <string name="title_contacts">Contacts</string>
 </resources>

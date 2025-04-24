@@ -17,9 +17,9 @@ internal val Roboto = FontFamily(
 )
 internal val SheSafeTypography = Typography(
     displayLarge = TextStyle(
-        fontWeight = FontWeight.Normal, fontSize = 57.sp, fontFamily = Roboto,
+        fontWeight = FontWeight.Normal, fontSize = 56.sp, fontFamily = Roboto,
     ), displayMedium = TextStyle(
-        fontWeight = FontWeight.Normal, fontSize = 45.sp, fontFamily = Roboto,
+        fontWeight = FontWeight.Normal, fontSize = 48.sp, fontFamily = Roboto,
     ), displaySmall = TextStyle(
         fontWeight = FontWeight.Normal, fontSize = 36.sp, fontFamily = Roboto,
     ), headlineLarge = TextStyle(
