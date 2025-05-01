@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         }
                     } != null
                     val isShownFab =
-                        currentDestination?.route == SheSafeDestination.Contacts.route.name
+                        currentDestination?.route.let { route -> MenuItems.find { it.sheSafeDestination.route.name == route }?.sheSafeDestination == SheSafeDestination.Contacts }
                     SheSafeApp(
                         navController = navController,
                         contactsViewModel = ContactsViewModel(),
