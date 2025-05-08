@@ -20,11 +20,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.lucolimac.shesafe.android.domain.entity.Contact
+import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 
 @Composable
-fun ContactCard(contact: Contact) {
+fun ContactCard(secureContact: SecureContact) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,11 +34,11 @@ fun ContactCard(contact: Contact) {
     ) {
         Column {
             Text(
-                text = contact.name,
+                text = secureContact.name,
                 style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
             )
             Text(
-                text = contact.phoneNumber, style = TextStyle(fontSize = 14.sp, color = Color.Gray)
+                text = secureContact.phoneNumber, style = TextStyle(fontSize = 14.sp, color = Color.Gray)
             )
         }
 
@@ -53,6 +53,6 @@ fun ContactCard(contact: Contact) {
 @Preview(showBackground = true)
 fun ContactListItemPreview() {
     SheSafeTheme {
-        ContactCard(Contact("John", "Doe", "123-456-7890", ""))
+        ContactCard(SecureContact("John", "Doe", "123-456-7890", ""))
     }
 }
