@@ -18,11 +18,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeBottomBar
 import br.com.lucolimac.shesafe.android.presentation.model.NavigationItem
-import br.com.lucolimac.shesafe.android.presentation.screen.ContactsScreen
+import br.com.lucolimac.shesafe.android.presentation.screen.SecureContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.LoginScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.ProfileScreen
-import br.com.lucolimac.shesafe.android.presentation.viewModel.ContactsViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.route.SheSafeDestination
 
 val MenuItems = listOf(
@@ -38,7 +38,7 @@ val MenuItems = listOf(
 @Composable
 fun SheSafeApp(
     navController: NavHostController,
-    contactsViewModel: ContactsViewModel,
+    secureContactViewModel: SecureContactViewModel,
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
     bottomAppBarItemSelected: NavigationItem = MenuItems[1],
@@ -85,7 +85,11 @@ fun SheSafeApp(
                     )
                 })
             }
-            composable(SheSafeDestination.Contacts.route.name) { ContactsScreen(contactsViewModel) }
+            composable(SheSafeDestination.Contacts.route.name) {
+                SecureContactsScreen(
+                    secureContactViewModel
+                )
+            }
             composable(SheSafeDestination.Profile.route.name) { ProfileScreen() }
             composable(SheSafeDestination.RegisterContact.route.name) { }
 //                composable(NavigationItem.Settings.route) { SettingsScreen(navController) }) {}
