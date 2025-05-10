@@ -53,6 +53,6 @@ fun ContactCard(secureContact: SecureContact) {
 @Preview(showBackground = true)
 fun ContactListItemPreview() {
     SheSafeTheme {
-        ContactCard(SecureContact("John", "Doe", "123-456-7890", ""))
+        ContactCard(SecureContact("John", "123-456-7890"))
     }
 }

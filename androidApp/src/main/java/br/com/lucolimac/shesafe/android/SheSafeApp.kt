@@ -18,10 +18,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeBottomBar
 import br.com.lucolimac.shesafe.android.presentation.model.NavigationItem
-import br.com.lucolimac.shesafe.android.presentation.screen.SecureContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.LoginScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.ProfileScreen
+import br.com.lucolimac.shesafe.android.presentation.screen.RegisterSecureContactScreen
+import br.com.lucolimac.shesafe.android.presentation.screen.SecureContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.route.SheSafeDestination
 
@@ -57,7 +58,11 @@ fun SheSafeApp(
         floatingActionButton = {
             if (isShowFab) {
                 FloatingActionButton(
-                    {},
+                    {
+                        navigateTo(
+                            navController, SheSafeDestination.RegisterContact
+                        )
+                    },
                     containerColor = MaterialTheme.colorScheme.primary,
                     content = {
                         Icon(
@@ -91,7 +96,14 @@ fun SheSafeApp(
                 )
             }
             composable(SheSafeDestination.Profile.route.name) { ProfileScreen() }
-            composable(SheSafeDestination.RegisterContact.route.name) { }
+            composable(SheSafeDestination.RegisterContact.route.name) {
+                RegisterSecureContactScreen(secureContactViewModel) {
+                    navigateTo(
+                        navController, SheSafeDestination.Contacts
+                    )
+                    secureContactViewModel.resetRegistered()
+                }
+            }
 //                composable(NavigationItem.Settings.route) { SettingsScreen(navController) }) {}
         }
     }

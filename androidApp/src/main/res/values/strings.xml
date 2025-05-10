@@ -3,4 +3,5 @@
     <string name="appName">SheSafe</string>
     <string name="title_home">HOME\n</string>
     <string name="title_contacts">Contacts</string>
+    <string name="title_no_secure_contacts">Você ainda não possui contatos cadastrados!</string>
 </resources>
