@@ -13,7 +13,7 @@ class SecureContactUseCaseImpl(
 ) : SecureContactUseCase {
 
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
-    override fun getSecureContact(): Flow<List<SecureContact>> {
+    override fun getSecureContacts(): Flow<List<SecureContact>> {
         return flow {
             emit(secureContactRepository.getSecureContactList())
         }.flowOn(coroutineDispatcher)

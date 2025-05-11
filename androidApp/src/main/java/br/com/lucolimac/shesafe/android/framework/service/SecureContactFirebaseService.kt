@@ -3,6 +3,7 @@ package br.com.lucolimac.shesafe.android.framework.service
 import br.com.lucolimac.shesafe.android.data.model.SecureContactModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: FirebaseAuth) :
     SecureContactService {
@@ -11,28 +12,26 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
         firestore.collection("secureContacts").document(userEmail.toString()).collection("contacts")
 
     override suspend fun getSecureContacts(): List<SecureContactModel> {
-        val secureContactList = mutableListOf<SecureContactModel>()
-        secureContactCollection.get().addOnSuccessListener { documents ->
-            for (document in documents) {
-                val secureContact = document.toObject(SecureContactModel::class.java)
-                secureContactList.add(secureContact)
-            }
-        }.addOnFailureListener {
-            // Handle the error
+        var secureContactList = mutableListOf<SecureContactModel>()
+        try {
+            val querySnapshot = secureContactCollection.get().await() // Use .await() here
+            secureContactList = querySnapshot.documents.mapNotNull {
+                it.toObject(SecureContactModel::class.java)
+            }.toMutableList()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         return secureContactList
     }
 
     override suspend fun getSecureContactByPhone(phone: String): SecureContactModel? {
-        var secureContact: SecureContactModel? = SecureContactModel()
-
-        secureContactCollection.document(phone).get().addOnSuccessListener { document ->
-                secureContact = document?.toObject(SecureContactModel::class.java)
-            }.addOnFailureListener {
-                secureContact = null
-                it.printStackTrace()
-            }
-        return secureContact
+        return try {
+            val documentSnapshot = secureContactCollection.document(phone).get().await()
+            documentSnapshot.toObject(SecureContactModel::class.java)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null // Return null if there's an error
+        }
     }
 
     override suspend fun registerSecureContact(secureContactModel: SecureContactModel): Boolean {

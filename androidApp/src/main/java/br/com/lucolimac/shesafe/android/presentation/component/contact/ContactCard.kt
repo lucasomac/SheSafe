@@ -24,11 +24,11 @@ import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 
 @Composable
-fun ContactCard(secureContact: SecureContact) {
+fun ContactCard(secureContact: SecureContact, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -38,7 +38,8 @@ fun ContactCard(secureContact: SecureContact) {
                 style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
             )
             Text(
-                text = secureContact.phoneNumber, style = TextStyle(fontSize = 14.sp, color = Color.Gray)
+                text = secureContact.phoneNumber,
+                style = TextStyle(fontSize = 14.sp, color = Color.Gray)
             )
         }
 

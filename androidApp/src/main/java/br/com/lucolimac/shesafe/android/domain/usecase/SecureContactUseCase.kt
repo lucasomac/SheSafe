@@ -4,7 +4,7 @@ import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import kotlinx.coroutines.flow.Flow
 
 interface SecureContactUseCase {
-    fun getSecureContact(): Flow<List<SecureContact>>
+    fun getSecureContacts(): Flow<List<SecureContact>>
     fun getSecureContactByPhone(phone: String): Flow<SecureContact?>
     fun registerSecureContact(contact: SecureContact): Flow<Boolean>
     fun updateSecureContact(phone: String, contact: SecureContact): Flow<Boolean>
