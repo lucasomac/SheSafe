@@ -4,15 +4,16 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias (libs.plugins.kotlin.parcelize)
 }
 
 android {
     namespace = "br.com.lucolimac.shesafe.android"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         applicationId = "br.com.lucolimac.shesafe.android"
-        minSdk = 26
-        targetSdk = 35
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
     }

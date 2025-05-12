@@ -19,15 +19,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.android.R
+import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
-import br.com.lucolimac.shesafe.android.presentation.component.contact.ContactCard
+import br.com.lucolimac.shesafe.android.presentation.component.contact.SecureContactCard
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import org.koin.java.KoinJavaComponent.inject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecureContactsScreen(
-    secureContactViewModel: SecureContactViewModel, modifier: Modifier = Modifier
+    onEditAction: (SecureContact) -> Unit,
+    onDeleteAction: (SecureContact) -> Unit, // Add parameters for edit and delete actions
+    secureContactViewModel: SecureContactViewModel,
+    modifier: Modifier = Modifier
 ) {
     // Observe the secure contacts from the ViewModel
     val secureContacts = secureContactViewModel.secureContacts.collectAsState().value
@@ -80,7 +84,11 @@ fun SecureContactsScreen(
                         contentPadding = PaddingValues(bottom = 72.dp) // Space for FAB
                     ) {
                         items(secureContacts.size) { index ->
-                            ContactCard(secureContact = secureContacts[index])
+                            SecureContactCard(
+                                secureContact = secureContacts[index],
+                                onEditClick = onEditAction,
+                                onDeleteClick = onDeleteAction,
+                            )
                         }
                     }
                 }
@@ -93,5 +101,5 @@ fun SecureContactsScreen(
 @Composable
 fun ContactsScreenPreview() {
     val viewModel: SecureContactViewModel by inject(SecureContactViewModel::class.java)
-    SecureContactsScreen(viewModel, modifier = Modifier)
+    SecureContactsScreen({}, {}, viewModel, modifier = Modifier)
 }

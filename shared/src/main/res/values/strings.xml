@@ -2,4 +2,6 @@
 <resources>
     <string name="appName">SheSafe</string>
     <string name="request_help">Pedir Ajuda</string>
+    <string name="title_new_secure_contact">Novo contato seguro</string>
+    <string name="title_edit_secure_contact">Editar contato seguro</string>
 </resources>

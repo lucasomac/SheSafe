@@ -1,10 +1,12 @@
 [versions]
 compileSdk = "35"
+targetSdk = "35"
+minSdk = "26"
 agp = "8.10.0"
 firebaseAuthKtxVersion = "33.0.0"
 firebaseBom = "33.13.0"
 kotlin = "2.1.20"
-compose = "1.8.0"
+compose = "1.8.1"
 compose-material3 = "1.3.2"
 androidx-activityCompose = "1.10.1"
 kmpauthGoogle = "2.3.1"
@@ -14,7 +16,7 @@ firebaseAnalytics = "22.4.0"
 firebaseAuth = "23.2.0"
 kotlinxSerializationJson = "1.8.1"
 mapsCompose = "6.6.0"
-navigationCompose = "2.8.9"
+navigationCompose = "2.9.0"
 androidx-core-ktx = "1.16.0"
 androidx-test-junit = "1.2.1"
 androidx-espresso-core = "3.6.1"
@@ -90,3 +92,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 google-services = { id = "com.google.gms.google-services", version.ref = "google-service" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
+kotlin-parcelize = { id = "kotlin-parcelize"}

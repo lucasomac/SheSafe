@@ -92,12 +92,22 @@ fun SheSafeApp(
             }
             composable(SheSafeDestination.Contacts.route.name) {
                 SecureContactsScreen(
-                    secureContactViewModel
+                    onEditAction = { secureContact ->
+                    navigateTo(
+                        navController,
+                        SheSafeDestination.RegisterContact,
+                        secureContact.phoneNumber
+                    )
+                }, onDeleteAction = {}, secureContactViewModel
                 )
             }
             composable(SheSafeDestination.Profile.route.name) { ProfileScreen() }
-            composable(SheSafeDestination.RegisterContact.route.name) {
-                RegisterSecureContactScreen(secureContactViewModel) {
+            composable(SheSafeDestination.RegisterContact.route.name + "/{secureContactPhone}") {
+                val secureContactPhone = it.arguments?.getString("secureContactPhone") ?: ""
+                RegisterSecureContactScreen(
+                    secureContactPhone = secureContactPhone, secureContactViewModel
+                ) {
+                    secureContactViewModel.resetSecureContact()
                     navigateTo(
                         navController, SheSafeDestination.Contacts
                     )
@@ -112,15 +122,22 @@ fun SheSafeApp(
 fun navigateTo(
     navController: NavHostController,
     destination: SheSafeDestination,
+    vararg navArgs: String = emptyArray(),
     popUpTo: SheSafeDestination? = null
 ) {
-    navController.navigate(destination.route.name) {
+    val route = if (destination == SheSafeDestination.RegisterContact) "${destination.route.name}/${
+        navArgs.joinToString("/")
+    }" else destination.route.name
+    navController.navigate(route) {
         popUpTo?.let {
             popUpTo(it.route.name) {
                 saveState = true
             }
         }
+        // Avoid multiple copies of the same destination when
+        // reselecting the same item
         launchSingleTop = true
+        // Restore state when reselecting a previously selected item
         restoreState = true
     }
 }

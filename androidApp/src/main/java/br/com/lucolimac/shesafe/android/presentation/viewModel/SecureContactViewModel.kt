@@ -12,9 +12,12 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : ViewModel() {
-    private val _registered = MutableStateFlow<Boolean>(false)
-    val registered = _registered.asStateFlow()
-
+    private val _hasBeenRegisteredSecureContact = MutableStateFlow<Boolean>(false)
+    val hasBeenRegisteredSecureContact = _hasBeenRegisteredSecureContact.asStateFlow()
+    private val _hasBeenDeletedSecureContact = MutableStateFlow<Boolean>(false)
+    val hasBeenDeletedSecureContact = _hasBeenDeletedSecureContact.asStateFlow()
+    private val _secureContact = MutableStateFlow<SecureContact?>(null)
+    val secureContact = _secureContact.asStateFlow()
 
     private val _isLoading = MutableStateFlow(true) // Add a loading state
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -28,8 +31,16 @@ class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : V
         viewModelScope.launch {
             secureContactUseCase.registerSecureContact(secureContact)
                 .onStart { _isLoading.emit(true) }.onCompletion { _isLoading.emit(false) }.collect {
-                    _registered.emit(it)
+                    _hasBeenRegisteredSecureContact.emit(it)
                 }
+        }
+    }
+
+    fun updateSecureContact(phone: String, secureContact: SecureContact) {
+        viewModelScope.launch {
+            secureContactUseCase.updateSecureContact(phone, secureContact)
+                .onStart { _isLoading.emit(true) }.onCompletion { _isLoading.emit(false) }
+                .collect { _hasBeenRegisteredSecureContact.emit(it) }
         }
     }
 
@@ -43,10 +54,38 @@ class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : V
         }
     }
 
-    fun resetRegistered() {
+    fun getSecureContactByPhone(phone: String) {
         viewModelScope.launch {
-            _registered.emit(false)
+            secureContactUseCase.getSecureContactByPhone(phone).onStart { _isLoading.emit(true) }
+                .onCompletion { _isLoading.emit(false) }.collect { secureContact ->
+                    _secureContact.emit(secureContact)
+                }
         }
     }
 
+    fun deleteSecureContact(phone: String) {
+        viewModelScope.launch {
+            secureContactUseCase.deleteSecureContact(phone).onStart { _isLoading.emit(true) }
+                .onCompletion { _isLoading.emit(false) }
+                .collect { _hasBeenDeletedSecureContact.emit(it) }
+        }
+    }
+
+    fun resetRegistered() {
+        viewModelScope.launch {
+            _hasBeenRegisteredSecureContact.emit(false)
+        }
+    }
+
+    fun resetDeleted() {
+        viewModelScope.launch {
+            _hasBeenDeletedSecureContact.emit(false)
+        }
+    }
+
+    fun resetSecureContact() {
+        viewModelScope.launch {
+            _secureContact.emit(null)
+        }
+    }
 }
