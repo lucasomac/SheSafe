@@ -93,12 +93,16 @@ fun SheSafeApp(
             composable(SheSafeDestination.Contacts.route.name) {
                 SecureContactsScreen(
                     onEditAction = { secureContact ->
-                    navigateTo(
-                        navController,
-                        SheSafeDestination.RegisterContact,
-                        secureContact.phoneNumber
-                    )
-                }, onDeleteAction = {}, secureContactViewModel
+                        navigateTo(
+                            navController,
+                            SheSafeDestination.RegisterContact,
+                            secureContact.phoneNumber
+                        )
+                    },
+                    onDeleteAction = {
+                        secureContactViewModel.deleteSecureContact(it.phoneNumber)
+                    },
+                    secureContactViewModel,
                 )
             }
             composable(SheSafeDestination.Profile.route.name) { ProfileScreen() }

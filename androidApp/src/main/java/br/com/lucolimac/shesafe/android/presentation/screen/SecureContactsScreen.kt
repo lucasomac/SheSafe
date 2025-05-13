@@ -1,5 +1,6 @@
 package br.com.lucolimac.shesafe.android.presentation.screen
 
+import SheSafeBottomSheet
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,15 +11,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.lucolimac.shesafe.android.R
+import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
 import br.com.lucolimac.shesafe.android.presentation.component.contact.SecureContactCard
@@ -40,7 +47,10 @@ fun SecureContactsScreen(
         // Fetch the secure contacts when the screen is launched
         secureContactViewModel.getAllSecureContacts()
     }
-    // Show a loading indicator while fetching data
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var selectedContact by remember { mutableStateOf<SecureContact?>(null) }
+
     Box(modifier = modifier.fillMaxSize()) { // Use a Box to layer content
         when {
             isLoading -> {
@@ -68,6 +78,23 @@ fun SecureContactsScreen(
                 }
             }
 
+            showBottomSheet -> ModalBottomSheet(
+                onDismissRequest = {
+                    showBottomSheet = false
+                }, sheetState = sheetState
+            ) {
+                SheSafeBottomSheet(
+                    contactName = selectedContact?.name ?: "", onConfirmDelete = {
+                        onDeleteAction(selectedContact ?: return@SheSafeBottomSheet)
+                        selectedContact = null
+                        secureContactViewModel.getAllSecureContacts()
+                        showBottomSheet = false
+                    }, onDismiss = {
+                        showBottomSheet = false
+                    }, sheetState = sheetState
+                )
+            }
+
             else -> {
                 // Show the list of secure contacts
                 Column {
@@ -87,7 +114,10 @@ fun SecureContactsScreen(
                             SecureContactCard(
                                 secureContact = secureContacts[index],
                                 onEditClick = onEditAction,
-                                onDeleteClick = onDeleteAction,
+                                onDeleteClick = {
+                                    selectedContact = secureContacts[index]
+                                    showBottomSheet = true
+                                },
                             )
                         }
                     }

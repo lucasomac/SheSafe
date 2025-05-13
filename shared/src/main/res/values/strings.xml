@@ -4,4 +4,10 @@
     <string name="request_help">Pedir Ajuda</string>
     <string name="title_new_secure_contact">Novo contato seguro</string>
     <string name="title_edit_secure_contact">Editar contato seguro</string>
+    <string name="title_no_secure_contacts">Você ainda não possui contatos cadastrados!</string>
+    <string name="title_contacts">Contacts</string>
+    <string name="title_delete_secure_contact">Deletar contato seguro?</string>
+    <string name="message_delete_secure_contact">Tem certeza de que deseja excluir %1$s dos seus contatos seguros?</string>
+    <string name="label_cancel">Cancelar</string>
+    <string name="label_delete">Excluir</string>
 </resources>
