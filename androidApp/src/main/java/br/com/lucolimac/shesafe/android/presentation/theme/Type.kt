@@ -29,7 +29,7 @@ internal val SheSafeTypography = Typography(
     ), headlineSmall = TextStyle(
         fontWeight = FontWeight.SemiBold, fontSize = 24.sp, fontFamily = Roboto,
     ), titleLarge = TextStyle(
-        fontWeight = FontWeight.SemiBold, fontSize = 22.sp, fontFamily = Roboto,
+        fontWeight = FontWeight.SemiBold, fontSize = 18.sp, fontFamily = Roboto,
     ), titleMedium = TextStyle(
         fontWeight = FontWeight.SemiBold, fontSize = 16.sp, fontFamily = Roboto,
     ), titleSmall = TextStyle(

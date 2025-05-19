@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)
+    implementation(libs.coil.compose)
     //Koin
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)

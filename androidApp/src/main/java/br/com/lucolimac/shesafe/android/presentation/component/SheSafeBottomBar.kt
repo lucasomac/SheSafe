@@ -1,6 +1,7 @@
 package br.com.lucolimac.shesafe.android.presentation.component
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
@@ -14,7 +15,7 @@ fun SheSafeBottomBar(
     menus: List<NavigationItem> = emptyList(),
     onBottomAppBarItemSelectedChange: (NavigationItem) -> Unit = {},
 ) {
-    NavigationBar(modifier) {
+    NavigationBar(modifier, containerColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.onBackground) {
         menus.forEach {
             NavigationBarItem(
                 icon = {

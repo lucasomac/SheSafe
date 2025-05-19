@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.android.R
 import br.com.lucolimac.shesafe.android.presentation.actions.ScreenAction
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
-import br.com.lucolimac.shesafe.android.presentation.component.RoundedButton
 import br.com.lucolimac.shesafe.android.presentation.component.SearchBar
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeDialog
+import br.com.lucolimac.shesafe.android.presentation.component.button.RoundedButton
 import br.com.lucolimac.shesafe.android.presentation.component.geolocation.LocationPermissionRequester
 import br.com.lucolimac.shesafe.android.presentation.component.geolocation.rememberLocation
 import br.com.lucolimac.shesafe.android.presentation.model.DialogModel
@@ -70,14 +70,14 @@ fun HomeScreen(onOrderHelp: () -> Unit, modifier: Modifier = Modifier) {
         Column {
             HomeHeader(
                 stringResource(R.string.title_home),
-                modifier = Modifier
+                modifier = modifier
                     .padding(top = 16.dp)
                     .align(Alignment.CenterHorizontally)
             )
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = modifier.fillMaxSize()) {
                 // Map (placed first, so it's in the background)
                 GoogleMap(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = modifier.fillMaxSize(),
                     cameraPositionState = cameraPositionState,
                     uiSettings = MapUiSettings(
                         compassEnabled = false,
@@ -92,7 +92,7 @@ fun HomeScreen(onOrderHelp: () -> Unit, modifier: Modifier = Modifier) {
                     onSearch = { query ->
                         // Handle the search query (e.g., filter map markers)
                         println("Searching for: $query")
-                    }, modifier = Modifier
+                    }, modifier = modifier
                         .align(Alignment.TopCenter) // Align at the top
                         .padding(16.dp) // Add padding
                 )
@@ -110,7 +110,7 @@ fun HomeScreen(onOrderHelp: () -> Unit, modifier: Modifier = Modifier) {
                             })
                         showDialog = true
                     },
-                    modifier = Modifier
+                    modifier = modifier
                         .align(Alignment.BottomCenter) // Align at the bottom center
                         .padding(16.dp) // Add some padding
                 )

@@ -1,4 +1,4 @@
-package br.com.lucolimac.shesafe.android.presentation.component
+package br.com.lucolimac.shesafe.android.presentation.component.button
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button

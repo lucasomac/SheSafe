@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import br.com.lucolimac.shesafe.android.presentation.component.button.DialogButton
 import br.com.lucolimac.shesafe.android.presentation.model.DialogModel
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 

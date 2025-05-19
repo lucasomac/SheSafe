@@ -1,4 +1,4 @@
-package br.com.lucolimac.shesafe.android.presentation.component
+package br.com.lucolimac.shesafe.android.presentation.component.button
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
