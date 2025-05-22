@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)
     implementation(libs.coil.compose)
+    implementation (libs.accompanist.permissions)
     //Koin
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)

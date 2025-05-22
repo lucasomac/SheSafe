@@ -1,5 +1,6 @@
 package br.com.lucolimac.shesafe.android
 
+import android.telephony.SmsManager
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -13,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -84,11 +86,20 @@ fun SheSafeApp(
         ) {
             composable(SheSafeDestination.Login.route.name) { LoginScreen(navController) }
             composable(SheSafeDestination.Home.route.name) {
-                HomeScreen({
-                    navigateTo(
-                        navController, SheSafeDestination.Contacts
-                    )
-                })
+                HomeScreen(
+                    onOrderHelp = { message, phone, context ->
+                        try {
+                            val smsManager = ContextCompat.getSystemService<SmsManager>(
+                                context, SmsManager::class.java
+                            )
+                            smsManager?.sendTextMessage(phone, null, message, null, null)
+                            true
+                        } catch (_: Exception) {
+                            false
+                        }
+                    },
+                    secureContactViewModel = secureContactViewModel,
+                )
             }
             composable(SheSafeDestination.Contacts.route.name) {
                 SecureContactsScreen(
@@ -119,6 +130,8 @@ fun SheSafeApp(
                 }
             }
 //                composable(NavigationItem.Settings.route) { SettingsScreen(navController) }) {}
+
+
         }
     }
 }

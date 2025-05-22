@@ -14,32 +14,19 @@ class ScreenAction() {
             message = "Você ainda não possui contatos seguros cadastrados. Gostaria de ir para o cadastro?",
             confirmButtonText = "Cadastrar",
             dismissButtonText = "Cancelar",
-            onConfirm = {
-//                showDialog = false
-                onConfirm.invoke()
-            },
-            onDismiss = {
-//                showDialog = false
-                onDismiss.invoke()
-            })
+            onConfirm = onConfirm,
+            onDismiss = onDismiss)
 
         val helpConfirmationDialogModel = DialogModel(
             title = "Confirmar pedido de ajuda?",
             message = "Ao confirmar seu pedido de ajuda toda a sua lista de contatos seguros receberá um SMS informando seu pedido e sua localização. Deseja enviar?",
             confirmButtonText = "Enviar",
             dismissButtonText = "Cancelar",
-            onConfirm = {
-                onConfirm.invoke()
-//                showHelpConfirmation = false
-            },
-            onDismiss = {
-//                showHelpConfirmation = false
-                onDismiss.invoke()
-            },
+            onConfirm = onConfirm,
+            onDismiss = onDismiss,
             showCheckbox = true,
             checkboxText = "Não perguntar novamente",
             onCheckboxCheckedChange = { isChecked ->
-//                doNotAskAgain = isChecked
                 onCheckboxCheckedChange.invoke(isChecked)
 
             },
