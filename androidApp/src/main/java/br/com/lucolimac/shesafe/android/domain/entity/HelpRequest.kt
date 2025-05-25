@@ -3,7 +3,7 @@ package br.com.lucolimac.shesafe.android.domain.entity
 import java.time.LocalDateTime
 import com.google.android.gms.maps.model.LatLng
 
-data class OrderHelp(
+data class HelpRequest(
     val phone: String, val location: LatLng, val createdAt: LocalDateTime
 ) {
     val linkMap =
