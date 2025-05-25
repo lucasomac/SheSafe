@@ -16,12 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.route.SheSafeDestination
 import org.koin.java.KoinJavaComponent.inject
 
 class MainActivity : ComponentActivity() {
     private val secureContactViewModel by inject<SecureContactViewModel>(SecureContactViewModel::class.java)
+    private val helpRequestViewModel by inject<HelpRequestViewModel>(HelpRequestViewModel::class.java)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -60,6 +62,7 @@ class MainActivity : ComponentActivity() {
                     SheSafeApp(
                         navController = navController,
                         secureContactViewModel = secureContactViewModel,
+                        helpRequestViewModel = helpRequestViewModel,
                         isShownBottomBar = isShownBottomBar,
                         isShowFab = isShownFab,
                         bottomAppBarItemSelected = selectedItem,

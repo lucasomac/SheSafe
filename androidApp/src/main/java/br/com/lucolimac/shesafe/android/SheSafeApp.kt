@@ -25,6 +25,7 @@ import br.com.lucolimac.shesafe.android.presentation.screen.LoginScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.ProfileScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.RegisterSecureContactScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.SecureContactsScreen
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.route.SheSafeDestination
 
@@ -42,6 +43,7 @@ val MenuItems = listOf(
 fun SheSafeApp(
     navController: NavHostController,
     secureContactViewModel: SecureContactViewModel,
+    helpRequestViewModel: HelpRequestViewModel,
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
     bottomAppBarItemSelected: NavigationItem = MenuItems[1],
@@ -116,7 +118,7 @@ fun SheSafeApp(
                     secureContactViewModel,
                 )
             }
-            composable(SheSafeDestination.Profile.route.name) { ProfileScreen() }
+            composable(SheSafeDestination.Profile.route.name) { ProfileScreen(helpRequestViewModel) }
             composable(SheSafeDestination.RegisterContact.route.name + "/{secureContactPhone}") {
                 val secureContactPhone = it.arguments?.getString("secureContactPhone") ?: ""
                 RegisterSecureContactScreen(
