@@ -1,7 +1,6 @@
 package br.com.lucolimac.shesafe.android.framework.service
 
 import br.com.lucolimac.shesafe.android.data.model.OrderHelpModel
-import br.com.lucolimac.shesafe.android.data.model.SecureContactModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
