@@ -23,8 +23,7 @@ class HelpRequestViewModel(private val helpRequestUseCase: HelpRequestUseCase) :
 
     private fun fetchHelpRequests() {
         viewModelScope.launch {
-            helpRequestUseCase.getHelpRequests().onStart { _isLoading.emit(true) }
-                .onCompletion { _isLoading.emit(false) }.collect { helpRequests ->
+            helpRequestUseCase.getHelpRequests().collect { helpRequests ->
                     _helpRequests.emit(helpRequests)
                 }
         }
