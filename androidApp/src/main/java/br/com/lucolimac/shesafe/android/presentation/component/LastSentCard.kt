@@ -21,11 +21,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import br.com.lucolimac.shesafe.android.domain.entity.OrderHelp
+import br.com.lucolimac.shesafe.android.domain.entity.HelpRequest
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun LastSentCard(lastSent: OrderHelp) {
+fun LastSentCard(lastSent: HelpRequest) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

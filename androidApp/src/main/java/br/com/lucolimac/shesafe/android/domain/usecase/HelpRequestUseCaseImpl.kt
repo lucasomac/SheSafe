@@ -1,9 +1,7 @@
 package br.com.lucolimac.shesafe.android.domain.usecase
 
 import br.com.lucolimac.shesafe.android.domain.entity.HelpRequest
-import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.domain.repository.HelpRequestRepository
-import br.com.lucolimac.shesafe.android.domain.repository.SecureContactRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

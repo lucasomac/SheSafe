@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.android.R
-import br.com.lucolimac.shesafe.android.domain.entity.OrderHelp
+import br.com.lucolimac.shesafe.android.domain.entity.HelpRequest
 import br.com.lucolimac.shesafe.android.presentation.actions.ScreenAction
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
 import br.com.lucolimac.shesafe.android.presentation.component.SearchBar
@@ -34,7 +34,6 @@ import br.com.lucolimac.shesafe.android.presentation.model.DialogModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
-import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -72,7 +71,7 @@ fun HomeScreen(
         // Permission granted, proceed with sending SMS
         var countSmsSent = 0
         secureContacts.forEach {
-            val orderHHelp = OrderHelp(
+            val orderHHelp = HelpRequest(
                 phone = it.phoneNumber, location = LatLng(
                     userLocation?.latitude ?: 0.0, userLocation?.longitude ?: 0.0
                 ), createdAt = LocalDateTime.now()
