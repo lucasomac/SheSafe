@@ -1,20 +1,15 @@
 package br.com.lucolimac.shesafe.android.presentation.viewModel
 
-import android.content.Intent
-import android.net.Uri
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.domain.usecase.SecureContactUseCase
-import com.google.android.gms.common.wrappers.Wrappers.packageManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import java.net.Proxy.Type.HTTP
 
 class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : ViewModel() {
     private val _hasBeenRegisteredSecureContact = MutableStateFlow<Boolean>(false)
