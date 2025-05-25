@@ -1,14 +1,23 @@
 package br.com.lucolimac.shesafe.android.framework.di
 
 import br.com.lucolimac.shesafe.android.FirebaseProvider
+import br.com.lucolimac.shesafe.android.data.repository.HelpRequestRepositoryImpl
 import br.com.lucolimac.shesafe.android.data.repository.SecureContactRepositoryImpl
+import br.com.lucolimac.shesafe.android.data.source.HelpRequestDataSource
 import br.com.lucolimac.shesafe.android.data.source.SecureContactDataSource
+import br.com.lucolimac.shesafe.android.domain.repository.HelpRequestRepository
 import br.com.lucolimac.shesafe.android.domain.repository.SecureContactRepository
+import br.com.lucolimac.shesafe.android.domain.usecase.HelpRequestUseCase
+import br.com.lucolimac.shesafe.android.domain.usecase.HelpRequestUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.SecureContactUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.SecureContactUseCaseImpl
+import br.com.lucolimac.shesafe.android.framework.data.source.HelpRequestDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.SecureSecureContactDataSourceImpl
+import br.com.lucolimac.shesafe.android.framework.service.HelpRequestFirebaseService
+import br.com.lucolimac.shesafe.android.framework.service.HelpRequestService
 import br.com.lucolimac.shesafe.android.framework.service.SecureContactService
 import br.com.lucolimac.shesafe.android.framework.service.SecureContactFirebaseService
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,9 +38,16 @@ object SheSafeDependenciesInjection {
         factoryOf(::SecureContactFirebaseService) {
             bind<SecureContactService>()
         }
+        factoryOf(::HelpRequestFirebaseService) {
+            bind<HelpRequestService>()
+        }
         factoryOf(::SecureSecureContactDataSourceImpl) { bind<SecureContactDataSource>() }
+        factoryOf(::HelpRequestDataSourceImpl) { bind<HelpRequestDataSource>() }
         factoryOf(::SecureContactRepositoryImpl) { bind<SecureContactRepository>() }
+        factoryOf(::HelpRequestRepositoryImpl) { bind<HelpRequestRepository>() }
         factoryOf(::SecureContactUseCaseImpl) { bind<SecureContactUseCase>() }
+        factoryOf(::HelpRequestUseCaseImpl) { bind<HelpRequestUseCase>() }
         viewModelOf(::SecureContactViewModel)
+        viewModelOf(::HelpRequestViewModel)
     }
 }
