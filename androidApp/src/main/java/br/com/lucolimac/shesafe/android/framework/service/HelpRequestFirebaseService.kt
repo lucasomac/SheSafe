@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
-class HelpRequestFirebaseRequestService(firestore: FirebaseFirestore, firebaseAuth: FirebaseAuth) :
+class HelpRequestFirebaseService(firestore: FirebaseFirestore, firebaseAuth: FirebaseAuth) :
     HelpRequestService {
     private val userEmail = firebaseAuth.currentUser?.email
     private val helpRequestCollection =
