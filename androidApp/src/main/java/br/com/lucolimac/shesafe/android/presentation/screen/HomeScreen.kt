@@ -56,14 +56,15 @@ import java.time.LocalDateTime
 fun HomeScreen(
     secureContactViewModel: SecureContactViewModel,
     onOrderHelp: (String, String, Context) -> Boolean,
-    modifier: Modifier = Modifier
+    onNoContacts: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val userLocation = rememberLocation()
     var showDialog by remember { mutableStateOf(false) }
     var doNotAskAgain by remember { mutableStateOf(false) }
     var dialogModel by remember { mutableStateOf<DialogModel?>(null) }
     val secureContacts by secureContactViewModel.secureContacts.collectAsState()
-    var hasSecureContacts by remember { mutableStateOf(secureContacts.isEmpty()) }
+    var hasSecureContacts by remember { mutableStateOf(secureContacts.isNotEmpty()) }
     val smsPermissionState = rememberPermissionState(Manifest.permission.SEND_SMS)
     val context = LocalContext.current
     val screenAction = ScreenAction()
@@ -71,61 +72,82 @@ fun HomeScreen(
         // Permission granted, proceed with sending SMS
         var countSmsSent = 0
         secureContacts.forEach {
-            val orderHHelp = HelpRequest(
-                phone = it.phoneNumber, location = LatLng(
-                    userLocation?.latitude ?: 0.0, userLocation?.longitude ?: 0.0
-                ), createdAt = LocalDateTime.now()
-            )
-            val hasBeenSent = onOrderHelp(
-                orderHHelp.phone, orderHHelp.linkMap, context
-            )
+            val orderHHelp =
+                HelpRequest(
+                    phone = it.phoneNumber,
+                    location =
+                        LatLng(
+                            userLocation?.latitude ?: 0.0,
+                            userLocation?.longitude ?: 0.0,
+                        ),
+                    createdAt = LocalDateTime.now(),
+                )
+            val hasBeenSent =
+                onOrderHelp(
+                    orderHHelp.phone,
+                    orderHHelp.linkMap,
+                    context,
+                )
             if (hasBeenSent) {
                 countSmsSent++
             }
         }
         if (countSmsSent > 0) {
-            Toast.makeText(
-                context, context.getString(
-                    R.string.sms_sent, countSmsSent.toString()
-                ), Toast.LENGTH_SHORT
-            ).show()
+            Toast
+                .makeText(
+                    context,
+                    context.getString(
+                        R.string.sms_sent,
+                        countSmsSent.toString(),
+                    ),
+                    Toast.LENGTH_SHORT,
+                ).show()
         } else {
-            Toast.makeText(
-                context, context.getString(R.string.sms_not_sent), Toast.LENGTH_SHORT
-            ).show()
+            Toast
+                .makeText(
+                    context,
+                    context.getString(R.string.sms_not_sent),
+                    Toast.LENGTH_SHORT,
+                ).show()
         }
     }
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            sendSms()
-        } else {
-            // Permission denied, show a message to the user
-            Toast.makeText(
-                context,
-                "Permission to send SMS is required to use this feature.",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    LocationPermissionRequester {
-        val cameraPositionState = rememberCameraPositionState {
-            position = if (userLocation != null) {
-                CameraPosition.fromLatLngZoom(
-                    LatLng(userLocation.latitude, userLocation.longitude), 10f
-                )
+    val requestPermissionLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission(),
+        ) { isGranted ->
+            if (isGranted) {
+                sendSms()
             } else {
-                CameraPosition.fromLatLngZoom(LatLng(1.35, 103.87), 10f) // Default
+                // Permission denied, show a message to the user
+                Toast
+                    .makeText(
+                        context,
+                        "Permission to send SMS is required to use this feature.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
             }
         }
+
+    LocationPermissionRequester {
+        val cameraPositionState =
+            rememberCameraPositionState {
+                position =
+                    if (userLocation != null) {
+                        CameraPosition.fromLatLngZoom(
+                            LatLng(userLocation.latitude, userLocation.longitude),
+                            10F,
+                        )
+                    } else {
+                        CameraPosition.fromLatLngZoom(LatLng(1.35, 103.87), 10f) // Default
+                    }
+            }
 
         LaunchedEffect(key1 = userLocation) {
             if (userLocation != null) {
                 cameraPositionState.animate(
                     CameraUpdateFactory.newLatLngZoom(
-                        LatLng(userLocation.latitude, userLocation.longitude), 16f
+                        LatLng(userLocation.latitude, userLocation.longitude),
+                        16f,
                     ),
                 )
             }
@@ -133,21 +155,24 @@ fun HomeScreen(
         Column {
             HomeHeader(
                 stringResource(R.string.title_home),
-                modifier = modifier
-                    .padding(top = 16.dp)
-                    .align(Alignment.CenterHorizontally)
+                modifier =
+                    modifier
+                        .padding(top = 16.dp)
+                        .align(Alignment.CenterHorizontally),
             )
             Box(modifier = modifier.fillMaxSize()) {
                 // Map (placed first, so it's in the background)
                 GoogleMap(
                     modifier = modifier.fillMaxSize(),
                     cameraPositionState = cameraPositionState,
-                    uiSettings = MapUiSettings(
-                        compassEnabled = false,
-                        zoomControlsEnabled = true,
-                        mapToolbarEnabled = false,
-                    ), // remove default buttons.
-                    properties = MapProperties(isMyLocationEnabled = true)
+                    uiSettings =
+                        MapUiSettings(
+                            compassEnabled = false,
+                            zoomControlsEnabled = true,
+                            mapToolbarEnabled = false,
+                        ),
+                    // remove default buttons.
+                    properties = MapProperties(isMyLocationEnabled = true),
                 )
 
                 // Search bar (placed second, on top of the map)
@@ -155,9 +180,12 @@ fun HomeScreen(
                     onSearch = { query ->
                         // Handle the search query (e.g., filter map markers)
                         println("Searching for: $query")
-                    }, modifier = modifier
-                        .align(Alignment.TopCenter) // Align at the top
-                        .padding(16.dp) // Add padding
+                    },
+                    modifier =
+                        modifier
+                            .align(Alignment.TopCenter) // Align at the top
+                            .padding(16.dp),
+                    // Add padding
                 )
                 // Button (placed third, on top of the map)
                 RoundedButton(
@@ -167,7 +195,11 @@ fun HomeScreen(
                             is PermissionStatus.Granted -> {
                                 dialogModel =
                                     screenAction.chooseDialogModel(hasSecureContacts, onConfirm = {
-                                        sendSms()
+                                        if (hasSecureContacts) {
+                                            sendSms()
+                                        } else {
+                                            onNoContacts()
+                                        }
                                         showDialog = false
                                     }, onDismiss = {
                                         showDialog = false
@@ -183,17 +215,21 @@ fun HomeScreen(
                             }
                         }
                     },
-                    modifier = modifier
-                        .align(Alignment.BottomCenter) // Align at the bottom center
-                        .padding(16.dp) // Add some padding
+                    modifier =
+                        modifier
+                            .align(Alignment.BottomCenter) // Align at the bottom center
+                            .padding(16.dp),
+                    // Add some padding
                 )
             }
         }
     }
     if (showDialog && dialogModel != null) {
         SheSafeDialog(
-            dialogModel = dialogModel!!, onDismissRequest = {
+            dialogModel = dialogModel!!,
+            onDismissRequest = {
                 showDialog = false
-            })
+            },
+        )
     }
 }
