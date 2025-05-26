@@ -25,7 +25,6 @@ import br.com.lucolimac.shesafe.android.R
 import br.com.lucolimac.shesafe.android.domain.entity.HelpRequest
 import br.com.lucolimac.shesafe.android.presentation.actions.ScreenAction
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
-import br.com.lucolimac.shesafe.android.presentation.component.SearchBar
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeDialog
 import br.com.lucolimac.shesafe.android.presentation.component.button.RoundedButton
 import br.com.lucolimac.shesafe.android.presentation.component.geolocation.LocationPermissionRequester
@@ -176,17 +175,17 @@ fun HomeScreen(
                 )
 
                 // Search bar (placed second, on top of the map)
-                SearchBar(
-                    onSearch = { query ->
-                        // Handle the search query (e.g., filter map markers)
-                        println("Searching for: $query")
-                    },
-                    modifier =
-                        modifier
-                            .align(Alignment.TopCenter) // Align at the top
-                            .padding(16.dp),
-                    // Add padding
-                )
+//                SearchBar(
+//                    onSearch = { query ->
+//                        // Handle the search query (e.g., filter map markers)
+//                        println("Searching for: $query")
+//                    },
+//                    modifier =
+//                        modifier
+//                            .align(Alignment.TopCenter) // Align at the top
+//                            .padding(16.dp),
+//                    // Add padding
+//                )
                 // Button (placed third, on top of the map)
                 RoundedButton(
                     text = stringResource(R.string.request_help),

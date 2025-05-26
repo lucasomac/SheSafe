@@ -13,6 +13,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,25 +35,25 @@ fun SecureContactCard(
     secureContact: SecureContact,
     onEditClick: (SecureContact) -> Unit,
     onDeleteClick: (SecureContact) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-
-    var expanded by remember { mutableStateOf(false) } //For the dropdown
+    var expanded by remember { mutableStateOf(false) } // For the dropdown
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
             Text(
                 text = secureContact.name,
-                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold),
             )
             Text(
                 text = secureContact.phoneNumber,
-                style = TextStyle(fontSize = 14.sp, color = Color.Gray)
+                style = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary),
             )
         }
         Box {
@@ -62,18 +62,20 @@ fun SecureContactCard(
             }
 
             DropdownMenu(
-                expanded = expanded, onDismissRequest = { expanded = false }) {
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
                 DropdownMenuItem(text = {
                     Text("Edit")
                 }, onClick = {
                     onEditClick(secureContact)
-                    expanded = false //close after click
+                    expanded = false // close after click
                 })
                 DropdownMenuItem(text = {
                     Text("Delete")
                 }, onClick = {
                     onDeleteClick(secureContact)
-                    expanded = false //close after click
+                    expanded = false // close after click
                 })
                 // Add more menu items as needed
             }

@@ -48,7 +48,7 @@ import org.koin.java.KoinJavaComponent.inject
 fun RegisterSecureContactScreen(
     secureContactPhone: String = "",
     secureContactViewModel: SecureContactViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     var isEditMode by remember { mutableStateOf(secureContactPhone.isNotBlank()) }
     val isLoading = secureContactViewModel.isLoading.collectAsState().value
@@ -62,19 +62,19 @@ fun RegisterSecureContactScreen(
             isLoading -> {
                 // Show a loading indicator
                 CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
                 )
             }
 
             else -> {
                 var name: String by remember {
                     mutableStateOf(
-                        secureContactViewModel.secureContact.value?.name ?: ""
+                        secureContactViewModel.secureContact.value?.name ?: "",
                     )
                 }
                 var phoneNumber: String by remember {
                     mutableStateOf(
-                        secureContactViewModel.secureContact.value?.phoneNumber ?: ""
+                        secureContactViewModel.secureContact.value?.phoneNumber ?: "",
                     )
                 }
                 val registered by secureContactViewModel.hasBeenRegisteredSecureContact.collectAsState()
@@ -86,35 +86,46 @@ fun RegisterSecureContactScreen(
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text(text = stringResource(if (isEditMode) R.string.title_edit_secure_contact else R.string.title_new_secure_contact)) },
+                            title = {
+                                Text(
+                                    text =
+                                        stringResource(
+                                            if (isEditMode) R.string.title_edit_secure_contact else R.string.title_new_secure_contact,
+                                        ),
+                                )
+                            },
                             navigationIcon = {
                                 IconButton(onClick = onBack) {
                                     Icon(
                                         Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "Back"
+                                        contentDescription = "Back",
                                     )
                                 }
                             },
-                            colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.background
-                            )
+                            colors =
+                                TopAppBarDefaults.topAppBarColors(
+                                    containerColor = MaterialTheme.colorScheme.background,
+                                ),
                         )
-                    }) { paddingValues ->
+                    },
+                ) { paddingValues ->
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues)
-                            .padding(16.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues)
+                                .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Top  // Changed to Top
+                        verticalArrangement = Arrangement.Top, // Changed to Top
                     ) {
                         OutlinedTextField(
                             value = name,
                             onValueChange = { name = it },
                             label = { Text("Nome") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp),
                         )
 
                         OutlinedTextField(
@@ -126,11 +137,10 @@ fun RegisterSecureContactScreen(
                             },
                             label = { Text("Celular") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
 
-                        Spacer(modifier = Modifier.weight(1f))  // Push button to the bottom
-
+                        Spacer(modifier = Modifier.weight(1f)) // Push button to the bottom
 
                         Button(
                             onClick = {
@@ -138,25 +148,28 @@ fun RegisterSecureContactScreen(
                                     secureContactViewModel.updateSecureContact(
                                         secureContactViewModel.secureContact.value?.phoneNumber!!,
                                         SecureContact(
-                                            name, phoneNumber
-                                        )
+                                            name,
+                                            phoneNumber,
+                                        ),
                                     )
                                 } else {
                                     secureContactViewModel.registerSecureContact(
                                         SecureContact(
-                                            name, phoneNumber
-                                        )
+                                            name,
+                                            phoneNumber,
+                                        ),
                                     )
                                 }
                             },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 24.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 24.dp),
                             shape = RoundedCornerShape(8.dp),
                         ) {
                             Text(
                                 text = "SALVAR",
-                                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
                             )
                         }
                     }
@@ -166,7 +179,7 @@ fun RegisterSecureContactScreen(
     }
 }
 
-
+@Suppress("ktlint:standard:function-naming")
 @Preview(showBackground = true)
 @Composable
 fun AddContactScreenPreview() {

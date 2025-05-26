@@ -10,4 +10,10 @@
     <string name="message_delete_secure_contact">Tem certeza de que deseja excluir %1$s dos seus contatos seguros?</string>
     <string name="label_cancel">Cancelar</string>
     <string name="label_delete">Excluir</string>
+    <!--    Settings-->
+    <string name="title_settings">Configurações</string>
+    <string name="label_setting_heatmap">Mapa de calor</string>
+    <string name="label_setting_send_confirmation">Confirmação de envio</string>
+    <string name="label_setting_search_location">Busca de local</string>
+    <string name="label_setting_button_shortcut">Atalho de botão</string>
 </resources>
