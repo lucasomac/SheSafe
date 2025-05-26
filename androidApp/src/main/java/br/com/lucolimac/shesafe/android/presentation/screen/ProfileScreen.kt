@@ -22,11 +22,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,12 +34,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.presentation.component.ActionIcon
 import br.com.lucolimac.shesafe.android.presentation.component.LastSentCard
+import br.com.lucolimac.shesafe.android.presentation.component.SheSafeLoading
 import br.com.lucolimac.shesafe.android.presentation.component.bottomsheet.SettingBottomSheet
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
@@ -51,13 +53,19 @@ import org.koin.java.KoinJavaComponent.inject
 fun ProfileScreen(
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
+    onHelpRequestsShowClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lastSentList by helpRequestViewModel.helpRequests.collectAsState()
     var showSettingsBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
+
+    val isLoading = helpRequestViewModel.isLoading.collectAsState().value
+    LaunchedEffect(lastSentList) {
+        helpRequestViewModel.fetchHelpRequests()
+    }
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) // Background color
     {
@@ -109,7 +117,10 @@ fun ProfileScreen(
                     Icons.Default.Settings,
                     description = "Settings",
                 ) { showSettingsBottomSheet = true }
-                ActionIcon(Icons.Default.Menu, description = "Menu") {}
+                ActionIcon(
+                    Icons.Default.Menu,
+                    description = "Menu",
+                    onClick = { onHelpRequestsShowClick() })
                 ActionIcon(Icons.Default.Edit, description = "Edit") {}
                 ActionIcon(
                     painter = painterResource(R.drawable.logout_24),
@@ -126,9 +137,13 @@ fun ProfileScreen(
                     .padding(bottom = 8.dp),
             )
             when {
+                isLoading -> {
+                    SheSafeLoading()
+                }
+
                 lastSentList.isEmpty() -> {
                     Text(
-                        text = "Nenhum pedido de ajuda enviado ainda.",
+                        text = stringResource(R.string.message_nothing_send_yet),
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.Gray,
                     )
@@ -136,7 +151,7 @@ fun ProfileScreen(
 
                 else -> {
                     LazyColumn {
-                        items(lastSentList.size) { index ->
+                        items(lastSentList.take(5).size) { index ->
                             LastSentCard(lastSent = lastSentList[index])
                         }
                     }
@@ -168,5 +183,5 @@ fun ProfileScreen(
 fun ProfileScreenPreview() {
     val viewModel: HelpRequestViewModel by inject<HelpRequestViewModel>(HelpRequestViewModel::class.java)
     val settingsViewModel: SettingsViewModel by inject<SettingsViewModel>(SettingsViewModel::class.java)
-    ProfileScreen(viewModel, settingsViewModel)
+    ProfileScreen(viewModel, settingsViewModel, {})
 }

@@ -3,6 +3,7 @@
     <string name="appName">SheSafe</string>
     <string name="request_help">Pedir Ajuda</string>
     <string name="title_new_secure_contact">Novo contato seguro</string>
+    <string name="title_help_request_sent">Pedidos de ajuda enviados</string>
     <string name="title_edit_secure_contact">Editar contato seguro</string>
     <string name="title_no_secure_contacts">Você ainda não possui contatos cadastrados!</string>
     <string name="title_contacts">Contacts</string>
@@ -10,6 +11,7 @@
     <string name="message_delete_secure_contact">Tem certeza de que deseja excluir %1$s dos seus contatos seguros?</string>
     <string name="label_cancel">Cancelar</string>
     <string name="label_delete">Excluir</string>
+    <string name="message_nothing_send_yet">Nenhum pedido de ajuda enviado ainda.</string>
     <!--    Settings-->
     <string name="title_settings">Configurações</string>
     <string name="label_setting_heatmap">Mapa de calor</string>

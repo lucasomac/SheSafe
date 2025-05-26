@@ -17,17 +17,15 @@ class HelpRequestViewModel(private val helpRequestUseCase: HelpRequestUseCase) :
     private val _helpRequests = MutableStateFlow<List<HelpRequest>>(emptyList())
     val helpRequests = _helpRequests.asStateFlow()
 
-    init {
-        fetchHelpRequests()
-    }
-
-    private fun fetchHelpRequests() {
+    fun fetchHelpRequests() {
         viewModelScope.launch {
-            helpRequestUseCase.getHelpRequests().collect { helpRequests ->
-                    _helpRequests.emit(helpRequests.take(5))
+            helpRequestUseCase.getHelpRequests().onStart { _isLoading.emit(true) }
+                .onCompletion { _isLoading.emit(false) }.collect { helpRequests ->
+                    _helpRequests.emit(helpRequests)
                 }
         }
     }
+
     fun registerHelpRequest(helpRequest: HelpRequest) {
         viewModelScope.launch {
             helpRequestUseCase.registerHelpRequest(helpRequest).onStart { _isLoading.emit(true) }

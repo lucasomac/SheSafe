@@ -6,7 +6,8 @@ sealed class SheSafeDestination(val route: SheSafeRoute) {
         HOME("Home"), LOGIN("Login"), CONTACTS("Meus Contatos"), PROFILE("Profile"), REGISTER_CONTACT(
             "Contato"
         ),
-        SETTINGS("Configurações"), ERROR(
+
+        HELP_REQUESTS("Pedidos Enviados"), ERROR(
             "Error"
         )
     }
@@ -16,6 +17,6 @@ sealed class SheSafeDestination(val route: SheSafeRoute) {
     object Contacts : SheSafeDestination(SheSafeRoute.CONTACTS)
     object Profile : SheSafeDestination(SheSafeRoute.PROFILE)
     object RegisterContact : SheSafeDestination(SheSafeRoute.REGISTER_CONTACT)
-    object Settings : SheSafeDestination(SheSafeRoute.SETTINGS)
+    object HelpRequests : SheSafeDestination(SheSafeRoute.HELP_REQUESTS)
     object Error : SheSafeDestination(SheSafeRoute.ERROR)
 }

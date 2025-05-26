@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeBottomBar
 import br.com.lucolimac.shesafe.android.presentation.model.NavigationItem
+import br.com.lucolimac.shesafe.android.presentation.screen.HelpRequestsScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.LoginScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.ProfileScreen
@@ -135,7 +136,12 @@ fun SheSafeApp(
             }
             composable(SheSafeDestination.Profile.route.name) {
                 ProfileScreen(
-                    helpRequestViewModel, settingsViewModel
+                    helpRequestViewModel, settingsViewModel, onHelpRequestsShowClick = {
+                        navigateTo(
+                            navController,
+                            SheSafeDestination.HelpRequests,
+                        )
+                    }
                 )
             }
             composable(SheSafeDestination.RegisterContact.route.name + "/{secureContactPhone}") {
@@ -152,7 +158,16 @@ fun SheSafeApp(
                     secureContactViewModel.resetRegistered()
                 }
             }
-//                composable(NavigationItem.Settings.route) { SettingsScreen(navController) }) {}
+            composable(SheSafeDestination.HelpRequests.route.name) {
+                HelpRequestsScreen(
+                    helpRequestViewModel = helpRequestViewModel
+                ) {
+                    navigateTo(
+                        navController,
+                        SheSafeDestination.Profile,
+                    )
+                }
+            }
         }
     }
 }
