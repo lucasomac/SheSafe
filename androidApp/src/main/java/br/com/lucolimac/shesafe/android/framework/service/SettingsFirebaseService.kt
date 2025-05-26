@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
 class SettingsFirebaseService(
-    private val firestore: FirebaseFirestore, private val firebaseAuth: FirebaseAuth
+    firestore: FirebaseFirestore, firebaseAuth: FirebaseAuth
 ) : SettingsService {
     private val userEmail = firebaseAuth.currentUser?.email
     private val settingsCollection = firestore.collection("settings").document(userEmail.toString())

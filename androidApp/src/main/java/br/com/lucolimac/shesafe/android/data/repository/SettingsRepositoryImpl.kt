@@ -8,7 +8,7 @@ class SettingsRepositoryImpl(private val settingsDataSource: SettingsDataSource)
     override suspend fun getToggleSetting(setting: String): Boolean {
         return try {
             settingsDataSource.getToggleSetting(setting)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // Handle the exception, e.g., log it or return a default value
             false // Default value in case of an error
         }
@@ -20,7 +20,7 @@ class SettingsRepositoryImpl(private val settingsDataSource: SettingsDataSource)
         return try {
             settingsDataSource.setToggleSetting(setting, value)
             true // Return true if the setting was successfully set
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // Handle the exception, e.g., log it or throw a custom exception
             false // Return false in case of an error
         }
