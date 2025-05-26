@@ -10,20 +10,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.android.presentation.component.SettingItem
 import br.com.lucolimac.shesafe.R
+import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
+import br.com.lucolimac.shesafe.enum.SettingsEnum
 import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.inject
+import kotlin.getValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingBottomSheet(
+    settingsViewModel: SettingsViewModel,
     onDismiss: () -> Unit,
     sheetState: SheetState,
 ) {
     val scope = rememberCoroutineScope()
-
-    var heatMapEnabled by remember { mutableStateOf(false) }
-    var sendConfirmationEnabled by remember { mutableStateOf(true) }
-    var locationSearchEnabled by remember { mutableStateOf(false) }
-    var buttonShortcutEnabled by remember { mutableStateOf(true) }
+    val mapOfSettings by remember { settingsViewModel.mapOfSettings }.collectAsState()
 
     Column(
         modifier = Modifier.padding(16.dp),
@@ -34,26 +35,26 @@ fun SettingBottomSheet(
             modifier = Modifier.padding(bottom = 16.dp),
         )
 
-        SettingItem(
-            text = stringResource(R.string.label_setting_heatmap),
-            checked = heatMapEnabled,
-            onCheckedChange = { heatMapEnabled = it },
-        )
+//        SettingItem(
+//            text = stringResource(R.string.label_setting_heatmap),
+//            checked = mapOfSettings[SettingsEnum.HEATMAP] == true,
+//            onCheckedChange = { heatMapEnabled = it },
+//        )
         SettingItem(
             text = stringResource(R.string.label_setting_send_confirmation),
-            checked = sendConfirmationEnabled,
-            onCheckedChange = { sendConfirmationEnabled = it },
+            checked = mapOfSettings[SettingsEnum.SEND_CONFIRMATION] == true,
+            onCheckedChange = { settingsViewModel.setToggleSetting(SettingsEnum.SEND_CONFIRMATION) },
         )
-        SettingItem(
-            text = stringResource(R.string.label_setting_search_location),
-            checked = locationSearchEnabled,
-            onCheckedChange = { locationSearchEnabled = it },
-        )
-        SettingItem(
-            text = stringResource(R.string.label_setting_button_shortcut),
-            checked = buttonShortcutEnabled,
-            onCheckedChange = { buttonShortcutEnabled = it },
-        )
+//        SettingItem(
+//            text = stringResource(R.string.label_setting_search_location),
+//            checked = locationSearchEnabled,
+//            onCheckedChange = { locationSearchEnabled = it },
+//        )
+//        SettingItem(
+//            text = stringResource(R.string.label_setting_button_shortcut),
+//            checked = buttonShortcutEnabled,
+//            onCheckedChange = { buttonShortcutEnabled = it },
+//        )
 
         Spacer(modifier = Modifier.weight(1f)) // Push the button to the bottom if needed
 
@@ -62,10 +63,9 @@ fun SettingBottomSheet(
                 scope.launch { sheetState.hide() }
                 onDismiss()
             },
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
         ) {
             Text(text = "Fechar")
         }
@@ -73,13 +73,13 @@ fun SettingBottomSheet(
 }
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun SettingsBottomSheetPreview() {
     val sheetState = rememberModalBottomSheetState()
+    val settingsViewModel: SettingsViewModel by inject<SettingsViewModel>(SettingsViewModel::class.java)
     MaterialTheme {
-        SettingBottomSheet(onDismiss = {}, sheetState = sheetState)
+        SettingBottomSheet(settingsViewModel, onDismiss = {}, sheetState = sheetState)
     }
 }

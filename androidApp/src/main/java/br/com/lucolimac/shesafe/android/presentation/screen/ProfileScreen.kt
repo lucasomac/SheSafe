@@ -42,6 +42,7 @@ import br.com.lucolimac.shesafe.android.presentation.component.ActionIcon
 import br.com.lucolimac.shesafe.android.presentation.component.LastSentCard
 import br.com.lucolimac.shesafe.android.presentation.component.bottomsheet.SettingBottomSheet
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 import coil.compose.rememberAsyncImagePainter
 import org.koin.java.KoinJavaComponent.inject
 
@@ -49,12 +50,12 @@ import org.koin.java.KoinJavaComponent.inject
 @Composable
 fun ProfileScreen(
     helpRequestViewModel: HelpRequestViewModel,
+    settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier,
 ) {
     val lastSentList by helpRequestViewModel.helpRequests.collectAsState()
     var showSettingsBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
@@ -73,17 +74,15 @@ fun ProfileScreen(
             )
 
             Image(
-                painter =
-                    rememberAsyncImagePainter(
-                        model = "https://randomuser.me/api/portraits/women/75.jpg",
-                    ),
+                painter = rememberAsyncImagePainter(
+                    model = "https://randomuser.me/api/portraits/women/75.jpg",
+                ),
                 contentDescription = "Profile Picture",
                 contentScale = ContentScale.Crop,
-                modifier =
-                    Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Gray, CircleShape),
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, Color.Gray, CircleShape),
             )
 
             Text(
@@ -102,10 +101,9 @@ fun ProfileScreen(
             // Action Icons
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
             ) {
                 ActionIcon(
                     Icons.Default.Settings,
@@ -123,10 +121,9 @@ fun ProfileScreen(
             Text(
                 text = "Últimos envios",
                 style = MaterialTheme.typography.titleLarge,
-                modifier =
-                    Modifier
-                        .align(Alignment.Start)
-                        .padding(bottom = 8.dp),
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(bottom = 8.dp),
             )
             when {
                 lastSentList.isEmpty() -> {
@@ -152,6 +149,7 @@ fun ProfileScreen(
             sheetState = sheetState,
             content = {
                 SettingBottomSheet(
+                    settingsViewModel,
                     onDismiss = {
                         showSettingsBottomSheet = false
                     },
@@ -169,5 +167,6 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenPreview() {
     val viewModel: HelpRequestViewModel by inject<HelpRequestViewModel>(HelpRequestViewModel::class.java)
-    ProfileScreen(viewModel)
+    val settingsViewModel: SettingsViewModel by inject<SettingsViewModel>(SettingsViewModel::class.java)
+    ProfileScreen(viewModel, settingsViewModel)
 }

@@ -27,29 +27,30 @@ import br.com.lucolimac.shesafe.android.presentation.screen.RegisterSecureContac
 import br.com.lucolimac.shesafe.android.presentation.screen.SecureContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 import br.com.lucolimac.shesafe.route.SheSafeDestination
 
-val MenuItems =
-    listOf(
-        NavigationItem(
-            icon = Icons.AutoMirrored.Filled.List,
-            sheSafeDestination = SheSafeDestination.Contacts,
-        ),
-        NavigationItem(
-            icon = Icons.Filled.Home,
-            sheSafeDestination = SheSafeDestination.Home,
-        ),
-        NavigationItem(
-            icon = Icons.Filled.Person,
-            sheSafeDestination = SheSafeDestination.Profile,
-        ),
-    )
+val MenuItems = listOf(
+    NavigationItem(
+        icon = Icons.AutoMirrored.Filled.List,
+        sheSafeDestination = SheSafeDestination.Contacts,
+    ),
+    NavigationItem(
+        icon = Icons.Filled.Home,
+        sheSafeDestination = SheSafeDestination.Home,
+    ),
+    NavigationItem(
+        icon = Icons.Filled.Person,
+        sheSafeDestination = SheSafeDestination.Profile,
+    ),
+)
 
 @Composable
 fun SheSafeApp(
     navController: NavHostController,
     secureContactViewModel: SecureContactViewModel,
     helpRequestViewModel: HelpRequestViewModel,
+    settingsViewModel: SettingsViewModel,
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
     bottomAppBarItemSelected: NavigationItem = MenuItems[1],
@@ -89,21 +90,19 @@ fun SheSafeApp(
         NavHost(
             navController = navController,
             startDestination = SheSafeDestination.Login.route.name,
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
         ) {
             composable(SheSafeDestination.Login.route.name) { LoginScreen(navController) }
             composable(SheSafeDestination.Home.route.name) {
                 HomeScreen(
                     onOrderHelp = { message, phone, context ->
                         try {
-                            val smsManager =
-                                ContextCompat.getSystemService<SmsManager>(
-                                    context,
-                                    SmsManager::class.java,
-                                )
+                            val smsManager = ContextCompat.getSystemService<SmsManager>(
+                                context,
+                                SmsManager::class.java,
+                            )
                             smsManager?.sendTextMessage(phone, null, message, null, null)
                             true
                         } catch (_: Exception) {
@@ -134,7 +133,11 @@ fun SheSafeApp(
                     secureContactViewModel,
                 )
             }
-            composable(SheSafeDestination.Profile.route.name) { ProfileScreen(helpRequestViewModel) }
+            composable(SheSafeDestination.Profile.route.name) {
+                ProfileScreen(
+                    helpRequestViewModel, settingsViewModel
+                )
+            }
             composable(SheSafeDestination.RegisterContact.route.name + "/{secureContactPhone}") {
                 val secureContactPhone = it.arguments?.getString("secureContactPhone") ?: ""
                 RegisterSecureContactScreen(
@@ -160,14 +163,13 @@ fun navigateTo(
     vararg navArgs: String = emptyArray(),
     popUpTo: SheSafeDestination? = null,
 ) {
-    val route =
-        if (destination == SheSafeDestination.RegisterContact) {
-            "${destination.route.name}/${
-                navArgs.joinToString("/")
-            }"
-        } else {
-            destination.route.name
-        }
+    val route = if (destination == SheSafeDestination.RegisterContact) {
+        "${destination.route.name}/${
+            navArgs.joinToString("/")
+        }"
+    } else {
+        destination.route.name
+    }
     navController.navigate(route) {
         popUpTo?.let {
             popUpTo(it.route.name) {
