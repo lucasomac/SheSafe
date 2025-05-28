@@ -19,9 +19,9 @@ class SecureContactUseCaseImpl(
         }.flowOn(coroutineDispatcher)
     }
 
-    override fun getSecureContactByPhone(phone: String): Flow<SecureContact?> {
+    override fun getSecureContactByPhoneNumber(phoneNumber: String): Flow<SecureContact?> {
         return flow {
-            emit(secureContactRepository.getContactByPhone(phone))
+            emit(secureContactRepository.getContactByPhoneNumber(phoneNumber))
         }.flowOn(coroutineDispatcher)
     }
 
@@ -32,16 +32,16 @@ class SecureContactUseCaseImpl(
     }
 
     override fun updateSecureContact(
-        phone: String, contact: SecureContact
+        phoneNumber: String, contact: SecureContact
     ): Flow<Boolean> {
         return flow {
-            emit(secureContactRepository.updateSecureContact(phone, contact))
+            emit(secureContactRepository.updateSecureContact(phoneNumber, contact))
         }.flowOn(coroutineDispatcher)
     }
 
-    override fun deleteSecureContact(phone: String): Flow<Boolean> {
+    override fun deleteSecureContact(phoneNumber: String): Flow<Boolean> {
         return flow {
-            emit(secureContactRepository.deleteSecureContact(phone))
+            emit(secureContactRepository.deleteSecureContact(phoneNumber))
         }.flowOn(coroutineDispatcher)
     }
 }

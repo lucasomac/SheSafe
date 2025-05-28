@@ -72,7 +72,7 @@ fun HomeScreen(
         var countSmsSent = 0
         secureContacts.forEach {
             val orderHHelp = HelpRequest(
-                phone = it.phoneNumber,
+                phoneNumber = it.phoneNumber,
                 location = LatLng(
                     userLocation?.latitude ?: 0.0,
                     userLocation?.longitude ?: 0.0,
@@ -80,7 +80,7 @@ fun HomeScreen(
                 createdAt = LocalDateTime.now(),
             )
             val hasBeenSent = onOrderHelp(
-                orderHHelp.phone,
+                orderHHelp.phoneNumber,
                 orderHHelp.linkMap,
                 context,
             )

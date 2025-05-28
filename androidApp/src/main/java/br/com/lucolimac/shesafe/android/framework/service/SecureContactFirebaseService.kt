@@ -24,10 +24,12 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
         return secureContactList
     }
 
-    override suspend fun getSecureContactByPhone(phone: String): SecureContactModel? {
+    override suspend fun getSecureContactByPhoneNumber(phoneNumber: String): SecureContactModel? {
         return try {
-            val documentSnapshot = secureContactCollection.document(phone).get().await()
-            documentSnapshot.toObject(SecureContactModel::class.java)
+            val documentSnapshot =
+                secureContactCollection.whereEqualTo("phoneNumber", phoneNumber).get()
+                    .await().documents
+            documentSnapshot[0].toObject(SecureContactModel::class.java)
         } catch (e: Exception) {
             e.printStackTrace()
             null // Return null if there's an error
@@ -36,7 +38,7 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
 
     override suspend fun registerSecureContact(secureContactModel: SecureContactModel): Boolean {
         return try {
-            secureContactCollection.document(secureContactModel.phone).set(secureContactModel)
+            secureContactCollection.document(secureContactModel.phoneNumber).set(secureContactModel)
             true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -45,10 +47,10 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
     }
 
     override suspend fun updateSecureContact(
-        phone: String, secureContactModel: SecureContactModel
+        phoneNumber: String, secureContactModel: SecureContactModel
     ): Boolean {
         return try {
-            secureContactCollection.document(phone).set(secureContactModel)
+            secureContactCollection.document(phoneNumber).set(secureContactModel)
             true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -56,9 +58,9 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
         }
     }
 
-    override suspend fun deleteSecureContact(phone: String): Boolean {
+    override suspend fun deleteSecureContact(phoneNumber: String): Boolean {
         return try {
-            secureContactCollection.document(phone).delete()
+            secureContactCollection.document(phoneNumber).delete()
             true
         } catch (e: Exception) {
             e.printStackTrace()

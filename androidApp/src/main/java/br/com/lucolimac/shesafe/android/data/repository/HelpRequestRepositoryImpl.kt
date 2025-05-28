@@ -11,7 +11,7 @@ class HelpRequestRepositoryImpl(
     override suspend fun getHelpRequests(): List<HelpRequest> {
         return helpRequestDataSource.getHelpRequests().map {
             HelpRequest(
-                phone = it.phone, location = it.location, createdAt = it.createdAt
+                phoneNumber = it.phoneNumber, location = it.location, createdAt = it.createdAt
             )
         }
     }

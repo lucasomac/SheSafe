@@ -10,8 +10,8 @@ class SecureSecureContactDataSourceImpl(private val secureContactService: Secure
         return secureContactService.getSecureContacts()
     }
 
-    override suspend fun getSecureContactByPhone(phone: String): SecureContactModel? {
-        return secureContactService.getSecureContactByPhone(phone)
+    override suspend fun getSecureContactByPhoneNumber(phoneNumber: String): SecureContactModel? {
+        return secureContactService.getSecureContactByPhoneNumber(phoneNumber)
     }
 
     override suspend fun registerSecureContact(contact: SecureContactModel): Boolean {
@@ -19,12 +19,12 @@ class SecureSecureContactDataSourceImpl(private val secureContactService: Secure
     }
 
     override suspend fun updateSecureContact(
-        phone: String, contact: SecureContactModel
+        phoneNumber: String, contact: SecureContactModel
     ): Boolean {
-        return secureContactService.updateSecureContact(phone, contact)
+        return secureContactService.updateSecureContact(phoneNumber, contact)
     }
 
-    override suspend fun deleteSecureContact(phone: String): Boolean {
-        return secureContactService.deleteSecureContact(phone)
+    override suspend fun deleteSecureContact(phoneNumber: String): Boolean {
+        return secureContactService.deleteSecureContact(phoneNumber)
     }
 }

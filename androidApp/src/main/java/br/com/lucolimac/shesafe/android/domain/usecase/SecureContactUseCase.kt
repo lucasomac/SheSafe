@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface SecureContactUseCase {
     fun getSecureContacts(): Flow<List<SecureContact>>
-    fun getSecureContactByPhone(phone: String): Flow<SecureContact?>
+    fun getSecureContactByPhoneNumber(phoneNumber: String): Flow<SecureContact?>
     fun registerSecureContact(contact: SecureContact): Flow<Boolean>
-    fun updateSecureContact(phone: String, contact: SecureContact): Flow<Boolean>
-    fun deleteSecureContact(phone: String): Flow<Boolean>
+    fun updateSecureContact(phoneNumber: String, contact: SecureContact): Flow<Boolean>
+    fun deleteSecureContact(phoneNumber: String): Flow<Boolean>
 }

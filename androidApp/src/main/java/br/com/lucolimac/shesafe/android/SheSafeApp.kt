@@ -126,13 +126,13 @@ fun SheSafeApp(
             composable(SheSafeDestination.Login.route.name) { LoginScreen(navController) }
             composable(SheSafeDestination.Home.route.name) {
                 HomeScreen(
-                    onOrderHelp = { message, phone, context ->
+                    onOrderHelp = { message, phoneNumber, context ->
                         try {
                             val smsManager = ContextCompat.getSystemService<SmsManager>(
                                 context,
                                 SmsManager::class.java,
                             )
-                            smsManager?.sendTextMessage(phone, null, message, null, null)
+                            smsManager?.sendTextMessage(phoneNumber, null, message, null, null)
                             true
                         } catch (_: Exception) {
                             false
@@ -171,10 +171,10 @@ fun SheSafeApp(
                         )
                     })
             }
-            composable(SheSafeDestination.RegisterContact.route.name + "/{secureContactPhone}") {
-                val secureContactPhone = it.arguments?.getString("secureContactPhone") ?: ""
+            composable(SheSafeDestination.RegisterContact.route.name + "/{secureContactPhoneNumber}") {
+                val secureContactPhoneNumber = it.arguments?.getString("secureContactPhoneNumber") ?: ""
                 RegisterSecureContactScreen(
-                    secureContactPhone = secureContactPhone, secureContactViewModel, onBack = {
+                    secureContactPhoneNumber = secureContactPhoneNumber, secureContactViewModel, onBack = {
                         navigateTo(
                             navController,
                             SheSafeDestination.Contacts,

@@ -20,17 +20,17 @@ class SecureContactRepositoryImpl(
         return secureContactDataSource.getSecureContacts().map { it.toEntity() }
     }
 
-    override suspend fun getContactByPhone(phone: String): SecureContact? {
-        return secureContactDataSource.getSecureContactByPhone(phone)?.toEntity()
+    override suspend fun getContactByPhoneNumber(phoneNumber: String): SecureContact? {
+        return secureContactDataSource.getSecureContactByPhoneNumber(phoneNumber)?.toEntity()
     }
 
-    override suspend fun updateSecureContact(phone: String, secureContact: SecureContact): Boolean {
+    override suspend fun updateSecureContact(phoneNumber: String, secureContact: SecureContact): Boolean {
         return secureContactDataSource.updateSecureContact(
-            phone, SecureContactModel.fromEntity(secureContact)
+            phoneNumber, SecureContactModel.fromEntity(secureContact)
         )
     }
 
-    override suspend fun deleteSecureContact(phone: String): Boolean {
-        return secureContactDataSource.deleteSecureContact(phone)
+    override suspend fun deleteSecureContact(phoneNumber: String): Boolean {
+        return secureContactDataSource.deleteSecureContact(phoneNumber)
     }
 }

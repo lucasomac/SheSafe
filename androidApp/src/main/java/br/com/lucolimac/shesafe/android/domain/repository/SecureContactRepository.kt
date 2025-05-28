@@ -5,7 +5,7 @@ import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 interface SecureContactRepository {
     suspend fun registerSecureContact(secureContact: SecureContact): Boolean
     suspend fun getSecureContactList(): List<SecureContact>
-    suspend fun getContactByPhone(phone: String): SecureContact?
-    suspend fun updateSecureContact(phone: String, secureContact: SecureContact): Boolean
-    suspend fun deleteSecureContact(phone: String): Boolean
+    suspend fun getContactByPhoneNumber(phoneNumber: String): SecureContact?
+    suspend fun updateSecureContact(phoneNumber: String, secureContact: SecureContact): Boolean
+    suspend fun deleteSecureContact(phoneNumber: String): Boolean
 }
