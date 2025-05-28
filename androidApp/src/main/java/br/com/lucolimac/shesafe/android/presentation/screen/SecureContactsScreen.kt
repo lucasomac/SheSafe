@@ -1,7 +1,6 @@
 package br.com.lucolimac.shesafe.android.presentation.screen
 
 import SheSafeBottomSheet
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,9 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
+import br.com.lucolimac.shesafe.android.presentation.component.SheSafeLoading
 import br.com.lucolimac.shesafe.android.presentation.component.contact.SecureContactCard
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import org.koin.java.KoinJavaComponent.inject
@@ -36,44 +36,37 @@ import org.koin.java.KoinJavaComponent.inject
 @Composable
 fun SecureContactsScreen(
     onEditAction: (SecureContact) -> Unit,
-    onDeleteAction: (SecureContact) -> Unit, // Add parameters for edit and delete actions
+    onDeleteAction: (SecureContact) -> Unit,
     secureContactViewModel: SecureContactViewModel,
     modifier: Modifier = Modifier
 ) {
-    // Observe the secure contacts from the ViewModel
-    val secureContacts = secureContactViewModel.secureContacts.collectAsState().value
-    val isLoading = secureContactViewModel.isLoading.collectAsState().value
-    LaunchedEffect(Unit) {
-        // Fetch the secure contacts when the screen is launched
-        secureContactViewModel.getAllSecureContacts()
-    }
+    val secureContacts by secureContactViewModel.secureContacts.collectAsState()
+    val isLoading by secureContactViewModel.isLoading.collectAsState()
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedContact by remember { mutableStateOf<SecureContact?>(null) }
-
-    Box(modifier = modifier.fillMaxSize()) { // Use a Box to layer content
+    LaunchedEffect(Unit) {
+        secureContactViewModel.getAllSecureContacts()
+    }
+    Column {
+        HomeHeader(
+            stringResource(R.string.title_secure_contacts),
+            modifier = modifier
+                .padding(top = 16.dp)
+                .align(Alignment.CenterHorizontally)
+        )
         when {
             isLoading -> {
-                // Show a loading indicator
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                SheSafeLoading()
             }
 
             secureContacts.isEmpty() -> {
-                // Show a message or UI indicating that there are no secure contacts
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center), // Center the column
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Box(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    HomeHeader(
-                        stringResource(R.string.title_no_secure_contacts),
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .align(Alignment.CenterHorizontally)
+                    Text(
+                        text = stringResource(R.string.message_no_secure_contacts),
+                        modifier = modifier.align(Alignment.Center)
                     )
                 }
             }
@@ -85,41 +78,32 @@ fun SecureContactsScreen(
             ) {
                 SheSafeBottomSheet(
                     contactName = selectedContact?.name ?: "", onConfirmDelete = {
-                        onDeleteAction(selectedContact ?: return@SheSafeBottomSheet)
-                        selectedContact = null
-                        secureContactViewModel.getAllSecureContacts()
-                        showBottomSheet = false
-                    }, onDismiss = {
-                        showBottomSheet = false
-                    }, sheetState = sheetState
+                    onDeleteAction(selectedContact ?: return@SheSafeBottomSheet)
+                    selectedContact = null
+                    secureContactViewModel.getAllSecureContacts()
+                    showBottomSheet = false
+                }, onDismiss = {
+                    showBottomSheet = false
+                }, sheetState = sheetState
                 )
             }
 
             else -> {
-                // Show the list of secure contacts
-                Column {
-                    HomeHeader(
-                        stringResource(R.string.title_contacts),
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .align(Alignment.CenterHorizontally)
-                    )
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        contentPadding = PaddingValues(bottom = 72.dp) // Space for FAB
-                    ) {
-                        items(secureContacts.size) { index ->
-                            SecureContactCard(
-                                secureContact = secureContacts[index],
-                                onEditClick = onEditAction,
-                                onDeleteClick = {
-                                    selectedContact = secureContacts[index]
-                                    showBottomSheet = true
-                                },
-                            )
-                        }
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    contentPadding = PaddingValues(bottom = 72.dp)
+                ) {
+                    items(secureContacts.size) { index ->
+                        SecureContactCard(
+                            secureContact = secureContacts[index],
+                            onEditClick = onEditAction,
+                            onDeleteClick = {
+                                selectedContact = secureContacts[index]
+                                showBottomSheet = true
+                            },
+                        )
                     }
                 }
             }
