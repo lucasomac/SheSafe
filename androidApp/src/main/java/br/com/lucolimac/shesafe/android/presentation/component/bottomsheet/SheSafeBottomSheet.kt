@@ -39,7 +39,7 @@ fun SheSafeBottomSheet(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()
         ) {
-            TextButton(onClick = {
+            OutlinedButton(onClick = {
                 scope.launch { sheetState.hide() }
                 onDismiss()
             }) {
@@ -56,9 +56,11 @@ fun SheSafeBottomSheet(
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFC8758F), contentColor = Color.White
-                ), //Optional: change the colors, using ButtonDefaults
+                ),
             ) {
-                Text(stringResource(R.string.label_delete), color = Color.White) // Optional: Use TextButton for consistent style
+                Text(
+                    stringResource(R.string.label_delete), color = Color.White
+                )
             }
         }
     }
