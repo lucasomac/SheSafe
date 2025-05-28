@@ -61,6 +61,11 @@ class MainActivity : ComponentActivity() {
                     } != null
                     val isShownFab =
                         currentDestination?.route.let { route -> MenuItems.find { it.sheSafeDestination.route.name == route }?.sheSafeDestination == SheSafeDestination.Contacts }
+                    // Should be show appBar only in RegisterSecureContactScreen and HelpRequestsScreen
+                    val isShowAppBar = currentDestination?.route.let { route ->
+                        route == SheSafeDestination.RegisterContact.route.name ||
+                                route == SheSafeDestination.HelpRequests.route.name
+                    }
                     SheSafeApp(
                         navController = navController,
                         secureContactViewModel = secureContactViewModel,
@@ -68,6 +73,9 @@ class MainActivity : ComponentActivity() {
                         settingsViewModel = settingsViewModel,
                         isShownBottomBar = isShownBottomBar,
                         isShowFab = isShownFab,
+                        isShowTopBar = isShowAppBar,
+                        titleTopBar = SheSafeDestination.SheSafeRoute.entries.find { it.name == currentDestination?.route }?.title
+                            ?: "",
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
                             val route = it.sheSafeDestination.route.name
