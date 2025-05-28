@@ -7,7 +7,7 @@ sealed class SheSafeDestination(val route: SheSafeRoute) {
             "Contato"
         ),
 
-        HELP_REQUESTS("Pedidos Enviados"), ERROR(
+        HELP_REQUESTS("Pedidos de ajuda enviados"), ERROR(
             "Error"
         )
     }

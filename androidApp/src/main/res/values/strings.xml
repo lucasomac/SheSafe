@@ -1,8 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="appName">SheSafe</string>
-    <string name="title_home">HOME\n</string>
-    <string name="message_order_help_sent">Pedido de ajuda enviado!!</string>
-    <string name="sms_sent">Pedido de ajuda enviado para %1$s contato(s) seguro!</string>
-    <string name="sms_not_sent">Pedido de ajuda não foi enviado!</string>
 </resources>

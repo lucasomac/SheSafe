@@ -4,14 +4,20 @@ import android.telephony.SmsManager
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
@@ -46,6 +52,7 @@ val MenuItems = listOf(
     ),
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SheSafeApp(
     navController: NavHostController,
@@ -54,10 +61,31 @@ fun SheSafeApp(
     settingsViewModel: SettingsViewModel,
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
+    isShowTopBar: Boolean = false,
+    titleTopBar: String = "",
     bottomAppBarItemSelected: NavigationItem = MenuItems[1],
     onBottomAppBarItemSelectedChange: (NavigationItem) -> Unit = {},
 ) {
     Scaffold(
+        topBar = {
+            if (isShowTopBar) {
+                TopAppBar(
+                    title = { Text(text = titleTopBar) },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Navigation Icon",
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    ),
+                )
+            }
+        },
         bottomBar = {
             if (isShownBottomBar) {
                 SheSafeBottomBar(
@@ -141,32 +169,23 @@ fun SheSafeApp(
                             navController,
                             SheSafeDestination.HelpRequests,
                         )
-                    }
-                )
+                    })
             }
             composable(SheSafeDestination.RegisterContact.route.name + "/{secureContactPhone}") {
                 val secureContactPhone = it.arguments?.getString("secureContactPhone") ?: ""
                 RegisterSecureContactScreen(
-                    secureContactPhone = secureContactPhone,
-                    secureContactViewModel,
-                ) {
-                    secureContactViewModel.resetSecureContact()
-                    navigateTo(
-                        navController,
-                        SheSafeDestination.Contacts,
-                    )
-                    secureContactViewModel.resetRegistered()
-                }
+                    secureContactPhone = secureContactPhone, secureContactViewModel, onBack = {
+                        navigateTo(
+                            navController,
+                            SheSafeDestination.Contacts,
+                        )
+                        secureContactViewModel.resetSecureContact()
+                    })
             }
             composable(SheSafeDestination.HelpRequests.route.name) {
                 HelpRequestsScreen(
                     helpRequestViewModel = helpRequestViewModel
-                ) {
-                    navigateTo(
-                        navController,
-                        SheSafeDestination.Profile,
-                    )
-                }
+                )
             }
         }
     }
@@ -176,7 +195,7 @@ fun navigateTo(
     navController: NavHostController,
     destination: SheSafeDestination,
     vararg navArgs: String = emptyArray(),
-    popUpTo: SheSafeDestination? = null,
+    navigationToPopUpTo: SheSafeDestination? = null,
 ) {
     val route = if (destination == SheSafeDestination.RegisterContact) {
         "${destination.route.name}/${
@@ -186,7 +205,7 @@ fun navigateTo(
         destination.route.name
     }
     navController.navigate(route) {
-        popUpTo?.let {
+        navigationToPopUpTo?.let {
             popUpTo(it.route.name) {
                 saveState = true
             }

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="appName">SheSafe</string>
+    <string name="title_home">Home</string>
+    <string name="title_secure_contacts">Contatos Seguro</string>
+    <string name="title_profile">Perfil</string>
+    <string name="message_order_help_sent">Pedido de ajuda enviado!!</string>
+    <string name="sms_sent">Pedido de ajuda enviado para %1$s contato(s) seguro!</string>
+    <string name="sms_not_sent">Pedido de ajuda não foi enviado!</string>
     <string name="request_help">Pedir Ajuda</string>
     <string name="title_new_secure_contact">Novo contato seguro</string>
     <string name="title_help_request_sent">Pedidos de ajuda enviados</string>
     <string name="title_edit_secure_contact">Editar contato seguro</string>
-    <string name="title_no_secure_contacts">Você ainda não possui contatos cadastrados!</string>
+    <string name="message_no_secure_contacts">Você ainda não possui contatos cadastrados!</string>
     <string name="title_contacts">Contacts</string>
     <string name="title_delete_secure_contact">Deletar contato seguro?</string>
     <string name="message_delete_secure_contact">Tem certeza de que deseja excluir %1$s dos seus contatos seguros?</string>
@@ -18,4 +24,9 @@
     <string name="label_setting_send_confirmation">Confirmação de envio</string>
     <string name="label_setting_search_location">Busca de local</string>
     <string name="label_setting_button_shortcut">Atalho de botão</string>
+<!--    Labels-->
+    <string name="label_secure_contact_name">Nome</string>
+    <string name="label_secure_contact_phone">Celular</string>
+    <string name="label_secure_contact_save">Salver</string>
+    <string name="label_secure_contact_update">Atualizar</string>
 </resources>

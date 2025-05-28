@@ -41,7 +41,9 @@ fun SignInArea(navController: NavController, modifier: Modifier = Modifier) {
         AppLogo()
         Spacer(modifier = Modifier.height(32.dp))
         GoogleButtonUiContainerFirebase(linkAccount = false, onResult = onFirebaseResult) {
-            GoogleSignInButton(modifier = Modifier.fillMaxWidth()) { this.onClick() }
+            GoogleSignInButton(modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)) { this.onClick() }
         }
     }
 }
