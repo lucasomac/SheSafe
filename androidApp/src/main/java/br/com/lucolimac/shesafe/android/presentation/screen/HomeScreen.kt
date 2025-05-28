@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import br.com.lucolimac.shesafe.android.R
+import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.domain.entity.HelpRequest
 import br.com.lucolimac.shesafe.android.presentation.actions.ScreenAction
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
@@ -71,29 +71,25 @@ fun HomeScreen(
         // Permission granted, proceed with sending SMS
         var countSmsSent = 0
         secureContacts.forEach {
-            val orderHHelp =
-                HelpRequest(
-                    phone = it.phoneNumber,
-                    location =
-                        LatLng(
-                            userLocation?.latitude ?: 0.0,
-                            userLocation?.longitude ?: 0.0,
-                        ),
-                    createdAt = LocalDateTime.now(),
-                )
-            val hasBeenSent =
-                onOrderHelp(
-                    orderHHelp.phone,
-                    orderHHelp.linkMap,
-                    context,
-                )
+            val orderHHelp = HelpRequest(
+                phone = it.phoneNumber,
+                location = LatLng(
+                    userLocation?.latitude ?: 0.0,
+                    userLocation?.longitude ?: 0.0,
+                ),
+                createdAt = LocalDateTime.now(),
+            )
+            val hasBeenSent = onOrderHelp(
+                orderHHelp.phone,
+                orderHHelp.linkMap,
+                context,
+            )
             if (hasBeenSent) {
                 countSmsSent++
             }
         }
         if (countSmsSent > 0) {
-            Toast
-                .makeText(
+            Toast.makeText(
                     context,
                     context.getString(
                         R.string.sms_sent,
@@ -102,44 +98,39 @@ fun HomeScreen(
                     Toast.LENGTH_SHORT,
                 ).show()
         } else {
-            Toast
-                .makeText(
+            Toast.makeText(
                     context,
                     context.getString(R.string.sms_not_sent),
                     Toast.LENGTH_SHORT,
                 ).show()
         }
     }
-    val requestPermissionLauncher =
-        rememberLauncherForActivityResult(
-            ActivityResultContracts.RequestPermission(),
-        ) { isGranted ->
-            if (isGranted) {
-                sendSms()
-            } else {
-                // Permission denied, show a message to the user
-                Toast
-                    .makeText(
-                        context,
-                        "Permission to send SMS is required to use this feature.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-            }
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { isGranted ->
+        if (isGranted) {
+            sendSms()
+        } else {
+            // Permission denied, show a message to the user
+            Toast.makeText(
+                context,
+                "Permission to send SMS is required to use this feature.",
+                Toast.LENGTH_SHORT,
+            ).show()
         }
+    }
 
     LocationPermissionRequester {
-        val cameraPositionState =
-            rememberCameraPositionState {
-                position =
-                    if (userLocation != null) {
-                        CameraPosition.fromLatLngZoom(
-                            LatLng(userLocation.latitude, userLocation.longitude),
-                            10F,
-                        )
-                    } else {
-                        CameraPosition.fromLatLngZoom(LatLng(1.35, 103.87), 10f) // Default
-                    }
+        val cameraPositionState = rememberCameraPositionState {
+            position = if (userLocation != null) {
+                CameraPosition.fromLatLngZoom(
+                    LatLng(userLocation.latitude, userLocation.longitude),
+                    10F,
+                )
+            } else {
+                CameraPosition.fromLatLngZoom(LatLng(1.35, 103.87), 10f) // Default
             }
+        }
 
         LaunchedEffect(key1 = userLocation) {
             if (userLocation != null) {
@@ -154,23 +145,20 @@ fun HomeScreen(
         Column {
             HomeHeader(
                 stringResource(R.string.title_home),
-                modifier =
-                    modifier
-                        .padding(top = 16.dp)
-                        .align(Alignment.CenterHorizontally),
+                modifier = modifier
+                    .padding(top = 16.dp)
+                    .align(Alignment.CenterHorizontally),
             )
             Box(modifier = modifier.fillMaxSize()) {
                 // Map (placed first, so it's in the background)
                 GoogleMap(
                     modifier = modifier.fillMaxSize(),
                     cameraPositionState = cameraPositionState,
-                    uiSettings =
-                        MapUiSettings(
-                            compassEnabled = false,
-                            zoomControlsEnabled = true,
-                            mapToolbarEnabled = false,
-                        ),
-                    // remove default buttons.
+                    uiSettings = MapUiSettings(
+                        compassEnabled = false,
+                        zoomControlsEnabled = true,
+                        mapToolbarEnabled = false,
+                    ),
                     properties = MapProperties(isMyLocationEnabled = true),
                 )
 
@@ -214,10 +202,9 @@ fun HomeScreen(
                             }
                         }
                     },
-                    modifier =
-                        modifier
-                            .align(Alignment.BottomCenter) // Align at the bottom center
-                            .padding(16.dp),
+                    modifier = modifier
+                        .align(Alignment.BottomCenter) // Align at the bottom center
+                        .padding(16.dp),
                     // Add some padding
                 )
             }
