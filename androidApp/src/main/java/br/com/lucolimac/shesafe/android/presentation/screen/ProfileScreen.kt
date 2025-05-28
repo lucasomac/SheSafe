@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.presentation.component.ActionIcon
+import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
 import br.com.lucolimac.shesafe.android.presentation.component.LastSentCard
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeLoading
 import br.com.lucolimac.shesafe.android.presentation.component.bottomsheet.SettingBottomSheet
@@ -74,11 +75,11 @@ fun ProfileScreen(
             modifier = Modifier.padding(16.dp),
         ) {
             // Profile Section
-            Text(
-                text = "PROFILE",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp),
+            HomeHeader(
+                stringResource(R.string.title_profile),
+                modifier = modifier
+                    .padding(top = 16.dp)
+                    .align(Alignment.CenterHorizontally),
             )
 
             Image(
