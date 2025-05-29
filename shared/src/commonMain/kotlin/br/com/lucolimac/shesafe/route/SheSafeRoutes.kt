@@ -4,7 +4,7 @@ package br.com.lucolimac.shesafe.route
 sealed class SheSafeDestination(val route: SheSafeRoute) {
     enum class SheSafeRoute(val title: String) {
         HOME("Home"), LOGIN("Login"), CONTACTS("Meus Contatos"), PROFILE("Profile"), REGISTER_CONTACT(
-            "Contato"
+            "Secure Contact"
         ),
 
         HELP_REQUESTS("Pedidos de ajuda enviados"), ERROR(

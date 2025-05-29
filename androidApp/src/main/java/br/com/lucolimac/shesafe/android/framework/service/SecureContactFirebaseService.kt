@@ -29,16 +29,16 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
             val documentSnapshot =
                 secureContactCollection.whereEqualTo("phoneNumber", phoneNumber).get()
                     .await().documents
-            documentSnapshot[0].toObject(SecureContactModel::class.java)
+            documentSnapshot.firstOrNull()?.toObject(SecureContactModel::class.java)
         } catch (e: Exception) {
             e.printStackTrace()
-            null // Return null if there's an error
+            null
         }
     }
 
     override suspend fun registerSecureContact(secureContactModel: SecureContactModel): Boolean {
         return try {
-            secureContactCollection.document(secureContactModel.phoneNumber).set(secureContactModel)
+            secureContactCollection.document().set(secureContactModel).await()
             true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -50,8 +50,16 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
         phoneNumber: String, secureContactModel: SecureContactModel
     ): Boolean {
         return try {
-            secureContactCollection.document(phoneNumber).set(secureContactModel)
-            true
+            val querySnapshot =
+                secureContactCollection.whereEqualTo("phoneNumber", phoneNumber).get().await()
+
+            val document = querySnapshot.documents.firstOrNull()
+            if (document != null) {
+                document.reference.set(secureContactModel).await()
+                true
+            } else {
+                false // No document found with the given phoneNumber
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             false
@@ -60,8 +68,15 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
 
     override suspend fun deleteSecureContact(phoneNumber: String): Boolean {
         return try {
-            secureContactCollection.document(phoneNumber).delete()
-            true
+            val querySnapshot =
+                secureContactCollection.whereEqualTo("phoneNumber", phoneNumber).get().await()
+            val document = querySnapshot.documents.firstOrNull()
+            if (document != null) {
+                document.reference.delete().await()
+                true
+            } else {
+                false // No document found with the given phoneNumber
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             false

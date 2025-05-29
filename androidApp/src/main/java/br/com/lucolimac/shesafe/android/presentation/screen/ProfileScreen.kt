@@ -72,14 +72,12 @@ fun ProfileScreen(
     {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp),
         ) {
             // Profile Section
             HomeHeader(
                 stringResource(R.string.title_profile),
-                modifier = modifier
-                    .padding(top = 16.dp)
-                    .align(Alignment.CenterHorizontally),
+                modifier = modifier.align(Alignment.CenterHorizontally),
             )
 
             Image(

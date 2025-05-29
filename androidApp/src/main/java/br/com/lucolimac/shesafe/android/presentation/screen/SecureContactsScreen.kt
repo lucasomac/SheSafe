@@ -51,9 +51,7 @@ fun SecureContactsScreen(
     Column {
         HomeHeader(
             stringResource(R.string.title_secure_contacts),
-            modifier = modifier
-                .padding(top = 16.dp)
-                .align(Alignment.CenterHorizontally)
+            modifier = modifier.align(Alignment.CenterHorizontally)
         )
         when {
             isLoading -> {
@@ -77,14 +75,16 @@ fun SecureContactsScreen(
                 }, sheetState = sheetState
             ) {
                 SheSafeBottomSheet(
-                    contactName = selectedContact?.name ?: "", onConfirmDelete = {
-                    onDeleteAction(selectedContact ?: return@SheSafeBottomSheet)
-                    selectedContact = null
-                    secureContactViewModel.getAllSecureContacts()
-                    showBottomSheet = false
-                }, onDismiss = {
-                    showBottomSheet = false
-                }, sheetState = sheetState
+                    contactName = selectedContact?.name ?: "",
+                    onConfirmDelete = {
+                        onDeleteAction(selectedContact ?: return@SheSafeBottomSheet)
+                        selectedContact = null
+                        showBottomSheet = false
+                    },
+                    onDismiss = {
+                        showBottomSheet = false
+                    },
+                    sheetState = sheetState,
                 )
             }
 

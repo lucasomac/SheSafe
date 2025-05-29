@@ -63,8 +63,7 @@ class MainActivity : ComponentActivity() {
                         currentDestination?.route.let { route -> MenuItems.find { it.sheSafeDestination.route.name == route }?.sheSafeDestination == SheSafeDestination.Contacts }
                     // Should be show appBar only in RegisterSecureContactScreen and HelpRequestsScreen
                     val isShowAppBar = currentDestination?.route.let { route ->
-                        route == SheSafeDestination.RegisterContact.route.name ||
-                                route == SheSafeDestination.HelpRequests.route.name
+                        route?.contains(SheSafeDestination.RegisterContact.route.name) == true || route == SheSafeDestination.HelpRequests.route.name
                     }
                     SheSafeApp(
                         navController = navController,
@@ -74,8 +73,9 @@ class MainActivity : ComponentActivity() {
                         isShownBottomBar = isShownBottomBar,
                         isShowFab = isShownFab,
                         isShowTopBar = isShowAppBar,
-                        titleTopBar = SheSafeDestination.SheSafeRoute.entries.find { it.name == currentDestination?.route }?.title
-                            ?: "",
+                        titleTopBar = SheSafeDestination.SheSafeRoute.entries.find {
+                            currentDestination?.route.toString().contains(it.name)
+                        }?.title ?: "",
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
                             val route = it.sheSafeDestination.route.name

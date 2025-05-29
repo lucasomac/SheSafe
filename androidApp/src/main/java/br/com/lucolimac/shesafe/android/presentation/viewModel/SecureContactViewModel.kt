@@ -23,24 +23,29 @@ class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : V
     val isLoading: StateFlow<Boolean> = _isLoading
 
 
-    //Genarate a list of 10 contacts with random names and phone numbers
+    //Genarate a list of 10 contacts with random names and phoneNumber numbers
     private val _secureContacts = MutableStateFlow<List<SecureContact>>(emptyList())
     val secureContacts = _secureContacts.asStateFlow()
 
-    fun registerSecureContact(secureContact: SecureContact) {
+    fun regiSecureContact(secureContact: SecureContact) {
         viewModelScope.launch {
-            secureContactUseCase.registerSecureContact(secureContact)
-                .onStart { _isLoading.emit(true) }.onCompletion { _isLoading.emit(false) }.collect {
-                    _hasBeenRegisteredSecureContact.emit(it)
-                }
+
         }
     }
 
-    fun updateSecureContact(phone: String, secureContact: SecureContact) {
+    fun saveSecureContact(phoneNumber: String, secureContact: SecureContact) {
         viewModelScope.launch {
-            secureContactUseCase.updateSecureContact(phone, secureContact)
-                .onStart { _isLoading.emit(true) }.onCompletion { _isLoading.emit(false) }
-                .collect { _hasBeenRegisteredSecureContact.emit(it) }
+            if (phoneNumber.isEmpty()) {
+                secureContactUseCase.registerSecureContact(secureContact).onStart {
+                    _isLoading.emit(true)
+                }.onCompletion { _isLoading.emit(false) }.collect {
+                    _hasBeenRegisteredSecureContact.emit(it)
+                }
+            } else {
+                secureContactUseCase.updateSecureContact(phoneNumber, secureContact)
+                    .onStart { _isLoading.emit(true) }.onCompletion { _isLoading.emit(false) }
+                    .collect { _hasBeenRegisteredSecureContact.emit(it) }
+            }
         }
     }
 
@@ -54,18 +59,19 @@ class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : V
         }
     }
 
-    fun getSecureContactByPhone(phone: String) {
+    fun getSecureContactByPhoneNumber(phoneNumber: String) {
         viewModelScope.launch {
-            secureContactUseCase.getSecureContactByPhone(phone).onStart { _isLoading.emit(true) }
-                .onCompletion { _isLoading.emit(false) }.collect { secureContact ->
+            secureContactUseCase.getSecureContactByPhoneNumber(phoneNumber)
+                .onStart { _isLoading.emit(true) }.onCompletion { _isLoading.emit(false) }
+                .collect { secureContact ->
                     _secureContact.emit(secureContact)
                 }
         }
     }
 
-    fun deleteSecureContact(phone: String) {
+    fun deleteSecureContact(phoneNumber: String) {
         viewModelScope.launch {
-            secureContactUseCase.deleteSecureContact(phone).onStart { _isLoading.emit(true) }
+            secureContactUseCase.deleteSecureContact(phoneNumber).onStart { _isLoading.emit(true) }
                 .onCompletion { _isLoading.emit(false) }
                 .collect { _hasBeenDeletedSecureContact.emit(it) }
         }
@@ -86,6 +92,12 @@ class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : V
     fun resetSecureContact() {
         viewModelScope.launch {
             _secureContact.emit(null)
+        }
+    }
+
+    fun resetLoading() {
+        viewModelScope.launch {
+            _isLoading.emit(false)
         }
     }
 }

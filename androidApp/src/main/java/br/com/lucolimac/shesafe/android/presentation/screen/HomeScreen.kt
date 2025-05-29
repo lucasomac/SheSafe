@@ -90,19 +90,19 @@ fun HomeScreen(
         }
         if (countSmsSent > 0) {
             Toast.makeText(
-                    context,
-                    context.getString(
-                        R.string.sms_sent,
-                        countSmsSent.toString(),
-                    ),
-                    Toast.LENGTH_SHORT,
-                ).show()
+                context,
+                context.getString(
+                    R.string.sms_sent,
+                    countSmsSent.toString(),
+                ),
+                Toast.LENGTH_SHORT,
+            ).show()
         } else {
             Toast.makeText(
-                    context,
-                    context.getString(R.string.sms_not_sent),
-                    Toast.LENGTH_SHORT,
-                ).show()
+                context,
+                context.getString(R.string.sms_not_sent),
+                Toast.LENGTH_SHORT,
+            ).show()
         }
     }
     val requestPermissionLauncher = rememberLauncherForActivityResult(
@@ -145,9 +145,7 @@ fun HomeScreen(
         Column {
             HomeHeader(
                 stringResource(R.string.title_home),
-                modifier = modifier
-                    .padding(top = 16.dp)
-                    .align(Alignment.CenterHorizontally),
+                modifier = modifier.align(Alignment.CenterHorizontally),
             )
             Box(modifier = modifier.fillMaxSize()) {
                 // Map (placed first, so it's in the background)

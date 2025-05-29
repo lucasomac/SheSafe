@@ -2,6 +2,7 @@ package br.com.lucolimac.shesafe.android.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,12 +25,12 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewMo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HelpRequestsScreen(helpRequestViewModel: HelpRequestViewModel) {
+fun HelpRequestsScreen(helpRequestViewModel: HelpRequestViewModel, modifier: Modifier = Modifier) {
 
     val helpRequestList by helpRequestViewModel.helpRequests.collectAsState()
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(16.dp)
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
@@ -38,11 +39,16 @@ fun HelpRequestsScreen(helpRequestViewModel: HelpRequestViewModel) {
     ) {
         when {
             helpRequestList.isEmpty() -> {
-                Text(
-                    text = stringResource(R.string.message_nothing_send_yet),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Gray,
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = stringResource(R.string.message_nothing_send_yet),
+                        modifier = modifier.align(Alignment.Center),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.Gray,
+                    )
+                }
             }
 
             else -> {
@@ -57,5 +63,4 @@ fun HelpRequestsScreen(helpRequestViewModel: HelpRequestViewModel) {
             }
         }
     }
-
 }
