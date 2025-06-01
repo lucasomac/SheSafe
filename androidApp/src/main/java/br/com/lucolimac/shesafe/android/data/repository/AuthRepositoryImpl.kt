@@ -11,4 +11,16 @@ class AuthRepositoryImpl(private val authDataSource: AuthDataSource) : AuthRepos
     override fun logoutUser(onLogoutSuccess: () -> Unit, onLogoutFailure: (Exception) -> Unit) {
         authDataSource.logoutUser(onLogoutSuccess, onLogoutFailure)
     }
+
+    override fun getUserEmail(): String? {
+        return authDataSource.getUserEmail()
+    }
+
+    override fun getUserName(): String? {
+        return authDataSource.getUserName()
+    }
+
+    override fun getUserPhotoUrl(): String? {
+        return authDataSource.getUserPhotoUrl()
+    }
 }

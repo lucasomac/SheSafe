@@ -30,6 +30,7 @@ import br.com.lucolimac.shesafe.android.presentation.component.button.RoundedBut
 import br.com.lucolimac.shesafe.android.presentation.component.geolocation.LocationPermissionRequester
 import br.com.lucolimac.shesafe.android.presentation.component.geolocation.rememberLocation
 import br.com.lucolimac.shesafe.android.presentation.model.DialogModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
@@ -54,10 +55,12 @@ import java.time.LocalDateTime
 @Composable
 fun HomeScreen(
     secureContactViewModel: SecureContactViewModel,
+    authViewModel: AuthViewModel,
     onOrderHelp: (String, String, Context) -> Boolean,
     onNoContacts: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    LaunchedEffect(Unit) { authViewModel.setFieldsOfLoggedUser() }
     val userLocation = rememberLocation()
     var showDialog by remember { mutableStateOf(false) }
     var doNotAskAgain by remember { mutableStateOf(false) }

@@ -153,6 +153,7 @@ fun SheSafeApp(
                         )
                     },
                     secureContactViewModel = secureContactViewModel,
+                    authViewModel = authViewModel,
                 )
             }
             composable(SheSafeDestination.Contacts.route.name) {
@@ -188,6 +189,8 @@ fun SheSafeApp(
                         settingsViewModel.resetAllStates()
                         // Clear the auth state
                         authViewModel.resetAllStates()
+                        // Logout the user
+                        authViewModel.logoutUser()
                         // Navigate to the login screen
                         navigateTo(
                             navController,

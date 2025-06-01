@@ -11,4 +11,16 @@ class AuthDataSourceImpl(private val authService: AuthService) : AuthDataSource 
     override fun logoutUser(onLogoutSuccess: () -> Unit, onLogoutFailure: (Exception) -> Unit) {
         authService.logoutUser(onLogoutSuccess, onLogoutFailure)
     }
+
+    override fun getUserEmail(): String? {
+        return authService.getUserEmail()
+    }
+
+    override fun getUserName(): String? {
+        return authService.getUserName()
+    }
+
+    override fun getUserPhotoUrl(): String? {
+        return authService.getUserPhotoUrl()
+    }
 }

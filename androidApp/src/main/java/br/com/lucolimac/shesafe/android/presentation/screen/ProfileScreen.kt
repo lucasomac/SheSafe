@@ -64,6 +64,8 @@ fun ProfileScreen(
     val sheetState = rememberModalBottomSheetState()
 
     val isLoading = helpRequestViewModel.isLoading.collectAsState().value
+    val userName = authViewModel.userName.collectAsState().value
+    val userPhotoUrl = authViewModel.userPhotoUrl.collectAsState().value
     LaunchedEffect(lastSentList) {
         helpRequestViewModel.fetchHelpRequests()
     }
@@ -84,7 +86,7 @@ fun ProfileScreen(
 
             Image(
                 painter = rememberAsyncImagePainter(
-                    model = "https://randomuser.me/api/portraits/women/75.jpg",
+                    model = userPhotoUrl,
                 ),
                 contentDescription = "Profile Picture",
                 contentScale = ContentScale.Crop,
@@ -95,7 +97,7 @@ fun ProfileScreen(
             )
 
             Text(
-                text = "Theresa",
+                text = userName ?: stringResource(R.string.default_user_name),
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(top = 8.dp),
             )
@@ -185,5 +187,6 @@ fun ProfileScreen(
 fun ProfileScreenPreview() {
     val viewModel: HelpRequestViewModel by inject<HelpRequestViewModel>(HelpRequestViewModel::class.java)
     val settingsViewModel: SettingsViewModel by inject<SettingsViewModel>(SettingsViewModel::class.java)
-    ProfileScreen(viewModel, settingsViewModel, {}, {})
+    val authViewModel: AuthViewModel by inject<AuthViewModel>(AuthViewModel::class.java)
+    ProfileScreen(viewModel, settingsViewModel, authViewModel, {}, {})
 }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
     init {
-        isUserLoggedIn()
+        setStartDestination()
     }
 
     // SharedFlow is good for one-time events like navigation or showing a toast
@@ -20,6 +20,12 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
     val isUserLoggedIn = _isUserLoggedIn.asStateFlow()
     private val _startDestination = MutableStateFlow<SheSafeDestination>(SheSafeDestination.Login)
     val startDestination = _startDestination.asStateFlow()
+    private val _userEmail = MutableStateFlow<String?>(null)
+    val userEmail = _userEmail.asStateFlow()
+    private val _userName = MutableStateFlow<String?>(null)
+    val userName = _userName.asStateFlow()
+    private val _userPhotoUrl = MutableStateFlow<String?>(null)
+    val userPhotoUrl = _userPhotoUrl.asStateFlow()
 
     fun logoutUser() {
         viewModelScope.launch {
@@ -33,13 +39,42 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
         }
     }
 
-    fun isUserLoggedIn() {
+    fun setStartDestination() {
         viewModelScope.launch {
             authUseCase.isUserLoggedIn().collect { isLoggedIn ->
                 _startDestination.emit(
                     if (isLoggedIn) SheSafeDestination.Home else SheSafeDestination.Login
                 )
-                _isUserLoggedIn.emit(true)
+            }
+        }
+    }
+
+    fun setFieldsOfLoggedUser() {
+        getUserEmail()
+        getName()
+        getPhotoUrl()
+    }
+
+    fun getUserEmail() {
+        viewModelScope.launch {
+            authUseCase.getUserEmail().collect { email ->
+                _userEmail.emit(email)
+            }
+        }
+    }
+
+    fun getName() {
+        viewModelScope.launch {
+            authUseCase.getUserName().collect { name ->
+                _userName.emit(name)
+            }
+        }
+    }
+
+    fun getPhotoUrl() {
+        viewModelScope.launch {
+            authUseCase.getUserPhotoUrl().collect { photoUrl ->
+                _userPhotoUrl.emit(photoUrl)
             }
         }
     }
@@ -49,6 +84,9 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
             _logoutCompleteEvent.emit(false)
             _isUserLoggedIn.emit(false)
             _startDestination.emit(SheSafeDestination.Login)
+            _userEmail.emit(null)
+            _userName.emit(null)
+            _userPhotoUrl.emit(null)
         }
     }
 }

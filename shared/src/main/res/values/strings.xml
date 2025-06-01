@@ -29,4 +29,5 @@
     <string name="label_secure_contact_phone">Celular</string>
     <string name="label_secure_contact_save">Salvar</string>
     <string name="label_secure_contact_update">Atualizar</string>
+    <string name="default_user_name">Usuário</string>
 </resources>

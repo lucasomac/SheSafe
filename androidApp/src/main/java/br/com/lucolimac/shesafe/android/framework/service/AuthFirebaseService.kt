@@ -15,4 +15,16 @@ class AuthFirebaseService(private val firebaseAuth: FirebaseAuth) : AuthService 
             onLogoutFailure(e) // Notify failure
         }
     }
+
+    override fun getUserEmail(): String? {
+        return firebaseAuth.currentUser?.email // Get the email of the currently logged-in user
+    }
+
+    override fun getUserName(): String? {
+        return firebaseAuth.currentUser?.displayName // Get the display name of the currently logged-in user
+    }
+
+    override fun getUserPhotoUrl(): String? {
+        return firebaseAuth.currentUser?.photoUrl?.toString() // Get the photo URL of the currently logged-in user
+    }
 }

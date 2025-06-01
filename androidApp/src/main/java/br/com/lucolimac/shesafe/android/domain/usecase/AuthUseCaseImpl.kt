@@ -18,4 +18,16 @@ class AuthUseCaseImpl(private val authRepository: AuthRepository) : AuthUseCase 
     override fun logoutUser(onLogoutSuccess: () -> Unit, onLogoutFailure: (Exception) -> Unit) {
         authRepository.logoutUser(onLogoutSuccess, onLogoutFailure)
     }
+
+    override fun getUserEmail(): Flow<String?> {
+        return flow { emit(authRepository.getUserEmail()) }.flowOn(coroutineDispatcher)
+    }
+
+    override fun getUserName(): Flow<String?> {
+        return flow { emit(authRepository.getUserName()) }.flowOn(coroutineDispatcher)
+    }
+
+    override fun getUserPhotoUrl(): Flow<String?> {
+        return flow { emit(authRepository.getUserPhotoUrl()) }.flowOn(coroutineDispatcher)
+    }
 }
