@@ -72,7 +72,10 @@ fun SheSafeApp(
                 TopAppBar(
                     title = { Text(text = titleTopBar) },
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                            secureContactViewModel.resetSecureContact()
+                        }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Navigation Icon",
@@ -172,15 +175,18 @@ fun SheSafeApp(
                     })
             }
             composable(SheSafeDestination.RegisterContact.route.name + "/{secureContactPhoneNumber}") {
-                val secureContactPhoneNumber = it.arguments?.getString("secureContactPhoneNumber") ?: ""
+                val secureContactPhoneNumber =
+                    it.arguments?.getString("secureContactPhoneNumber") ?: ""
                 RegisterSecureContactScreen(
-                    secureContactPhoneNumber = secureContactPhoneNumber, secureContactViewModel, onBack = {
+                    secureContactPhoneNumber = secureContactPhoneNumber, secureContactViewModel,
+                    onBack = {
                         navigateTo(
                             navController,
                             SheSafeDestination.Contacts,
                         )
                         secureContactViewModel.resetSecureContact()
-                    })
+                    },
+                )
             }
             composable(SheSafeDestination.HelpRequests.route.name) {
                 HelpRequestsScreen(

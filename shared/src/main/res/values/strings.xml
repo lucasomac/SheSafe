@@ -27,6 +27,6 @@
 <!--    Labels-->
     <string name="label_secure_contact_name">Nome</string>
     <string name="label_secure_contact_phone">Celular</string>
-    <string name="label_secure_contact_save">Salver</string>
+    <string name="label_secure_contact_save">Salvar</string>
     <string name="label_secure_contact_update">Atualizar</string>
 </resources>

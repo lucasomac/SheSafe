@@ -8,18 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -38,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
-import br.com.lucolimac.shesafe.android.presentation.component.SheSafeLoading
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import org.koin.java.KoinJavaComponent.inject
 
@@ -55,7 +46,6 @@ fun RegisterSecureContactScreen(
         }
     }
 
-    val isLoading by secureContactViewModel.isLoading.collectAsState()
     val secureContact by secureContactViewModel.secureContact.collectAsState()
     var name by remember { mutableStateOf(secureContact?.name ?: "") }
     var phoneNumber by remember { mutableStateOf(secureContact?.phoneNumber ?: "") }
@@ -63,54 +53,45 @@ fun RegisterSecureContactScreen(
         name = secureContact?.name ?: ""
         phoneNumber = secureContact?.phoneNumber ?: ""
     }
-    when {
-        isLoading -> {
-            SheSafeLoading(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text(stringResource(R.string.label_secure_contact_name)) },
+            textStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        OutlinedTextField(
+            value = phoneNumber,
+            onValueChange = { phoneNumber = it },
+            label = { Text(stringResource(R.string.label_secure_contact_phone)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            textStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.weight(1F))
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                secureContactViewModel.saveSecureContact(
+                    secureContactPhoneNumber, SecureContact(name, phoneNumber)
+                )
+                onBack()
+            },
+            shape = RoundedCornerShape(8.dp),
+        ) {
+            Text(
+                text = stringResource(
+                    if (secureContactPhoneNumber.isNotBlank()) R.string.label_secure_contact_update else R.string.label_secure_contact_save,
+                ),
             )
-        }
-
-        else -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text(stringResource(R.string.label_secure_contact_name)) },
-                    textStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(modifier = Modifier.padding(8.dp))
-                OutlinedTextField(
-                    value = phoneNumber,
-                    onValueChange = { phoneNumber = it },
-                    label = { Text(stringResource(R.string.label_secure_contact_phone)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    textStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(modifier = Modifier.weight(1F))
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        secureContactViewModel.saveSecureContact(
-                            secureContactPhoneNumber, SecureContact(name, phoneNumber)
-                        )
-                        onBack()
-                    },
-                    shape = RoundedCornerShape(8.dp),
-                ) {
-                    Text(
-                        text = stringResource(
-                            if (secureContactPhoneNumber.isNotBlank()) R.string.label_secure_contact_update else R.string.label_secure_contact_save,
-                        ),
-                    )
-                }
-            }
         }
     }
 }

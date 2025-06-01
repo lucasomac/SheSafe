@@ -42,11 +42,17 @@ fun SecureContactsScreen(
 ) {
     val secureContacts by secureContactViewModel.secureContacts.collectAsState()
     val isLoading by secureContactViewModel.isLoading.collectAsState()
+    val hasBeenDeleted by secureContactViewModel.hasBeenDeletedSecureContact.collectAsState()
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedContact by remember { mutableStateOf<SecureContact?>(null) }
     LaunchedEffect(Unit) {
         secureContactViewModel.getAllSecureContacts()
+    }
+    LaunchedEffect(hasBeenDeleted) {
+        if (hasBeenDeleted) {
+            secureContactViewModel.getAllSecureContacts()
+        }
     }
     Column {
         HomeHeader(
@@ -79,6 +85,7 @@ fun SecureContactsScreen(
                     onConfirmDelete = {
                         onDeleteAction(selectedContact ?: return@SheSafeBottomSheet)
                         selectedContact = null
+                        secureContactViewModel.getAllSecureContacts()
                         showBottomSheet = false
                     },
                     onDismiss = {
