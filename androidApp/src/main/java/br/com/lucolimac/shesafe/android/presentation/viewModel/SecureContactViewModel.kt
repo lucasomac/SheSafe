@@ -100,4 +100,13 @@ class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : V
             _isLoading.emit(false)
         }
     }
+
+    fun resetAllStates() {
+        viewModelScope.launch {
+            resetRegistered()
+            resetDeleted()
+            resetSecureContact()
+            resetLoading()
+        }
+    }
 }

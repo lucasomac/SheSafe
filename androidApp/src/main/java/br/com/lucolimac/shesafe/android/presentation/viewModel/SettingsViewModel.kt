@@ -42,4 +42,14 @@ class SettingsViewModel(private val settingsUseCase: SettingsUseCase) : ViewMode
             }
         }
     }
+
+    fun resetAllStates() {
+        viewModelScope.launch {
+            _mapOfSettings.emit(mutableMapOf<SettingsEnum, Boolean>().apply {
+                SettingsEnum.entries.forEach { setting ->
+                    this[setting] = false // Reset to default value
+                }
+            })
+        }
+    }
 }

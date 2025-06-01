@@ -36,4 +36,11 @@ class HelpRequestViewModel(private val helpRequestUseCase: HelpRequestUseCase) :
                 }
         }
     }
+
+    fun resetAllStates() {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            _helpRequests.emit(emptyList())
+        }
+    }
 }

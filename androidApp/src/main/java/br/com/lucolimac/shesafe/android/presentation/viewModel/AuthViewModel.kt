@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.shesafe.android.domain.usecase.AuthUseCase
 import br.com.lucolimac.shesafe.route.SheSafeDestination
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -42,6 +41,14 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
                 )
                 _isUserLoggedIn.emit(true)
             }
+        }
+    }
+
+    fun resetAllStates() {
+        viewModelScope.launch {
+            _logoutCompleteEvent.emit(false)
+            _isUserLoggedIn.emit(false)
+            _startDestination.emit(SheSafeDestination.Login)
         }
     }
 }

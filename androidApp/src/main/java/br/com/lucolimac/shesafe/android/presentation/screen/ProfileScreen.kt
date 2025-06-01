@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.R
@@ -44,6 +43,7 @@ import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
 import br.com.lucolimac.shesafe.android.presentation.component.LastSentCard
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeLoading
 import br.com.lucolimac.shesafe.android.presentation.component.bottomsheet.SettingBottomSheet
+import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -54,7 +54,9 @@ import org.koin.java.KoinJavaComponent.inject
 fun ProfileScreen(
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
+    authViewModel: AuthViewModel,
     onHelpRequestsShowClick: () -> Unit,
+    onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lastSentList by helpRequestViewModel.helpRequests.collectAsState()
@@ -124,7 +126,8 @@ fun ProfileScreen(
                 ActionIcon(
                     painter = painterResource(R.drawable.logout_24),
                     description = "Logout",
-                ) { }
+                    onClick = onLogoutClick,
+                )
             }
 
             // Last Sent Section
@@ -182,5 +185,5 @@ fun ProfileScreen(
 fun ProfileScreenPreview() {
     val viewModel: HelpRequestViewModel by inject<HelpRequestViewModel>(HelpRequestViewModel::class.java)
     val settingsViewModel: SettingsViewModel by inject<SettingsViewModel>(SettingsViewModel::class.java)
-    ProfileScreen(viewModel, settingsViewModel, {})
+    ProfileScreen(viewModel, settingsViewModel, {}, {})
 }

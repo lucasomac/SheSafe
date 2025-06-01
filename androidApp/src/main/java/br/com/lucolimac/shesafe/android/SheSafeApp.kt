@@ -172,12 +172,30 @@ fun SheSafeApp(
             }
             composable(SheSafeDestination.Profile.route.name) {
                 ProfileScreen(
-                    helpRequestViewModel, settingsViewModel, onHelpRequestsShowClick = {
+                    helpRequestViewModel, settingsViewModel, authViewModel,
+                    onHelpRequestsShowClick = {
                         navigateTo(
                             navController,
                             SheSafeDestination.HelpRequests,
                         )
-                    })
+                    },
+                    onLogoutClick = {
+                        // Clear the secure contact list
+                        secureContactViewModel.resetAllStates()
+                        // Clear the help request list
+                        helpRequestViewModel.resetAllStates()
+                        // Clear the settings
+                        settingsViewModel.resetAllStates()
+                        // Clear the auth state
+                        authViewModel.resetAllStates()
+                        // Navigate to the login screen
+                        navigateTo(
+                            navController,
+                            SheSafeDestination.Login,
+                            navigationToPopUpTo = SheSafeDestination.Home,
+                        )
+                    },
+                )
             }
             composable(SheSafeDestination.RegisterContact.route.name + "/{secureContactPhoneNumber}") {
                 val secureContactPhoneNumber =
