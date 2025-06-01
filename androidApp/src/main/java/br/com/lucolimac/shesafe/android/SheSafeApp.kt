@@ -19,6 +19,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
@@ -32,6 +34,7 @@ import br.com.lucolimac.shesafe.android.presentation.screen.LoginScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.ProfileScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.RegisterSecureContactScreen
 import br.com.lucolimac.shesafe.android.presentation.screen.SecureContactsScreen
+import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
@@ -59,6 +62,7 @@ fun SheSafeApp(
     secureContactViewModel: SecureContactViewModel,
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
+    authViewModel: AuthViewModel,
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
     isShowTopBar: Boolean = false,
@@ -66,6 +70,7 @@ fun SheSafeApp(
     bottomAppBarItemSelected: NavigationItem = MenuItems[1],
     onBottomAppBarItemSelectedChange: (NavigationItem) -> Unit = {},
 ) {
+    val startDestination by authViewModel.startDestination.collectAsState()
     Scaffold(
         topBar = {
             if (isShowTopBar) {
@@ -121,7 +126,7 @@ fun SheSafeApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = SheSafeDestination.Login.route.name,
+            startDestination = startDestination.route.name,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),

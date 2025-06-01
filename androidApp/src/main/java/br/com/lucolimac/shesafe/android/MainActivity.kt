@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
+import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
@@ -26,6 +27,7 @@ class MainActivity : ComponentActivity() {
     private val secureContactViewModel by inject<SecureContactViewModel>(SecureContactViewModel::class.java)
     private val helpRequestViewModel by inject<HelpRequestViewModel>(HelpRequestViewModel::class.java)
     private val settingsViewModel by inject<SettingsViewModel>(SettingsViewModel::class.java)
+    private val authViewModel by inject<AuthViewModel>(AuthViewModel::class.java)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -70,6 +72,7 @@ class MainActivity : ComponentActivity() {
                         secureContactViewModel = secureContactViewModel,
                         helpRequestViewModel = helpRequestViewModel,
                         settingsViewModel = settingsViewModel,
+                        authViewModel = authViewModel,
                         isShownBottomBar = isShownBottomBar,
                         isShowFab = isShownFab,
                         isShowTopBar = isShowAppBar,
