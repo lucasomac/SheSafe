@@ -1,6 +1,5 @@
 package br.com.lucolimac.shesafe.android
 
-import android.telephony.SmsManager
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -22,18 +21,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeBottomBar
 import br.com.lucolimac.shesafe.android.presentation.model.NavigationItem
-import br.com.lucolimac.shesafe.android.presentation.screen.HelpRequestsScreen
-import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
-import br.com.lucolimac.shesafe.android.presentation.screen.LoginScreen
-import br.com.lucolimac.shesafe.android.presentation.screen.ProfileScreen
-import br.com.lucolimac.shesafe.android.presentation.screen.RegisterSecureContactScreen
-import br.com.lucolimac.shesafe.android.presentation.screen.SecureContactsScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.helpRequestsScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.homeScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.loginScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.navigateToRegisterSecureContact
+import br.com.lucolimac.shesafe.android.presentation.navigation.profileScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.registerSecureContactScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.secureContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
@@ -106,12 +104,7 @@ fun SheSafeApp(
         floatingActionButton = {
             if (isShowFab) {
                 FloatingActionButton(
-                    {
-                        navigateTo(
-                            navController,
-                            SheSafeDestination.RegisterContact,
-                        )
-                    },
+                    navController::navigateToRegisterSecureContact,
                     containerColor = MaterialTheme.colorScheme.primary,
                     content = {
                         Icon(
@@ -131,121 +124,18 @@ fun SheSafeApp(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            composable(SheSafeDestination.Login.route.name) { LoginScreen(navController) }
-            composable(SheSafeDestination.Home.route.name) {
-                HomeScreen(
-                    onOrderHelp = { message, phoneNumber, context ->
-                        try {
-                            val smsManager = ContextCompat.getSystemService<SmsManager>(
-                                context,
-                                SmsManager::class.java,
-                            )
-                            smsManager?.sendTextMessage(phoneNumber, null, message, null, null)
-                            true
-                        } catch (_: Exception) {
-                            false
-                        }
-                    },
-                    onNoContacts = {
-                        navigateTo(
-                            navController,
-                            SheSafeDestination.Contacts,
-                        )
-                    },
-                    secureContactViewModel = secureContactViewModel,
-                    authViewModel = authViewModel,
-                )
-            }
-            composable(SheSafeDestination.Contacts.route.name) {
-                SecureContactsScreen(
-                    onEditAction = { secureContact ->
-                        navigateTo(
-                            navController,
-                            SheSafeDestination.RegisterContact,
-                            secureContact.phoneNumber,
-                        )
-                    },
-                    onDeleteAction = {
-                        secureContactViewModel.deleteSecureContact(it.phoneNumber)
-                    },
-                    secureContactViewModel,
-                )
-            }
-            composable(SheSafeDestination.Profile.route.name) {
-                ProfileScreen(
-                    helpRequestViewModel, settingsViewModel, authViewModel,
-                    onHelpRequestsShowClick = {
-                        navigateTo(
-                            navController,
-                            SheSafeDestination.HelpRequests,
-                        )
-                    },
-                    onLogoutClick = {
-                        // Clear the secure contact list
-                        secureContactViewModel.resetAllStates()
-                        // Clear the help request list
-                        helpRequestViewModel.resetAllStates()
-                        // Clear the settings
-                        settingsViewModel.resetAllStates()
-                        // Clear the auth state
-                        authViewModel.resetAllStates()
-                        // Logout the user
-                        authViewModel.logoutUser()
-                        // Navigate to the login screen
-                        navigateTo(
-                            navController,
-                            SheSafeDestination.Login,
-                            navigationToPopUpTo = SheSafeDestination.Home,
-                        )
-                    },
-                )
-            }
-            composable(SheSafeDestination.RegisterContact.route.name + "/{secureContactPhoneNumber}") {
-                val secureContactPhoneNumber =
-                    it.arguments?.getString("secureContactPhoneNumber") ?: ""
-                RegisterSecureContactScreen(
-                    secureContactPhoneNumber = secureContactPhoneNumber, secureContactViewModel,
-                    onBack = {
-                        navigateTo(
-                            navController,
-                            SheSafeDestination.Contacts,
-                        )
-                        secureContactViewModel.resetSecureContact()
-                    },
-                )
-            }
-            composable(SheSafeDestination.HelpRequests.route.name) {
-                HelpRequestsScreen(
-                    helpRequestViewModel = helpRequestViewModel
-                )
-            }
+            loginScreen(navController)
+            homeScreen(navController, secureContactViewModel, authViewModel)
+            secureContactsScreen(navController, secureContactViewModel)
+            profileScreen(
+                helpRequestViewModel,
+                settingsViewModel,
+                authViewModel,
+                navController,
+                secureContactViewModel
+            )
+            registerSecureContactScreen(secureContactViewModel, navController)
+            helpRequestsScreen(helpRequestViewModel)
         }
-    }
-}
-
-fun navigateTo(
-    navController: NavHostController,
-    destination: SheSafeDestination,
-    vararg navArgs: String = emptyArray(),
-    navigationToPopUpTo: SheSafeDestination? = null,
-) {
-    val route = if (destination == SheSafeDestination.RegisterContact) {
-        "${destination.route.name}/${
-            navArgs.joinToString("/")
-        }"
-    } else {
-        destination.route.name
-    }
-    navController.navigate(route) {
-        navigationToPopUpTo?.let {
-            popUpTo(it.route.name) {
-                saveState = true
-            }
-        }
-        // Avoid multiple copies of the same destination when
-        // reselecting the same item
-        launchSingleTop = true
-        // Restore state when reselecting a previously selected item
-        restoreState = true
     }
 }
