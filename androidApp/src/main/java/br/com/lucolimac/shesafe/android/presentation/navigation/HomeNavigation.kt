@@ -4,6 +4,7 @@ import android.telephony.SmsManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
@@ -36,11 +37,6 @@ fun NavGraphBuilder.homeScreen(
     }
 }
 
-fun NavHostController.navigateToHome() {
-    this.navigate(HOME_ROUTE) {
-        // re-selecting the same item
-        launchSingleTop = true
-        // Restore state when re-selecting a previously selected item
-        restoreState = true
-    }
+fun NavHostController.navigateToHome(navOptions: NavOptions? = null) {
+    navigate(HOME_ROUTE, navOptions)
 }

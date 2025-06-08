@@ -2,6 +2,7 @@ package br.com.lucolimac.shesafe.android.presentation.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.ProfileScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
@@ -39,11 +40,6 @@ fun NavGraphBuilder.profileScreen(
     }
 }
 
-fun NavHostController.navigateToProfile() {
-    this.navigate(PROFILE_ROUTE) {
-        // re-selecting the same item
-        launchSingleTop = true
-        // Restore state when re-selecting a previously selected item
-        restoreState = true
-    }
+fun NavHostController.navigateToProfile(navOptions: NavOptions? = null) {
+    this.navigate(PROFILE_ROUTE, navOptions)
 }

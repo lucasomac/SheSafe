@@ -20,11 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import br.com.lucolimac.shesafe.R
+import br.com.lucolimac.shesafe.android.presentation.component.BottomBarItems
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeBottomBar
-import br.com.lucolimac.shesafe.android.presentation.model.NavigationItem
 import br.com.lucolimac.shesafe.android.presentation.navigation.BASE_SECURE_CONTACT_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.HELP_REQUESTS_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.BottomBarItems
+import br.com.lucolimac.shesafe.android.presentation.navigation.NavigationItem
 import br.com.lucolimac.shesafe.android.presentation.navigation.REGISTER_CONTACT_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.SECURE_CONTACT_PHONE_NUMBER_ARGUMENT
 import br.com.lucolimac.shesafe.android.presentation.navigation.SheSafeNavHost
@@ -46,7 +46,7 @@ fun SheSafeApp(
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
     isShowTopBar: Boolean = false,
-    bottomAppBarItemSelected: NavigationItem = NavigationItem.Home,
+    bottomAppBarItemSelected: NavigationItem = BottomBarItems[1],
     onBottomAppBarItemSelectedChange: (NavigationItem) -> Unit = {},
 ) {
     val isUpdateSecureContact = navController.currentDestination?.route?.startsWith(

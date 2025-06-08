@@ -2,6 +2,7 @@ package br.com.lucolimac.shesafe.android.presentation.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.SecureContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
@@ -23,11 +24,6 @@ fun NavGraphBuilder.secureContactsScreen(
     }
 }
 
-fun NavHostController.navigateToSecureContacts() {
-    this.navigate(SECURE_CONTACTS_ROUTE) {
-        // re-selecting the same item
-        launchSingleTop = true
-        // Restore state when re-selecting a previously selected item
-        restoreState = true
-    }
+fun NavHostController.navigateToSecureContacts(navOptions: NavOptions? = null) {
+    navigate(SECURE_CONTACTS_ROUTE, navOptions)
 }
