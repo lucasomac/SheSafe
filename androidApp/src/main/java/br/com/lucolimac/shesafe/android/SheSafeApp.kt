@@ -1,6 +1,7 @@
 package br.com.lucolimac.shesafe.android
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -17,18 +18,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.presentation.component.BottomBarItems
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeBottomBar
-import br.com.lucolimac.shesafe.android.presentation.navigation.BASE_SECURE_CONTACT_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.HELP_REQUESTS_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.BASE_SECURE_CONTACT_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HELP_REQUESTS_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.NavigationItem
-import br.com.lucolimac.shesafe.android.presentation.navigation.REGISTER_CONTACT_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.SECURE_CONTACT_PHONE_NUMBER_ARGUMENT
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.REGISTER_SECURE_CONTACT_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.SECURE_CONTACT_PHONE_NUMBER_ARGUMENT
 import br.com.lucolimac.shesafe.android.presentation.navigation.SheSafeNavHost
-import br.com.lucolimac.shesafe.android.presentation.navigation.navigateToRegisterSecureContact
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.navigateToRegisterSecureContact
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
@@ -60,7 +62,7 @@ fun SheSafeApp(
                     title = {
                         Text(
                             text = when (navController.currentDestination?.route) {
-                                REGISTER_CONTACT_ROUTE -> if (isUpdateSecureContact) {
+                                REGISTER_SECURE_CONTACT_ROUTE -> if (isUpdateSecureContact) {
                                     stringResource(R.string.title_edit_secure_contact)
                                 } else {
                                     stringResource(
@@ -119,11 +121,11 @@ fun SheSafeApp(
         SheSafeNavHost(
             navController,
             startDestination,
-            innerPadding,
             secureContactViewModel,
             authViewModel,
             helpRequestViewModel,
-            settingsViewModel
+            settingsViewModel,
+            modifier = Modifier.padding(innerPadding)
         )
     }
 }

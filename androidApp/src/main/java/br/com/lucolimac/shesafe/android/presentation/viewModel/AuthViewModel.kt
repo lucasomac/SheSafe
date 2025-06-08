@@ -3,8 +3,10 @@ package br.com.lucolimac.shesafe.android.presentation.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.shesafe.android.domain.usecase.AuthUseCase
-import br.com.lucolimac.shesafe.android.presentation.navigation.HOME_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.LOGIN_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HOME_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.LOGIN_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.graph.HOME_GRAPH_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.graph.LOGIN_GRAPH_ROUTE
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +21,7 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
     val logoutCompleteEvent = _logoutCompleteEvent.asStateFlow()
     private val _isUserLoggedIn = MutableStateFlow(false)
     val isUserLoggedIn = _isUserLoggedIn.asStateFlow()
-    private val _startDestination = MutableStateFlow(LOGIN_ROUTE)
+    private val _startDestination = MutableStateFlow(LOGIN_GRAPH_ROUTE)
     val startDestination = _startDestination.asStateFlow()
     private val _userEmail = MutableStateFlow<String?>(null)
     val userEmail = _userEmail.asStateFlow()
@@ -44,7 +46,7 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
         viewModelScope.launch {
             authUseCase.isUserLoggedIn().collect { isLoggedIn ->
                 _startDestination.emit(
-                    if (isLoggedIn) HOME_ROUTE else LOGIN_ROUTE
+                    if (isLoggedIn) HOME_GRAPH_ROUTE else LOGIN_ROUTE
                 )
             }
         }

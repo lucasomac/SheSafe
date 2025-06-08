@@ -15,12 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import br.com.lucolimac.shesafe.android.presentation.navigation.HELP_REQUESTS_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.HOME_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HELP_REQUESTS_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HOME_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.NavigationItem
-import br.com.lucolimac.shesafe.android.presentation.navigation.PROFILE_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.REGISTER_CONTACT_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.SECURE_CONTACTS_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.PROFILE_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.REGISTER_SECURE_CONTACT_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.SECURE_CONTACTS_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.navigateSingleTopWithPopUpTo
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
                     }
                     // Should be show appBar only in RegisterSecureContactScreen and HelpRequestsScreen
                     val isShowAppBar = when (currentRoute) {
-                        HELP_REQUESTS_ROUTE, REGISTER_CONTACT_ROUTE -> true
+                        HELP_REQUESTS_ROUTE, REGISTER_SECURE_CONTACT_ROUTE -> true
                         else -> false
                     }
                     // Should verify if current destination has arguments

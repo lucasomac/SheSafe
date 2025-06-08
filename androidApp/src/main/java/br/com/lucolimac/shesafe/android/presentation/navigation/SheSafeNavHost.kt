@@ -1,13 +1,30 @@
 package br.com.lucolimac.shesafe.android.presentation.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
+import androidx.navigation.navigation
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HELP_REQUESTS_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HOME_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.PROFILE_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.REGISTER_SECURE_CONTACT_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.SECURE_CONTACTS_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.helpRequestsScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.navigateToHome
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.navigateToProfile
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.navigateToSecureContacts
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.profileScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.registerSecureContactScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.secureContactsScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.graph.helpRequestsGraph
+import br.com.lucolimac.shesafe.android.presentation.navigation.graph.homeGraph
+import br.com.lucolimac.shesafe.android.presentation.navigation.graph.loginGraph
+import br.com.lucolimac.shesafe.android.presentation.navigation.graph.profileGraph
+import br.com.lucolimac.shesafe.android.presentation.navigation.graph.registerSecureContactGraph
+import br.com.lucolimac.shesafe.android.presentation.navigation.graph.secureContactsGraph
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
@@ -18,33 +35,51 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 fun SheSafeNavHost(
     navController: NavHostController,
     startDestination: String,
-    innerPadding: PaddingValues,
     secureContactViewModel: SecureContactViewModel,
     authViewModel: AuthViewModel,
     helpRequestViewModel: HelpRequestViewModel,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding),
+        modifier = modifier
     ) {
-        loginScreen(navController)
-        homeScreen(navController, secureContactViewModel, authViewModel)
-        secureContactsScreen(navController, secureContactViewModel)
-        profileScreen(
+        loginGraph(navController, secureContactViewModel, authViewModel)
+        homeGraph(
+            navController,
+            secureContactViewModel,
+            authViewModel,
+            helpRequestViewModel,
+            settingsViewModel
+        )
+        secureContactsGraph(
+            navController,
+            secureContactViewModel,
+            authViewModel,
+            helpRequestViewModel,
+            settingsViewModel
+        )
+        profileGraph(
             helpRequestViewModel,
             settingsViewModel,
             authViewModel,
             navController,
             secureContactViewModel
         )
-        registerSecureContactScreen(secureContactViewModel, navController)
-        helpRequestsScreen(helpRequestViewModel)
+        registerSecureContactGraph(secureContactViewModel, navController)
+
+        helpRequestsGraph(
+            helpRequestViewModel,
+            settingsViewModel,
+            authViewModel,
+            navController,
+            secureContactViewModel
+        )
     }
 }
+
 
 fun NavHostController.navigateSingleTopWithPopUpTo(
     item: NavigationItem

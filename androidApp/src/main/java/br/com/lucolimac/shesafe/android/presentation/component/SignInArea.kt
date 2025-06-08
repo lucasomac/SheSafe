@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import br.com.lucolimac.shesafe.android.presentation.navigation.HOME_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HOME_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton

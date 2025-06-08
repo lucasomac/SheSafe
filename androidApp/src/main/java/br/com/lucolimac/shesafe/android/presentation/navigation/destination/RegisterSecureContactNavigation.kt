@@ -1,4 +1,4 @@
-package br.com.lucolimac.shesafe.android.presentation.navigation
+package br.com.lucolimac.shesafe.android.presentation.navigation.destination
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -8,13 +8,13 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactView
 
 const val BASE_SECURE_CONTACT_ROUTE = "registercontact"
  const val SECURE_CONTACT_PHONE_NUMBER_ARGUMENT = "secureContactPhoneNumber"
-const val REGISTER_CONTACT_ROUTE =
+const val REGISTER_SECURE_CONTACT_ROUTE =
     "${BASE_SECURE_CONTACT_ROUTE}/{$SECURE_CONTACT_PHONE_NUMBER_ARGUMENT}"
 
 fun NavGraphBuilder.registerSecureContactScreen(
     secureContactViewModel: SecureContactViewModel, navController: NavHostController
 ) {
-    composable(REGISTER_CONTACT_ROUTE) {
+    composable(REGISTER_SECURE_CONTACT_ROUTE) {
         val secureContactPhoneNumber =
             it.arguments?.getString(SECURE_CONTACT_PHONE_NUMBER_ARGUMENT) ?: ""
         RegisterSecureContactScreen(

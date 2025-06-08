@@ -1,4 +1,4 @@
-package br.com.lucolimac.shesafe.android.presentation.navigation
+package br.com.lucolimac.shesafe.android.presentation.navigation.destination
 
 import android.telephony.SmsManager
 import androidx.core.content.ContextCompat
