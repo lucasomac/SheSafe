@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -75,6 +76,8 @@ dependencies {
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    //Detekt
+    detektPlugins(libs.detekt.formatting)
     // Jetpack Compose Testing
 
     androidTestImplementation(libs.androidx.ui.test.junit4)

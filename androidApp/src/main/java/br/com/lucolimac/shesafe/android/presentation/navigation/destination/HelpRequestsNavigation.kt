@@ -1,21 +1,22 @@
-package br.com.lucolimac.shesafe.android.presentation.navigation
+package br.com.lucolimac.shesafe.android.presentation.navigation.destination
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.HelpRequestsScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
-import br.com.lucolimac.shesafe.route.SheSafeDestination
 
+const val HELP_REQUESTS_ROUTE = "helprequests"
 fun NavGraphBuilder.helpRequestsScreen(helpRequestViewModel: HelpRequestViewModel) {
-    composable(SheSafeDestination.HelpRequests.route.name) {
+    composable(HELP_REQUESTS_ROUTE) {
         HelpRequestsScreen(
             helpRequestViewModel = helpRequestViewModel
         )
     }
 }
+
 fun NavHostController.navigateToHelpRequests() {
-    this.navigate(SheSafeDestination.HelpRequests.route.name) {
+    this.navigate(HELP_REQUESTS_ROUTE) {
         // re-selecting the same item
         launchSingleTop = true
         // Restore state when re-selecting a previously selected item

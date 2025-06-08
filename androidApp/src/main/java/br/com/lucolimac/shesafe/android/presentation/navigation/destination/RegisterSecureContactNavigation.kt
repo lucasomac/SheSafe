@@ -1,18 +1,20 @@
-package br.com.lucolimac.shesafe.android.presentation.navigation
+package br.com.lucolimac.shesafe.android.presentation.navigation.destination
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.RegisterSecureContactScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
-import br.com.lucolimac.shesafe.route.SheSafeDestination
 
-private const val SECURE_CONTACT_PHONE_NUMBER_ARGUMENT = "secureContactPhoneNumber"
+const val BASE_SECURE_CONTACT_ROUTE = "registercontact"
+ const val SECURE_CONTACT_PHONE_NUMBER_ARGUMENT = "secureContactPhoneNumber"
+const val REGISTER_SECURE_CONTACT_ROUTE =
+    "${BASE_SECURE_CONTACT_ROUTE}/{$SECURE_CONTACT_PHONE_NUMBER_ARGUMENT}"
 
 fun NavGraphBuilder.registerSecureContactScreen(
     secureContactViewModel: SecureContactViewModel, navController: NavHostController
 ) {
-    composable("${SheSafeDestination.RegisterContact.route.name}/$SECURE_CONTACT_PHONE_NUMBER_ARGUMENT") {
+    composable(REGISTER_SECURE_CONTACT_ROUTE) {
         val secureContactPhoneNumber =
             it.arguments?.getString(SECURE_CONTACT_PHONE_NUMBER_ARGUMENT) ?: ""
         RegisterSecureContactScreen(
@@ -26,7 +28,7 @@ fun NavGraphBuilder.registerSecureContactScreen(
 }
 
 fun NavHostController.navigateToRegisterSecureContact(secureContactPhoneNumber: String = "") {
-    this.navigate("${SheSafeDestination.RegisterContact.route.name} /$secureContactPhoneNumber") {
+    this.navigate("${BASE_SECURE_CONTACT_ROUTE}/$secureContactPhoneNumber") {
         // re-selecting the same item
         launchSingleTop = true
         // Restore state when re-selecting a previously selected item

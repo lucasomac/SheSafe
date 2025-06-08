@@ -1,15 +1,16 @@
-package br.com.lucolimac.shesafe.android.presentation.navigation
+package br.com.lucolimac.shesafe.android.presentation.navigation.destination
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.ProfileScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
-import br.com.lucolimac.shesafe.route.SheSafeDestination
 
+const val PROFILE_ROUTE = "profile"
 fun NavGraphBuilder.profileScreen(
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
@@ -17,7 +18,7 @@ fun NavGraphBuilder.profileScreen(
     navController: NavHostController,
     secureContactViewModel: SecureContactViewModel
 ) {
-    composable(SheSafeDestination.Profile.route.name) {
+    composable(PROFILE_ROUTE) {
         ProfileScreen(
             helpRequestViewModel, settingsViewModel, authViewModel,
             onHelpRequestsShowClick = navController::navigateToHelpRequests,
@@ -39,11 +40,6 @@ fun NavGraphBuilder.profileScreen(
     }
 }
 
-fun NavHostController.navigateToProfile() {
-    this.navigate(SheSafeDestination.Profile.route.name) {
-        // re-selecting the same item
-        launchSingleTop = true
-        // Restore state when re-selecting a previously selected item
-        restoreState = true
-    }
+fun NavHostController.navigateToProfile(navOptions: NavOptions? = null) {
+    this.navigate(PROFILE_ROUTE, navOptions)
 }

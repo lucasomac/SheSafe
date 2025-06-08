@@ -1,21 +1,22 @@
-package br.com.lucolimac.shesafe.android.presentation.navigation
+package br.com.lucolimac.shesafe.android.presentation.navigation.destination
 
 import android.telephony.SmsManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
-import br.com.lucolimac.shesafe.route.SheSafeDestination
 
+const val HOME_ROUTE = "home"
 fun NavGraphBuilder.homeScreen(
     navController: NavHostController,
     secureContactViewModel: SecureContactViewModel,
     authViewModel: AuthViewModel
 ) {
-    composable(SheSafeDestination.Home.route.name) {
+    composable(HOME_ROUTE) {
         HomeScreen(
             onOrderHelp = { message, phoneNumber, context ->
                 try {
@@ -36,11 +37,6 @@ fun NavGraphBuilder.homeScreen(
     }
 }
 
-fun NavHostController.navigateToHome() {
-    this.navigate(SheSafeDestination.Home.route.name) {
-        // re-selecting the same item
-        launchSingleTop = true
-        // Restore state when re-selecting a previously selected item
-        restoreState = true
-    }
+fun NavHostController.navigateToHome(navOptions: NavOptions? = null) {
+    navigate(HOME_ROUTE, navOptions)
 }

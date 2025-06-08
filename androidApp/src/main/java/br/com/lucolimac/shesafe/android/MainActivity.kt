@@ -15,12 +15,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HELP_REQUESTS_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HOME_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.NavigationItem
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.PROFILE_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.REGISTER_SECURE_CONTACT_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.destination.SECURE_CONTACTS_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.navigateSingleTopWithPopUpTo
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
-import br.com.lucolimac.shesafe.route.SheSafeDestination
 import org.koin.java.KoinJavaComponent.inject
 
 class MainActivity : ComponentActivity() {
@@ -48,25 +54,36 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
+                    val currentRoute = currentDestination?.route
                     val selectedItem by remember(currentDestination) {
-                        val item = currentDestination?.let { destination ->
-                            MenuItems.find {
-                                it.sheSafeDestination.route.name == destination.route
+                        val item = when (currentRoute) {
+                            SECURE_CONTACTS_ROUTE -> NavigationItem.SecureContacts
+                            HOME_ROUTE -> NavigationItem.Home
+                            PROFILE_ROUTE -> NavigationItem.Profile
+                            else -> {
+                                Log.w(
+                                    "MainActivity",
+                                    "onCreate: current destination is not a valid menu item"
+                                )
+                                NavigationItem.Home // Default to the first item if no match
                             }
-                        } ?: MenuItems[1]
+                        }
                         mutableStateOf(item)
                     }
-                    val isShownBottomBar = currentDestination?.route.let { route ->
-                        MenuItems.find {
-                            it.sheSafeDestination.route.name == route
-                        }
-                    } != null
-                    val isShownFab =
-                        currentDestination?.route.let { route -> MenuItems.find { it.sheSafeDestination.route.name == route }?.sheSafeDestination == SheSafeDestination.Contacts }
-                    // Should be show appBar only in RegisterSecureContactScreen and HelpRequestsScreen
-                    val isShowAppBar = currentDestination?.route.let { route ->
-                        route?.contains(SheSafeDestination.RegisterContact.route.name) == true || route == SheSafeDestination.HelpRequests.route.name
+                    val isShownBottomBar = when (currentRoute) {
+                        SECURE_CONTACTS_ROUTE, HOME_ROUTE, PROFILE_ROUTE -> true
+                        else -> false
                     }
+                    val isShownFab = when (currentRoute) {
+                        SECURE_CONTACTS_ROUTE -> true
+                        else -> false
+                    }
+                    // Should be show appBar only in RegisterSecureContactScreen and HelpRequestsScreen
+                    val isShowAppBar = when (currentRoute) {
+                        HELP_REQUESTS_ROUTE, REGISTER_SECURE_CONTACT_ROUTE -> true
+                        else -> false
+                    }
+                    // Should verify if current destination has arguments
                     SheSafeApp(
                         navController = navController,
                         secureContactViewModel = secureContactViewModel,
@@ -76,16 +93,12 @@ class MainActivity : ComponentActivity() {
                         isShownBottomBar = isShownBottomBar,
                         isShowFab = isShownFab,
                         isShowTopBar = isShowAppBar,
-                        titleTopBar = SheSafeDestination.SheSafeRoute.entries.find {
-                            currentDestination?.route.toString().contains(it.name)
-                        }?.title ?: "",
                         bottomAppBarItemSelected = selectedItem,
-                        onBottomAppBarItemSelectedChange = {
-                            val route = it.sheSafeDestination.route.name
-                            navController.navigate(route) {
-                                launchSingleTop = true
-                                popUpTo(route)
-                            }
+                        onBottomAppBarItemSelectedChange = { item ->
+                            Log.i(
+                                "MainActivity", "onCreate: selected item - ${item.javaClass.name})}"
+                            )
+                            navController.navigateSingleTopWithPopUpTo(item)
                         })
                 }
             }
