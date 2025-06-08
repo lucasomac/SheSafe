@@ -80,9 +80,15 @@ This project is licensed under the [MIT License](LICENSE).
 
 If you have any questions or suggestions, please feel free to reach out:
 
-*   [Lucas Macedo]
-*   [lucasomac@outlook.com]
-*   [https://linkedin.com/in/lucasomac]
+
+* [![GitHub](https://img.shields.io/badge/GitHub-lucasomac-blue)](https://github.com/lucasomac)
+* [![Email](https://img.shields.io/badge/Email-lucasomac%40outlook.com-blue)](mailto:lucasomac@outlook.com)
+* [![LinkedIn](https://img.shields.io/badge/LinkedIn-lucasomac-blue)](https://www.linkedin.com/in/lucasomac/)
+* [![Twitter](https://img.shields.io/badge/Twitter-lucasomac-blue)](https://twitter.com/lucasomac)
+* [![Instagram](https://img.shields.io/badge/Instagram-lucasomac-blue)](https://www.instagram.com/lucasomac/)
+* [![YouTube](https://img.shields.io/badge/YouTube-lucasomac-blue)](https://www.youtube.com/@lucasomac)
+* [![Facebook](https://img.shields.io/badge/Facebook-lucasomac-blue)](https://www.facebook.com/lucasomac)
+* [![TikTok](https://img.shields.io/badge/TikTok-lucasomac-blue)](https://www.tiktok.com/@lucasomac)
 
 ---
 
