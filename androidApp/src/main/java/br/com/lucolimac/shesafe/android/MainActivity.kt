@@ -13,15 +13,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.com.lucolimac.shesafe.android.presentation.navigation.HELP_REQUESTS_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.REGISTER_CONTACT_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.SECURE_CONTACTS_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
-import br.com.lucolimac.shesafe.route.SheSafeDestination
 import org.koin.java.KoinJavaComponent.inject
+import br.com.lucolimac.shesafe.R
+import br.com.lucolimac.shesafe.android.presentation.navigation.BASE_SECURE_CONTACT_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.SECURE_CONTACT_PHONE_NUMBER_ARGUMENT
 
 class MainActivity : ComponentActivity() {
     private val secureContactViewModel by inject<SecureContactViewModel>(SecureContactViewModel::class.java)
@@ -51,22 +57,21 @@ class MainActivity : ComponentActivity() {
                     val selectedItem by remember(currentDestination) {
                         val item = currentDestination?.let { destination ->
                             MenuItems.find {
-                                it.sheSafeDestination.route.name == destination.route
+                                it.route == destination.route
                             }
                         } ?: MenuItems[1]
                         mutableStateOf(item)
                     }
                     val isShownBottomBar = currentDestination?.route.let { route ->
                         MenuItems.find {
-                            it.sheSafeDestination.route.name == route
+                            it.route == route
                         }
                     } != null
-                    val isShownFab =
-                        currentDestination?.route.let { route -> MenuItems.find { it.sheSafeDestination.route.name == route }?.sheSafeDestination == SheSafeDestination.Contacts }
+                    val isShownFab = currentDestination?.route == SECURE_CONTACTS_ROUTE
                     // Should be show appBar only in RegisterSecureContactScreen and HelpRequestsScreen
-                    val isShowAppBar = currentDestination?.route.let { route ->
-                        route?.contains(SheSafeDestination.RegisterContact.route.name) == true || route == SheSafeDestination.HelpRequests.route.name
-                    }
+                    val isShowAppBar =
+                        currentDestination?.route?.contains(BASE_SECURE_CONTACT_ROUTE) == true || currentDestination?.route == HELP_REQUESTS_ROUTE
+                    // Should verify if current destination has arguments
                     SheSafeApp(
                         navController = navController,
                         secureContactViewModel = secureContactViewModel,
@@ -76,12 +81,9 @@ class MainActivity : ComponentActivity() {
                         isShownBottomBar = isShownBottomBar,
                         isShowFab = isShownFab,
                         isShowTopBar = isShowAppBar,
-                        titleTopBar = SheSafeDestination.SheSafeRoute.entries.find {
-                            currentDestination?.route.toString().contains(it.name)
-                        }?.title ?: "",
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
-                            val route = it.sheSafeDestination.route.name
+                            val route = it.route
                             navController.navigate(route) {
                                 launchSingleTop = true
                                 popUpTo(route)

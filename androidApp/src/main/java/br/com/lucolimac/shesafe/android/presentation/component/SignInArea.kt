@@ -12,8 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import br.com.lucolimac.shesafe.android.presentation.navigation.HOME_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
-import br.com.lucolimac.shesafe.route.SheSafeDestination
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import dev.gitlive.firebase.auth.FirebaseUser
@@ -26,7 +26,7 @@ fun SignInArea(navController: NavController, modifier: Modifier = Modifier) {
             //Should be navigate to home screen
             // Handle successful sign-in
             Log.d("SignInArea", "User signed in: ${user?.uid}")
-            navController.navigate(SheSafeDestination.Home.route.name)
+            navController.navigate(HOME_ROUTE)
 
         }, onFailure = { exception ->
             Log.e("SignInArea", "Sign-in failed: $exception")

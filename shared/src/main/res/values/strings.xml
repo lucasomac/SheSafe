@@ -9,7 +9,7 @@
     <string name="sms_not_sent">Pedido de ajuda não foi enviado!</string>
     <string name="request_help">Pedir Ajuda</string>
     <string name="title_new_secure_contact">Novo contato seguro</string>
-    <string name="title_help_request_sent">Pedidos de ajuda enviados</string>
+    <string name="title_help_request_sent">Pedidos de Ajuda</string>
     <string name="title_edit_secure_contact">Editar contato seguro</string>
     <string name="message_no_secure_contacts">Você ainda não possui contatos cadastrados!</string>
     <string name="title_contacts">Contacts</string>

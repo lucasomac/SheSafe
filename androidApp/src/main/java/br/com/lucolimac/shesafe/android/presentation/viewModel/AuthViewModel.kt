@@ -3,7 +3,8 @@ package br.com.lucolimac.shesafe.android.presentation.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.shesafe.android.domain.usecase.AuthUseCase
-import br.com.lucolimac.shesafe.route.SheSafeDestination
+import br.com.lucolimac.shesafe.android.presentation.navigation.HOME_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.LOGIN_ROUTE
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -16,9 +17,9 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
     // SharedFlow is good for one-time events like navigation or showing a toast
     private val _logoutCompleteEvent = MutableStateFlow<Boolean>(false)
     val logoutCompleteEvent = _logoutCompleteEvent.asStateFlow()
-    private val _isUserLoggedIn = MutableStateFlow<Boolean>(false)
+    private val _isUserLoggedIn = MutableStateFlow(false)
     val isUserLoggedIn = _isUserLoggedIn.asStateFlow()
-    private val _startDestination = MutableStateFlow<SheSafeDestination>(SheSafeDestination.Login)
+    private val _startDestination = MutableStateFlow(LOGIN_ROUTE)
     val startDestination = _startDestination.asStateFlow()
     private val _userEmail = MutableStateFlow<String?>(null)
     val userEmail = _userEmail.asStateFlow()
@@ -43,7 +44,7 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
         viewModelScope.launch {
             authUseCase.isUserLoggedIn().collect { isLoggedIn ->
                 _startDestination.emit(
-                    if (isLoggedIn) SheSafeDestination.Home else SheSafeDestination.Login
+                    if (isLoggedIn) HOME_ROUTE else LOGIN_ROUTE
                 )
             }
         }
@@ -83,7 +84,7 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
         viewModelScope.launch {
             _logoutCompleteEvent.emit(false)
             _isUserLoggedIn.emit(false)
-            _startDestination.emit(SheSafeDestination.Login)
+            _startDestination.emit(LOGIN_ROUTE)
             _userEmail.emit(null)
             _userName.emit(null)
             _userPhotoUrl.emit(null)

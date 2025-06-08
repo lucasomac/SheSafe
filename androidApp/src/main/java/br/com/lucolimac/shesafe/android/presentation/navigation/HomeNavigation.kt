@@ -8,14 +8,14 @@ import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
-import br.com.lucolimac.shesafe.route.SheSafeDestination
 
+const val HOME_ROUTE = "home"
 fun NavGraphBuilder.homeScreen(
     navController: NavHostController,
     secureContactViewModel: SecureContactViewModel,
     authViewModel: AuthViewModel
 ) {
-    composable(SheSafeDestination.Home.route.name) {
+    composable(HOME_ROUTE) {
         HomeScreen(
             onOrderHelp = { message, phoneNumber, context ->
                 try {
@@ -37,7 +37,7 @@ fun NavGraphBuilder.homeScreen(
 }
 
 fun NavHostController.navigateToHome() {
-    this.navigate(SheSafeDestination.Home.route.name) {
+    this.navigate(HOME_ROUTE) {
         // re-selecting the same item
         launchSingleTop = true
         // Restore state when re-selecting a previously selected item

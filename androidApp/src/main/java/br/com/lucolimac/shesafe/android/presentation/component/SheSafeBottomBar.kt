@@ -15,17 +15,17 @@ fun SheSafeBottomBar(
     menus: List<NavigationItem> = emptyList(),
     onBottomAppBarItemSelectedChange: (NavigationItem) -> Unit = {},
 ) {
-    NavigationBar(modifier, containerColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.onBackground) {
+    NavigationBar(
+        modifier,
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground
+    ) {
         menus.forEach {
-            NavigationBarItem(
-                icon = {
-                    Icon(
-                        imageVector = it.icon,
-                        contentDescription = it.sheSafeDestination.route.title
-                    )
-                },
-                selected = selected.sheSafeDestination.route.title == it.sheSafeDestination.route.title,
-                onClick = { onBottomAppBarItemSelectedChange(it) })
+            NavigationBarItem(icon = {
+                Icon(
+                    imageVector = it.icon, contentDescription = it.route
+                )
+            }, selected = selected == it, onClick = { onBottomAppBarItemSelectedChange(it) })
         }
     }
 }
