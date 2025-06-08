@@ -8,16 +8,24 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
 const val HOME_ROUTE = "home"
 fun NavGraphBuilder.homeScreen(
     navController: NavHostController,
+    homeViewModel: HomeViewModel,
     secureContactViewModel: SecureContactViewModel,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    settingsViewModel: SettingsViewModel,
 ) {
     composable(HOME_ROUTE) {
         HomeScreen(
+            homeViewModel = homeViewModel,
+            secureContactViewModel = secureContactViewModel,
+            authViewModel = authViewModel,
+            settingsViewModel = settingsViewModel,
             onOrderHelp = { message, phoneNumber, context ->
                 try {
                     val smsManager = ContextCompat.getSystemService<SmsManager>(
@@ -31,8 +39,6 @@ fun NavGraphBuilder.homeScreen(
                 }
             },
             onNoContacts = navController::navigateToSecureContacts,
-            secureContactViewModel = secureContactViewModel,
-            authViewModel = authViewModel,
         )
     }
 }
