@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : ViewModel() {
-    private val _hasBeenRegisteredSecureContact = MutableStateFlow<Boolean>(false)
+    private val _hasBeenRegisteredSecureContact = MutableStateFlow(false)
     val hasBeenRegisteredSecureContact = _hasBeenRegisteredSecureContact.asStateFlow()
-    private val _hasBeenDeletedSecureContact = MutableStateFlow<Boolean>(false)
+    private val _hasBeenDeletedSecureContact = MutableStateFlow(false)
     val hasBeenDeletedSecureContact = _hasBeenDeletedSecureContact.asStateFlow()
     private val _secureContact = MutableStateFlow<SecureContact?>(null)
     val secureContact = _secureContact.asStateFlow()

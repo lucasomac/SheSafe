@@ -7,6 +7,7 @@ class ScreenAction() {
         hasSecureContacts: Boolean,
         onConfirm: () -> Unit,
         onDismiss: () -> Unit,
+        showCheckbox: Boolean = true,
         onCheckboxCheckedChange: (Boolean) -> Unit = {}
     ): DialogModel {
         val initialDialogModel = DialogModel(
@@ -15,7 +16,8 @@ class ScreenAction() {
             confirmButtonText = "Cadastrar",
             dismissButtonText = "Cancelar",
             onConfirm = onConfirm,
-            onDismiss = onDismiss)
+            onDismiss = onDismiss
+        )
 
         val helpConfirmationDialogModel = DialogModel(
             title = "Confirmar pedido de ajuda?",
@@ -24,7 +26,7 @@ class ScreenAction() {
             dismissButtonText = "Cancelar",
             onConfirm = onConfirm,
             onDismiss = onDismiss,
-            showCheckbox = true,
+            showCheckbox = showCheckbox,
             checkboxText = "Não perguntar novamente",
             onCheckboxCheckedChange = { isChecked ->
                 onCheckboxCheckedChange.invoke(isChecked)
