@@ -13,19 +13,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Paint
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navOptions
 import br.com.lucolimac.shesafe.android.presentation.navigation.HELP_REQUESTS_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.HOME_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.NavigationItem
 import br.com.lucolimac.shesafe.android.presentation.navigation.PROFILE_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.REGISTER_CONTACT_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.SECURE_CONTACTS_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.navigateToHome
-import br.com.lucolimac.shesafe.android.presentation.navigation.navigateToProfile
-import br.com.lucolimac.shesafe.android.presentation.navigation.navigateToSecureContacts
+import br.com.lucolimac.shesafe.android.presentation.navigation.navigateSingleTopWithPopUpTo
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
@@ -102,29 +98,7 @@ class MainActivity : ComponentActivity() {
                             Log.i(
                                 "MainActivity", "onCreate: selected item - ${item.javaClass.name})}"
                             )
-
-                            val (route, navigateTo) = when (item) {
-                                NavigationItem.SecureContacts -> Pair(
-                                    SECURE_CONTACTS_ROUTE, navController::navigateToSecureContacts
-                                )
-
-                                NavigationItem.Home -> Pair(
-                                    HOME_ROUTE, navController::navigateToHome
-                                )
-
-                                NavigationItem.Profile -> Pair(
-                                    PROFILE_ROUTE, navController::navigateToProfile
-                                )
-
-                            }
-                            val navOptions = navOptions {
-                                // re-selecting the same item
-                                launchSingleTop = true
-                                // Restore state when re-selecting a previously selected item
-                                restoreState = true
-                                popUpTo(route)
-                            }
-                            navigateTo(navOptions)
+                            navController.navigateSingleTopWithPopUpTo(item)
                         })
                 }
             }

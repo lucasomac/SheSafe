@@ -7,11 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
-
 
 
 @Composable
@@ -44,4 +44,31 @@ fun SheSafeNavHost(
         registerSecureContactScreen(secureContactViewModel, navController)
         helpRequestsScreen(helpRequestViewModel)
     }
+}
+
+fun NavHostController.navigateSingleTopWithPopUpTo(
+    item: NavigationItem
+) {
+    val (route, navigateTo) = when (item) {
+        NavigationItem.SecureContacts -> Pair(
+            SECURE_CONTACTS_ROUTE, ::navigateToSecureContacts
+        )
+
+        NavigationItem.Home -> Pair(
+            HOME_ROUTE, ::navigateToHome
+        )
+
+        NavigationItem.Profile -> Pair(
+            PROFILE_ROUTE, ::navigateToProfile
+        )
+
+    }
+    val navOptions = navOptions {
+        // re-selecting the same item
+        launchSingleTop = true
+        // Restore state when re-selecting a previously selected item
+        restoreState = true
+        popUpTo(route)
+    }
+    navigateTo(navOptions)
 }
