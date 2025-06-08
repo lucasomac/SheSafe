@@ -33,6 +33,7 @@ import br.com.lucolimac.shesafe.android.presentation.navigation.SheSafeNavHost
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.navigateToRegisterSecureContact
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
@@ -45,6 +46,7 @@ fun SheSafeApp(
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel,
+    homeViewModel: HomeViewModel,
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
     isShowTopBar: Boolean = false,
@@ -121,6 +123,7 @@ fun SheSafeApp(
         SheSafeNavHost(
             navController,
             startDestination,
+            homeViewModel,
             secureContactViewModel,
             authViewModel,
             helpRequestViewModel,
