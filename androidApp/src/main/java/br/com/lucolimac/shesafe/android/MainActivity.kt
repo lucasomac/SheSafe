@@ -13,10 +13,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.com.lucolimac.shesafe.android.presentation.model.NavigationItem
+import br.com.lucolimac.shesafe.android.presentation.navigation.BASE_SECURE_CONTACT_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.HELP_REQUESTS_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.HOME_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.PROFILE_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.REGISTER_CONTACT_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.SECURE_CONTACTS_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
@@ -25,9 +28,6 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewMo
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 import org.koin.java.KoinJavaComponent.inject
-import br.com.lucolimac.shesafe.R
-import br.com.lucolimac.shesafe.android.presentation.navigation.BASE_SECURE_CONTACT_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.SECURE_CONTACT_PHONE_NUMBER_ARGUMENT
 
 class MainActivity : ComponentActivity() {
     private val secureContactViewModel by inject<SecureContactViewModel>(SecureContactViewModel::class.java)
@@ -54,23 +54,35 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
+                    val currentRoute = currentDestination?.route
                     val selectedItem by remember(currentDestination) {
-                        val item = currentDestination?.let { destination ->
-                            MenuItems.find {
-                                it.route == destination.route
+                        val item = when (currentRoute) {
+                            SECURE_CONTACTS_ROUTE -> NavigationItem.SecureContacts
+                            HOME_ROUTE -> NavigationItem.Home
+                            PROFILE_ROUTE -> NavigationItem.Profile
+                            else -> {
+                                Log.w(
+                                    "MainActivity",
+                                    "onCreate: current destination is not a valid menu item"
+                                )
+                                NavigationItem.Home // Default to the first item if no match
                             }
-                        } ?: MenuItems[1]
+                        }
                         mutableStateOf(item)
                     }
-                    val isShownBottomBar = currentDestination?.route.let { route ->
-                        MenuItems.find {
-                            it.route == route
-                        }
-                    } != null
-                    val isShownFab = currentDestination?.route == SECURE_CONTACTS_ROUTE
+                    val isShownBottomBar = when (currentRoute) {
+                        SECURE_CONTACTS_ROUTE, HOME_ROUTE, PROFILE_ROUTE -> true
+                        else -> false
+                    }
+                    val isShownFab = when (currentRoute) {
+                        SECURE_CONTACTS_ROUTE -> true
+                        else -> false
+                    }
                     // Should be show appBar only in RegisterSecureContactScreen and HelpRequestsScreen
-                    val isShowAppBar =
-                        currentDestination?.route?.contains(BASE_SECURE_CONTACT_ROUTE) == true || currentDestination?.route == HELP_REQUESTS_ROUTE
+                    val isShowAppBar = when (currentRoute) {
+                        HELP_REQUESTS_ROUTE, REGISTER_CONTACT_ROUTE -> true
+                        else -> false
+                    }
                     // Should verify if current destination has arguments
                     SheSafeApp(
                         navController = navController,

@@ -1,13 +1,9 @@
 package br.com.lucolimac.shesafe.android
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,43 +19,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeBottomBar
 import br.com.lucolimac.shesafe.android.presentation.model.NavigationItem
 import br.com.lucolimac.shesafe.android.presentation.navigation.BASE_SECURE_CONTACT_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.HELP_REQUESTS_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.HOME_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.PROFILE_ROUTE
+import br.com.lucolimac.shesafe.android.presentation.navigation.BottomBarItems
 import br.com.lucolimac.shesafe.android.presentation.navigation.REGISTER_CONTACT_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.SECURE_CONTACTS_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.SECURE_CONTACT_PHONE_NUMBER_ARGUMENT
-import br.com.lucolimac.shesafe.android.presentation.navigation.helpRequestsScreen
-import br.com.lucolimac.shesafe.android.presentation.navigation.homeScreen
-import br.com.lucolimac.shesafe.android.presentation.navigation.loginScreen
+import br.com.lucolimac.shesafe.android.presentation.navigation.SheSafeNavHost
 import br.com.lucolimac.shesafe.android.presentation.navigation.navigateToRegisterSecureContact
-import br.com.lucolimac.shesafe.android.presentation.navigation.profileScreen
-import br.com.lucolimac.shesafe.android.presentation.navigation.registerSecureContactScreen
-import br.com.lucolimac.shesafe.android.presentation.navigation.secureContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
-val MenuItems = listOf(
-    NavigationItem(
-        icon = Icons.AutoMirrored.Filled.List,
-        route = SECURE_CONTACTS_ROUTE,
-    ),
-    NavigationItem(
-        icon = Icons.Filled.Home,
-        route = HOME_ROUTE,
-    ),
-    NavigationItem(
-        icon = Icons.Filled.Person,
-        route = PROFILE_ROUTE,
-    ),
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +46,7 @@ fun SheSafeApp(
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
     isShowTopBar: Boolean = false,
-    bottomAppBarItemSelected: NavigationItem = MenuItems[1],
+    bottomAppBarItemSelected: NavigationItem = NavigationItem.Home,
     onBottomAppBarItemSelectedChange: (NavigationItem) -> Unit = {},
 ) {
     val isUpdateSecureContact = navController.currentDestination?.route?.startsWith(
@@ -121,7 +95,7 @@ fun SheSafeApp(
             if (isShownBottomBar) {
                 SheSafeBottomBar(
                     selected = bottomAppBarItemSelected,
-                    menus = MenuItems,
+                    menus = BottomBarItems,
                     onBottomAppBarItemSelectedChange = onBottomAppBarItemSelectedChange,
                 )
             }
@@ -142,25 +116,14 @@ fun SheSafeApp(
         },
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = startDestination,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-        ) {
-            loginScreen(navController)
-            homeScreen(navController, secureContactViewModel, authViewModel)
-            secureContactsScreen(navController, secureContactViewModel)
-            profileScreen(
-                helpRequestViewModel,
-                settingsViewModel,
-                authViewModel,
-                navController,
-                secureContactViewModel
-            )
-            registerSecureContactScreen(secureContactViewModel, navController)
-            helpRequestsScreen(helpRequestViewModel)
-        }
+        SheSafeNavHost(
+            navController,
+            startDestination,
+            innerPadding,
+            secureContactViewModel,
+            authViewModel,
+            helpRequestViewModel,
+            settingsViewModel
+        )
     }
 }
