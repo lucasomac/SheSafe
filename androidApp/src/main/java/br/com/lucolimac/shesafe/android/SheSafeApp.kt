@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import br.com.lucolimac.shesafe.R
@@ -80,7 +79,7 @@ fun SheSafeApp(
                     navigationIcon = {
                         IconButton(onClick = {
                             navController.popBackStack()
-                            secureContactViewModel.resetSecureContact()
+                            secureContactViewModel.resetSelectedSecureContact()
                         }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,

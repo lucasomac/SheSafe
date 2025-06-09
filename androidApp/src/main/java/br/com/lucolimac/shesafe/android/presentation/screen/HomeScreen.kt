@@ -72,8 +72,8 @@ fun HomeScreen(
     var showDialog by remember { mutableStateOf(false) }
     var isShowSendConfirmation by remember { mutableStateOf(settingsViewModel.mapOfSettings.value[SettingsEnum.SEND_CONFIRMATION]) }
     var dialogModel by remember { mutableStateOf<DialogModel?>(null) }
-    val secureContacts by secureContactViewModel.secureContacts.collectAsState()
-    val hasSecureContacts = secureContactViewModel.secureContacts.collectAsState().value.isNotEmpty()
+    val secureContacts = secureContactViewModel.uiState.collectAsState().value.secureContacts
+    val hasSecureContacts = secureContactViewModel.uiState.collectAsState().value.secureContacts.isNotEmpty()
     val smsPermissionState = rememberPermissionState(Manifest.permission.SEND_SMS)
     val context = LocalContext.current
     val screenAction = ScreenAction()
