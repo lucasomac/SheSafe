@@ -24,7 +24,7 @@ fun NavGraphBuilder.profileScreen(
             onHelpRequestsShowClick = navController::navigateToHelpRequests,
             onLogoutClick = {
                 // Clear the secure contact list
-                secureContactViewModel.resetAllStates()
+                secureContactViewModel.resetUiState()
                 // Clear the help request list
                 helpRequestViewModel.resetAllStates()
                 // Clear the settings

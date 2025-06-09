@@ -46,7 +46,7 @@ fun RegisterSecureContactScreen(
         }
     }
 
-    val secureContact by secureContactViewModel.secureContact.collectAsState()
+    val secureContact = secureContactViewModel.uiState.collectAsState().value.selectedContact
     var name by remember { mutableStateOf(secureContact?.name ?: "") }
     var phoneNumber by remember { mutableStateOf(secureContact?.phoneNumber ?: "") }
     LaunchedEffect(secureContact) {
