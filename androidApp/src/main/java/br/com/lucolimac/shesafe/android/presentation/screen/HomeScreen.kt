@@ -45,8 +45,6 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.awaitAll
 import java.time.LocalDateTime
 
 /**

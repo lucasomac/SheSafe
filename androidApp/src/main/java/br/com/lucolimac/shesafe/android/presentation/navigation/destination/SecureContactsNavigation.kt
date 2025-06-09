@@ -2,14 +2,12 @@ package br.com.lucolimac.shesafe.android.presentation.navigation.destination
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.SecureContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
-import org.koin.java.KoinJavaComponent.inject
 
 const val SECURE_CONTACTS_ROUTE = "securecontacts"
 fun NavGraphBuilder.secureContactsScreen(
