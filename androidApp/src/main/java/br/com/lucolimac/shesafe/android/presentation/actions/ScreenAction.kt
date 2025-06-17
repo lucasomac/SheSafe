@@ -30,7 +30,6 @@ class ScreenAction() {
             checkboxText = "Não perguntar novamente",
             onCheckboxCheckedChange = { isChecked ->
                 onCheckboxCheckedChange.invoke(isChecked)
-
             },
             initialCheckboxValue = false
         )
