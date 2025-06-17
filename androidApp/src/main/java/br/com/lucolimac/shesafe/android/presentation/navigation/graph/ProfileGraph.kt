@@ -11,6 +11,7 @@ import br.com.lucolimac.shesafe.android.presentation.navigation.destination.prof
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.secureContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
@@ -19,6 +20,7 @@ fun NavGraphBuilder.profileGraph(
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel,
+    homeViewModel: HomeViewModel,
     navController: NavHostController,
     secureContactViewModel: SecureContactViewModel
 ) {
@@ -31,11 +33,18 @@ fun NavGraphBuilder.profileGraph(
             secureContactViewModel
         )
         secureContactsScreen(navController, secureContactViewModel)
-        homeScreen(navController, secureContactViewModel, authViewModel)
+        homeScreen(
+            navController,
+            homeViewModel,
+            secureContactViewModel,
+            authViewModel,
+            settingsViewModel
+        )
         helpRequestsScreen(helpRequestViewModel)
         loginScreen(navController)
     }
 }
+
 fun NavHostController.navigateToProfileGraph() {
     navigate(PROFILE_GRAPH_ROUTE) {
         popUpTo(PROFILE_GRAPH_ROUTE) {

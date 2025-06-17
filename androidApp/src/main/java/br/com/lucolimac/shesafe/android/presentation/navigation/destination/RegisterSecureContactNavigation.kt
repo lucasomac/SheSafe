@@ -21,7 +21,7 @@ fun NavGraphBuilder.registerSecureContactScreen(
             secureContactPhoneNumber = secureContactPhoneNumber, secureContactViewModel,
             onBack = {
                 navController.navigateUp()
-                secureContactViewModel.resetSecureContact()
+                secureContactViewModel.resetSelectedSecureContact()
             },
         )
     }
