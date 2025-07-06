@@ -26,26 +26,19 @@ class SettingsViewModel(private val settingsUseCase: SettingsUseCase) : ViewMode
         viewModelScope.launch {
             settingsUseCase.getToggleSetting(settingsEnum.name).collect { settingToggle ->
                 _mapOfSettings.update {
-                    it.apply {
-                        this[settingsEnum] = settingToggle
+                    it.toMutableMap().also { mutableMap ->
+                        mutableMap[settingsEnum] = settingToggle
                     }
                 }
             }
         }
     }
 
-    fun setToggleSetting(settingsEnum: SettingsEnum, state: Boolean) {
+    fun setToggleSetting(setting: SettingsEnum, state: Boolean) {
         viewModelScope.launch {
-//            val currentValue = _mapOfSettings.value[settingsEnum] == true
-//            val newValue = !currentValue
-            settingsUseCase.setToggleSetting(settingsEnum.name, state).collect { success ->
+            settingsUseCase.setToggleSetting(setting.name, state).collect { success ->
                 if (success) {
-                    // Update the local state only if the setting was successfully updated
-                    _mapOfSettings.update {
-                        it.apply {
-                            this[settingsEnum] = state
-                        }
-                    }
+                    getToggleSetting(setting)
                 }
             }
         }
