@@ -34,6 +34,7 @@ import org.koin.java.KoinJavaComponent.inject
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecureContactsScreen(
+    secureContactViewModel: SecureContactViewModel,
     onEditAction: (SecureContact) -> Unit,
     onDeleteAction: (SecureContact) -> Unit,
     uiState: SecureContactUiState,
@@ -106,7 +107,7 @@ fun SecureContactsScreen(
                             secureContact = secureContacts[index],
                             onEditClick = onEditAction,
                             onDeleteClick = {
-                                selectedContact = secureContacts[index]
+                                secureContactViewModel.setSelectedSecureContact(secureContacts[index])
                                 showBottomSheet = true
                             },
                         )
@@ -120,5 +121,6 @@ fun SecureContactsScreen(
 @Preview(showBackground = true)
 @Composable
 fun ContactsScreenPreview() {
-    SecureContactsScreen({}, {}, SecureContactUiState(), modifier = Modifier)
+    val secureContactViewModel by  inject<SecureContactViewModel>(SecureContactViewModel::class.java)
+    SecureContactsScreen(secureContactViewModel, {}, {}, SecureContactUiState(), modifier = Modifier)
 }

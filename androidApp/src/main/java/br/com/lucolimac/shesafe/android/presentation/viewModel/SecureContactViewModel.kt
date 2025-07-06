@@ -19,7 +19,7 @@ class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : V
     private val _uiState: MutableStateFlow<SecureContactUiState> =
         MutableStateFlow(SecureContactUiState.Empty)
 
-        val uiState: StateFlow<SecureContactUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<SecureContactUiState> = _uiState.asStateFlow()
 //    private val _hasBeenRegisteredSecureContact = MutableStateFlow(false)
 //    val hasBeenRegisteredSecureContact = _hasBeenRegisteredSecureContact.asStateFlow()
 //    private val _hasBeenDeletedSecureContact = MutableStateFlow(false)
@@ -58,8 +58,18 @@ class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : V
                         }
                     }
             }
+            getAllSecureContacts()
         }
-        getAllSecureContacts()
+    }
+
+    fun setSelectedSecureContact(secureContact: SecureContact) {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    selectedContact = secureContact,
+                )
+            }
+        }
     }
 
     fun getAllSecureContacts() {
@@ -99,8 +109,8 @@ class SecureContactViewModel(val secureContactUseCase: SecureContactUseCase) : V
                         )
                     }
                 }
+            getAllSecureContacts()
         }
-        getAllSecureContacts()
     }
 
     fun resetRegistered() {

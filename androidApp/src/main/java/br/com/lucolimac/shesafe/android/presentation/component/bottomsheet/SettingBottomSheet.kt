@@ -24,7 +24,7 @@ fun SettingBottomSheet(
     sheetState: SheetState,
 ) {
     val scope = rememberCoroutineScope()
-    val mapOfSettings by remember { settingsViewModel.mapOfSettings }.collectAsState()
+    val mapOfSettings by settingsViewModel.mapOfSettings.collectAsState()
 
     Column(
         modifier = Modifier.padding(16.dp),
@@ -43,7 +43,7 @@ fun SettingBottomSheet(
         SettingItem(
             text = stringResource(R.string.label_setting_send_confirmation),
             checked = mapOfSettings[SettingsEnum.SEND_CONFIRMATION] == true,
-            onCheckedChange = { settingsViewModel.setToggleSetting(SettingsEnum.SEND_CONFIRMATION) },
+            onCheckedChange = { settingsViewModel.setToggleSetting(SettingsEnum.SEND_CONFIRMATION, it) },
         )
 //        SettingItem(
 //            text = stringResource(R.string.label_setting_search_location),

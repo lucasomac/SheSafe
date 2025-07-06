@@ -20,11 +20,12 @@ fun NavGraphBuilder.secureContactsScreen(
             secureContactViewModel.getAllSecureContacts()
         }
         SecureContactsScreen(
-            onEditAction = { secureContact ->
-            navController.navigateToRegisterSecureContact(secureContact.phoneNumber)
-        }, onDeleteAction = {
-            secureContactViewModel.deleteSecureContact(it.phoneNumber)
-        }, uiState
+            secureContactViewModel, onEditAction = { secureContact ->
+                navController.navigateToRegisterSecureContact(secureContact.phoneNumber)
+            }, onDeleteAction = {
+                secureContactViewModel.deleteSecureContact(it.phoneNumber)
+                secureContactViewModel.resetSelectedSecureContact()
+            }, uiState
         )
     }
 }

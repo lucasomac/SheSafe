@@ -116,7 +116,7 @@ fun HomeScreen(
             ).show()
         }
         if (homeViewModel.isCheckboxChecked.value != isShowSendConfirmation) {
-            settingsViewModel.setToggleSetting(SettingsEnum.SEND_CONFIRMATION)
+            settingsViewModel.setToggleSetting(SettingsEnum.SEND_CONFIRMATION, homeViewModel.isCheckboxChecked.value)
         }
     }
     val requestPermissionLauncher = rememberLauncherForActivityResult(

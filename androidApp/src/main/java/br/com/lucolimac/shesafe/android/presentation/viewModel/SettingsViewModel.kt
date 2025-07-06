@@ -34,16 +34,16 @@ class SettingsViewModel(private val settingsUseCase: SettingsUseCase) : ViewMode
         }
     }
 
-    fun setToggleSetting(settingsEnum: SettingsEnum) {
+    fun setToggleSetting(settingsEnum: SettingsEnum, state: Boolean) {
         viewModelScope.launch {
-            val currentValue = _mapOfSettings.value[settingsEnum] == true
-            val newValue = !currentValue
-            settingsUseCase.setToggleSetting(settingsEnum.name, newValue).collect { success ->
+//            val currentValue = _mapOfSettings.value[settingsEnum] == true
+//            val newValue = !currentValue
+            settingsUseCase.setToggleSetting(settingsEnum.name, state).collect { success ->
                 if (success) {
                     // Update the local state only if the setting was successfully updated
                     _mapOfSettings.update {
                         it.apply {
-                            this[settingsEnum] = newValue
+                            this[settingsEnum] = state
                         }
                     }
                 }
