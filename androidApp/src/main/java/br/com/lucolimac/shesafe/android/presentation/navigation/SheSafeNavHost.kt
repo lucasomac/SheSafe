@@ -20,6 +20,7 @@ import br.com.lucolimac.shesafe.android.presentation.navigation.graph.secureCont
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
@@ -28,6 +29,7 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 fun SheSafeNavHost(
     navController: NavHostController,
     startDestination: String,
+    profileViewModel: ProfileViewModel,
     homeViewModel: HomeViewModel,
     secureContactViewModel: SecureContactViewModel,
     authViewModel: AuthViewModel,
@@ -47,7 +49,8 @@ fun SheSafeNavHost(
             secureContactViewModel,
             authViewModel,
             helpRequestViewModel,
-            settingsViewModel
+            settingsViewModel,
+            profileViewModel
         )
         secureContactsGraph(
             navController,
@@ -55,7 +58,8 @@ fun SheSafeNavHost(
             authViewModel,
             helpRequestViewModel,
             settingsViewModel,
-            homeViewModel
+            homeViewModel,
+            profileViewModel
         )
         profileGraph(
             helpRequestViewModel,
@@ -63,11 +67,13 @@ fun SheSafeNavHost(
             authViewModel,
             homeViewModel,
             navController,
-            secureContactViewModel
+            secureContactViewModel,
+            profileViewModel
         )
         registerSecureContactGraph(secureContactViewModel, navController)
 
         helpRequestsGraph(
+            profileViewModel,
             helpRequestViewModel,
             settingsViewModel,
             authViewModel,

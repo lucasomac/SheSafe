@@ -11,6 +11,7 @@ import br.com.lucolimac.shesafe.android.presentation.navigation.destination.secu
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
@@ -21,7 +22,8 @@ fun NavGraphBuilder.secureContactsGraph(
     authViewModel: AuthViewModel,
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     navigation(startDestination = SECURE_CONTACTS_ROUTE, route = SECURE_CONTACTS_GRAPH_ROUTE) {
         secureContactsScreen(navController, secureContactViewModel)
@@ -30,6 +32,7 @@ fun NavGraphBuilder.secureContactsGraph(
             navController, homeViewModel, secureContactViewModel, authViewModel, settingsViewModel
         )
         profileScreen(
+            profileViewModel,
             helpRequestViewModel,
             settingsViewModel,
             authViewModel,

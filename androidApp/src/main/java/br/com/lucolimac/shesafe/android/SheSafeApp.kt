@@ -33,6 +33,7 @@ import br.com.lucolimac.shesafe.android.presentation.navigation.destination.navi
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
@@ -46,6 +47,7 @@ fun SheSafeApp(
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel,
     homeViewModel: HomeViewModel,
+    profileViewModel: ProfileViewModel,
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
     isShowTopBar: Boolean = false,
@@ -121,7 +123,7 @@ fun SheSafeApp(
     ) { innerPadding ->
         SheSafeNavHost(
             navController,
-            startDestination,
+            startDestination, profileViewModel,
             homeViewModel,
             secureContactViewModel,
             authViewModel,

@@ -8,11 +8,13 @@ import br.com.lucolimac.shesafe.android.presentation.navigation.destination.help
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.profileScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
 internal const val HELP_REQUESTS_GRAPH_ROUTE = "helpRequestsGraph"
 fun NavGraphBuilder.helpRequestsGraph(
+    profileViewModel: ProfileViewModel,
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel,
@@ -22,6 +24,7 @@ fun NavGraphBuilder.helpRequestsGraph(
     navigation(startDestination = HELP_REQUESTS_ROUTE, route = HELP_REQUESTS_GRAPH_ROUTE) {
         helpRequestsScreen(helpRequestViewModel)
         profileScreen(
+            profileViewModel,
             helpRequestViewModel,
             settingsViewModel,
             authViewModel,
