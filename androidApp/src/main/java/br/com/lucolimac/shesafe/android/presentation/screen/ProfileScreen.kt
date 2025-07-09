@@ -43,8 +43,10 @@ import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
 import br.com.lucolimac.shesafe.android.presentation.component.LastSentCard
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeLoading
 import br.com.lucolimac.shesafe.android.presentation.component.bottomsheet.SettingBottomSheet
+import br.com.lucolimac.shesafe.android.presentation.component.bottomsheet.UserMessageBottomSheet
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 import coil.compose.rememberAsyncImagePainter
 import org.koin.java.KoinJavaComponent.inject
@@ -52,6 +54,7 @@ import org.koin.java.KoinJavaComponent.inject
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
+    profileViewModel: ProfileViewModel,
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel,
@@ -60,7 +63,9 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
 ) {
     val lastSentList by helpRequestViewModel.helpRequests.collectAsState()
+    val userMessage by profileViewModel.helpMessage.collectAsState()
     var showSettingsBottomSheet by remember { mutableStateOf(false) }
+    var showUserMessageBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
     val isLoading = helpRequestViewModel.isLoading.collectAsState().value
@@ -101,9 +106,9 @@ fun ProfileScreen(
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(top = 8.dp),
             )
-
             Text(
-                text = "Estou em perigo. Por favor se puder me ajudar esta é minha localização!",
+                text = userMessage.takeIf { it.isNotEmpty() }
+                    ?: stringResource(R.string.default_message_danger_user),
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Gray,
                 modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
@@ -124,7 +129,9 @@ fun ProfileScreen(
                     Icons.Default.Menu,
                     description = "Menu",
                     onClick = { onHelpRequestsShowClick() })
-                ActionIcon(Icons.Default.Edit, description = "Edit") {}
+                ActionIcon(Icons.Default.Edit, description = "Edit") {
+                    showUserMessageBottomSheet = true
+                }
                 ActionIcon(
                     painter = painterResource(R.drawable.logout_24),
                     description = "Logout",
@@ -180,13 +187,43 @@ fun ProfileScreen(
             },
         )
     }
+    if (showUserMessageBottomSheet) {
+        ModalBottomSheet(
+            sheetState = sheetState,
+            content = {
+                UserMessageBottomSheet(
+                    actualMessage = userMessage,
+                    onDismiss = {
+                        showSettingsBottomSheet = false
+                    },
+                    onConfirm = { newMessage ->
+                        profileViewModel.registerHelpMessage(newMessage)
+                        showUserMessageBottomSheet = false
+                    },
+                    sheetState = sheetState,
+                )
+            },
+            onDismissRequest = {
+                showSettingsBottomSheet = false
+            },
+        )
+    }
 }
 
 @Preview
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreenPreview() {
-    val viewModel: HelpRequestViewModel by inject<HelpRequestViewModel>(HelpRequestViewModel::class.java)
-    val settingsViewModel: SettingsViewModel by inject<SettingsViewModel>(SettingsViewModel::class.java)
-    val authViewModel: AuthViewModel by inject<AuthViewModel>(AuthViewModel::class.java)
-    ProfileScreen(viewModel, settingsViewModel, authViewModel, {}, {})
+    val profileViewModel: ProfileViewModel by inject(ProfileViewModel::class.java)
+    val helpRequestViewModel: HelpRequestViewModel by inject(HelpRequestViewModel::class.java)
+    val settingsViewModel: SettingsViewModel by inject(SettingsViewModel::class.java)
+    val authViewModel: AuthViewModel by inject(AuthViewModel::class.java)
+    ProfileScreen(
+        profileViewModel = profileViewModel,
+        helpRequestViewModel = helpRequestViewModel,
+        settingsViewModel = settingsViewModel,
+        authViewModel = authViewModel,
+        onHelpRequestsShowClick = {},
+        onLogoutClick = {})
 }
+

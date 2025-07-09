@@ -9,22 +9,30 @@ import br.com.lucolimac.shesafe.android.presentation.navigation.destination.prof
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.secureContactsScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
+
 internal const val HOME_GRAPH_ROUTE = "homeGraph"
 fun NavGraphBuilder.homeGraph(
     navController: NavHostController,
+    homeViewModel: HomeViewModel,
     secureContactViewModel: SecureContactViewModel,
     authViewModel: AuthViewModel,
     helpRequestViewModel: HelpRequestViewModel,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     navigation(
         startDestination = HOME_ROUTE, route = HOME_GRAPH_ROUTE
     ) {
-        homeScreen(navController, secureContactViewModel, authViewModel)
+        homeScreen(
+            navController, homeViewModel, secureContactViewModel, authViewModel, settingsViewModel
+        )
         secureContactsScreen(navController, secureContactViewModel)
         profileScreen(
+            profileViewModel,
             helpRequestViewModel,
             settingsViewModel,
             authViewModel,
@@ -33,6 +41,7 @@ fun NavGraphBuilder.homeGraph(
         )
     }
 }
+
 fun NavHostController.navigateToHomeGraph() {
     navigate(HOME_GRAPH_ROUTE) {
         popUpTo(HOME_GRAPH_ROUTE) {

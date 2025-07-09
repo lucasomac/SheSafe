@@ -31,7 +31,10 @@ import br.com.lucolimac.shesafe.android.presentation.component.geolocation.Locat
 import br.com.lucolimac.shesafe.android.presentation.component.geolocation.rememberLocation
 import br.com.lucolimac.shesafe.android.presentation.model.DialogModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
+import br.com.lucolimac.shesafe.enum.SettingsEnum
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
@@ -54,8 +57,10 @@ import java.time.LocalDateTime
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
+    homeViewModel: HomeViewModel,
     secureContactViewModel: SecureContactViewModel,
     authViewModel: AuthViewModel,
+    settingsViewModel: SettingsViewModel,
     onOrderHelp: (String, String, Context) -> Boolean,
     onNoContacts: () -> Unit,
     modifier: Modifier = Modifier,
@@ -63,13 +68,16 @@ fun HomeScreen(
     LaunchedEffect(Unit) { authViewModel.setFieldsOfLoggedUser() }
     val userLocation = rememberLocation()
     var showDialog by remember { mutableStateOf(false) }
-    var doNotAskAgain by remember { mutableStateOf(false) }
+    var isShowSendConfirmation by remember { mutableStateOf(settingsViewModel.mapOfSettings.value[SettingsEnum.SEND_CONFIRMATION]) }
     var dialogModel by remember { mutableStateOf<DialogModel?>(null) }
-    val secureContacts by secureContactViewModel.secureContacts.collectAsState()
-    var hasSecureContacts by remember { mutableStateOf(secureContacts.isNotEmpty()) }
+    val secureContacts = secureContactViewModel.uiState.collectAsState().value.secureContacts
+    val hasSecureContacts = secureContactViewModel.uiState.collectAsState().value.secureContacts.isNotEmpty()
     val smsPermissionState = rememberPermissionState(Manifest.permission.SEND_SMS)
     val context = LocalContext.current
     val screenAction = ScreenAction()
+    LaunchedEffect(Unit) {
+        secureContactViewModel.getAllSecureContacts()
+    }
     val sendSms = {
         // Permission granted, proceed with sending SMS
         var countSmsSent = 0
@@ -106,6 +114,9 @@ fun HomeScreen(
                 context.getString(R.string.sms_not_sent),
                 Toast.LENGTH_SHORT,
             ).show()
+        }
+        if (homeViewModel.isCheckboxChecked.value != isShowSendConfirmation) {
+            settingsViewModel.setToggleSetting(SettingsEnum.SEND_CONFIRMATION, homeViewModel.isCheckboxChecked.value)
         }
     }
     val requestPermissionLauncher = rememberLauncherForActivityResult(
@@ -162,39 +173,44 @@ fun HomeScreen(
                     ),
                     properties = MapProperties(isMyLocationEnabled = true),
                 )
-
-                // Search bar (placed second, on top of the map)
-//                SearchBar(
-//                    onSearch = { query ->
-//                        // Handle the search query (e.g., filter map markers)
-//                        println("Searching for: $query")
-//                    },
-//                    modifier =
-//                        modifier
-//                            .align(Alignment.TopCenter) // Align at the top
-//                            .padding(16.dp),
-//                    // Add padding
-//                )
-                // Button (placed third, on top of the map)
                 RoundedButton(
                     text = stringResource(R.string.request_help),
                     onClick = {
                         when (smsPermissionState.status) {
                             is PermissionStatus.Granted -> {
-                                dialogModel =
-                                    screenAction.chooseDialogModel(hasSecureContacts, onConfirm = {
-                                        if (hasSecureContacts) {
-                                            sendSms()
-                                        } else {
+                                if (hasSecureContacts) {
+                                    if (isShowSendConfirmation == true) {
+                                        dialogModel = screenAction.chooseDialogModel(
+                                            true,
+                                            onConfirm = {
+                                                sendSms()
+                                                showDialog = false
+                                            },
+                                            onDismiss = {
+                                                showDialog = false
+                                            },
+                                            showCheckbox = true,
+                                            onCheckboxCheckedChange = { isChecked ->
+                                                homeViewModel.setCheckboxChecked(isChecked)
+                                            })
+                                        showDialog = true
+                                    } else {
+                                        sendSms()
+                                    }
+                                } else {
+                                    dialogModel = screenAction.chooseDialogModel(
+                                        false,
+                                        onConfirm = {
                                             onNoContacts()
-                                        }
-                                        showDialog = false
-                                    }, onDismiss = {
-                                        showDialog = false
-                                    }, onCheckboxCheckedChange = { isChecked ->
-                                        doNotAskAgain = isChecked
-                                    })
-                                showDialog = true
+                                            showDialog = false
+                                        },
+                                        onDismiss = {
+                                            showDialog = false
+                                        },
+                                        showCheckbox = false,
+                                    )
+                                    showDialog = true
+                                }
                             }
 
                             is PermissionStatus.Denied -> {

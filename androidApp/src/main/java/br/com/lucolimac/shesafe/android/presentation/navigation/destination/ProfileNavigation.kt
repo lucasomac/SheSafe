@@ -7,11 +7,13 @@ import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.ProfileScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
 const val PROFILE_ROUTE = "profile"
 fun NavGraphBuilder.profileScreen(
+    profileViewModel: ProfileViewModel,
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel,
@@ -20,11 +22,12 @@ fun NavGraphBuilder.profileScreen(
 ) {
     composable(PROFILE_ROUTE) {
         ProfileScreen(
+            profileViewModel,
             helpRequestViewModel, settingsViewModel, authViewModel,
             onHelpRequestsShowClick = navController::navigateToHelpRequests,
             onLogoutClick = {
                 // Clear the secure contact list
-                secureContactViewModel.resetAllStates()
+                secureContactViewModel.resetUiState()
                 // Clear the help request list
                 helpRequestViewModel.resetAllStates()
                 // Clear the settings

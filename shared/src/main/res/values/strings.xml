@@ -14,9 +14,12 @@
     <string name="message_no_secure_contacts">Você ainda não possui contatos cadastrados!</string>
     <string name="title_contacts">Contacts</string>
     <string name="title_delete_secure_contact">Deletar contato seguro?</string>
+    <string name="title_input_your_message">Insira sua nova mensagem!</string>
+    <string name="description_input_your_message">Ela será enviada juntamente com a sua localização para os seus contatos.</string>
     <string name="message_delete_secure_contact">Tem certeza de que deseja excluir %1$s dos seus contatos seguros?</string>
     <string name="label_cancel">Cancelar</string>
     <string name="label_delete">Excluir</string>
+    <string name="label_change">Alterar</string>
     <string name="message_nothing_send_yet">Nenhum pedido de ajuda enviado ainda.</string>
     <!--    Settings-->
     <string name="title_settings">Configurações</string>
@@ -24,10 +27,13 @@
     <string name="label_setting_send_confirmation">Confirmação de envio</string>
     <string name="label_setting_search_location">Busca de local</string>
     <string name="label_setting_button_shortcut">Atalho de botão</string>
-<!--    Labels-->
+    <!--    Labels-->
     <string name="label_secure_contact_name">Nome</string>
     <string name="label_secure_contact_phone">Celular</string>
     <string name="label_secure_contact_save">Salvar</string>
     <string name="label_secure_contact_update">Atualizar</string>
     <string name="default_user_name">Usuário</string>
+    <!--    Messages-->
+    <string name="default_message_danger_user">Estou em perigo. Por favor se puder me ajudar esta é minha localização!</string>
+    <string name="default_message_label">Sua mensagem</string>
 </resources>

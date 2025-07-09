@@ -7,6 +7,7 @@ import br.com.lucolimac.shesafe.enum.SettingsEnum
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(private val settingsUseCase: SettingsUseCase) : ViewModel() {
@@ -23,21 +24,21 @@ class SettingsViewModel(private val settingsUseCase: SettingsUseCase) : ViewMode
 
     fun getToggleSetting(settingsEnum: SettingsEnum) {
         viewModelScope.launch {
-            settingsUseCase.getToggleSetting(settingsEnum.name).collect {
-                _mapOfSettings.value[settingsEnum] = it
+            settingsUseCase.getToggleSetting(settingsEnum.name).collect { settingToggle ->
+                _mapOfSettings.update {
+                    it.toMutableMap().also { mutableMap ->
+                        mutableMap[settingsEnum] = settingToggle
+                    }
+                }
             }
         }
     }
 
-    fun setToggleSetting(settingsEnum: SettingsEnum) {
+    fun setToggleSetting(setting: SettingsEnum, state: Boolean) {
         viewModelScope.launch {
-            val currentValue = _mapOfSettings.value[settingsEnum] == true
-            val newValue = !currentValue
-            settingsUseCase.setToggleSetting(settingsEnum.name, newValue).collect { success ->
+            settingsUseCase.setToggleSetting(setting.name, state).collect { success ->
                 if (success) {
-                    _mapOfSettings.emit(_mapOfSettings.value.toMutableMap().apply {
-                        this[settingsEnum] = newValue
-                    })
+                    getToggleSetting(setting)
                 }
             }
         }
@@ -45,11 +46,7 @@ class SettingsViewModel(private val settingsUseCase: SettingsUseCase) : ViewMode
 
     fun resetAllStates() {
         viewModelScope.launch {
-            _mapOfSettings.emit(mutableMapOf<SettingsEnum, Boolean>().apply {
-                SettingsEnum.entries.forEach { setting ->
-                    this[setting] = false // Reset to default value
-                }
-            })
+            _mapOfSettings.emit(mutableMapOf())
         }
     }
 }

@@ -25,6 +25,8 @@ import br.com.lucolimac.shesafe.android.presentation.navigation.navigateSingleTo
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 import org.koin.java.KoinJavaComponent.inject
@@ -34,6 +36,8 @@ class MainActivity : ComponentActivity() {
     private val helpRequestViewModel by inject<HelpRequestViewModel>(HelpRequestViewModel::class.java)
     private val settingsViewModel by inject<SettingsViewModel>(SettingsViewModel::class.java)
     private val authViewModel by inject<AuthViewModel>(AuthViewModel::class.java)
+    private val homeViewModel by inject<HomeViewModel>(HomeViewModel::class.java)
+    private val profileViewModel by inject<ProfileViewModel>(ProfileViewModel::class.java)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -90,6 +94,8 @@ class MainActivity : ComponentActivity() {
                         helpRequestViewModel = helpRequestViewModel,
                         settingsViewModel = settingsViewModel,
                         authViewModel = authViewModel,
+                        homeViewModel = homeViewModel,
+                        profileViewModel = profileViewModel,
                         isShownBottomBar = isShownBottomBar,
                         isShowFab = isShownFab,
                         isShowTopBar = isShowAppBar,

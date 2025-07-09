@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import br.com.lucolimac.shesafe.R
@@ -33,6 +32,8 @@ import br.com.lucolimac.shesafe.android.presentation.navigation.SheSafeNavHost
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.navigateToRegisterSecureContact
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
@@ -45,6 +46,8 @@ fun SheSafeApp(
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel,
+    homeViewModel: HomeViewModel,
+    profileViewModel: ProfileViewModel,
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
     isShowTopBar: Boolean = false,
@@ -78,7 +81,7 @@ fun SheSafeApp(
                     navigationIcon = {
                         IconButton(onClick = {
                             navController.popBackStack()
-                            secureContactViewModel.resetSecureContact()
+                            secureContactViewModel.resetSelectedSecureContact()
                         }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -120,7 +123,8 @@ fun SheSafeApp(
     ) { innerPadding ->
         SheSafeNavHost(
             navController,
-            startDestination,
+            startDestination, profileViewModel,
+            homeViewModel,
             secureContactViewModel,
             authViewModel,
             helpRequestViewModel,

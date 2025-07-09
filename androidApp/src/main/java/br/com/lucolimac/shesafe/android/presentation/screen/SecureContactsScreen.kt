@@ -13,8 +13,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,31 +27,33 @@ import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeLoading
 import br.com.lucolimac.shesafe.android.presentation.component.contact.SecureContactCard
+import br.com.lucolimac.shesafe.android.presentation.state.SecureContactUiState
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import org.koin.java.KoinJavaComponent.inject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecureContactsScreen(
+    secureContactViewModel: SecureContactViewModel,
     onEditAction: (SecureContact) -> Unit,
     onDeleteAction: (SecureContact) -> Unit,
-    secureContactViewModel: SecureContactViewModel,
+    uiState: SecureContactUiState,
     modifier: Modifier = Modifier
 ) {
-    val secureContacts by secureContactViewModel.secureContacts.collectAsState()
-    val isLoading by secureContactViewModel.isLoading.collectAsState()
-    val hasBeenDeleted by secureContactViewModel.hasBeenDeletedSecureContact.collectAsState()
+    val secureContacts = uiState.secureContacts
+    val isLoading = uiState.isLoading
+//    val hasBeenDeleted = uiState.hasBeenDeletedSecureContact
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedContact by remember { mutableStateOf<SecureContact?>(null) }
-    LaunchedEffect(Unit) {
-        secureContactViewModel.getAllSecureContacts()
-    }
-    LaunchedEffect(hasBeenDeleted) {
-        if (hasBeenDeleted) {
-            secureContactViewModel.getAllSecureContacts()
-        }
-    }
+    var selectedContact = uiState.selectedContact
+//    LaunchedEffect(Unit) {
+//        uiState.getAllSecureContacts()
+//    }
+//    LaunchedEffect(hasBeenDeleted) {
+//        if (hasBeenDeleted) {
+//            uiState.getAllSecureContacts()
+//        }
+//    }
     Column {
         HomeHeader(
             stringResource(R.string.title_secure_contacts),
@@ -85,7 +85,7 @@ fun SecureContactsScreen(
                     onConfirmDelete = {
                         onDeleteAction(selectedContact ?: return@SheSafeBottomSheet)
                         selectedContact = null
-                        secureContactViewModel.getAllSecureContacts()
+//                        uiState.getAllSecureContacts()
                         showBottomSheet = false
                     },
                     onDismiss = {
@@ -107,7 +107,7 @@ fun SecureContactsScreen(
                             secureContact = secureContacts[index],
                             onEditClick = onEditAction,
                             onDeleteClick = {
-                                selectedContact = secureContacts[index]
+                                secureContactViewModel.setSelectedSecureContact(secureContacts[index])
                                 showBottomSheet = true
                             },
                         )
@@ -121,6 +121,6 @@ fun SecureContactsScreen(
 @Preview(showBackground = true)
 @Composable
 fun ContactsScreenPreview() {
-    val viewModel: SecureContactViewModel by inject(SecureContactViewModel::class.java)
-    SecureContactsScreen({}, {}, viewModel, modifier = Modifier)
+    val secureContactViewModel by  inject<SecureContactViewModel>(SecureContactViewModel::class.java)
+    SecureContactsScreen(secureContactViewModel, {}, {}, SecureContactUiState(), modifier = Modifier)
 }
