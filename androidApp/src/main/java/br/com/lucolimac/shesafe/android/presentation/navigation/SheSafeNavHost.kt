@@ -41,7 +41,13 @@ fun SheSafeNavHost(
         navController = navController, startDestination = startDestination, modifier = modifier
     ) {
         loginGraph(
-            navController, homeViewModel, secureContactViewModel, authViewModel, settingsViewModel
+            navController,
+            homeViewModel,
+            secureContactViewModel,
+            authViewModel,
+            settingsViewModel,
+            profileViewModel,
+            helpRequestViewModel
         )
         homeGraph(
             navController,

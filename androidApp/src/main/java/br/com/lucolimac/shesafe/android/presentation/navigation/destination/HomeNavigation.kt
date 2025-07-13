@@ -8,7 +8,9 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
@@ -19,6 +21,8 @@ fun NavGraphBuilder.homeScreen(
     secureContactViewModel: SecureContactViewModel,
     authViewModel: AuthViewModel,
     settingsViewModel: SettingsViewModel,
+    profileViewModel: ProfileViewModel,
+    helpRequestViewModel: HelpRequestViewModel
 ) {
     composable(HOME_ROUTE) {
         HomeScreen(
@@ -26,13 +30,17 @@ fun NavGraphBuilder.homeScreen(
             secureContactViewModel = secureContactViewModel,
             authViewModel = authViewModel,
             settingsViewModel = settingsViewModel,
-            onOrderHelp = { message, phoneNumber, context ->
+            profileViewModel = profileViewModel,
+            onOrderHelp = { helpRequest, message, context ->
                 try {
-                    val smsManager = ContextCompat.getSystemService<SmsManager>(
+                    val smsManager = ContextCompat.getSystemService(
                         context,
                         SmsManager::class.java,
                     )
-                    smsManager?.sendTextMessage(phoneNumber, null, message, null, null)
+                    smsManager?.sendTextMessage(
+                        helpRequest.phoneNumber, null, message, null, null
+                    )
+                    helpRequestViewModel.registerHelpRequest(helpRequest)
                     true
                 } catch (_: Exception) {
                     false

@@ -32,6 +32,7 @@ import br.com.lucolimac.shesafe.android.presentation.component.geolocation.remem
 import br.com.lucolimac.shesafe.android.presentation.model.DialogModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 import br.com.lucolimac.shesafe.enum.SettingsEnum
@@ -61,7 +62,8 @@ fun HomeScreen(
     secureContactViewModel: SecureContactViewModel,
     authViewModel: AuthViewModel,
     settingsViewModel: SettingsViewModel,
-    onOrderHelp: (String, String, Context) -> Boolean,
+    profileViewModel: ProfileViewModel,
+    onOrderHelp: (HelpRequest, String, Context) -> Boolean,
     onNoContacts: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -71,28 +73,32 @@ fun HomeScreen(
     var isShowSendConfirmation by remember { mutableStateOf(settingsViewModel.mapOfSettings.value[SettingsEnum.SEND_CONFIRMATION]) }
     var dialogModel by remember { mutableStateOf<DialogModel?>(null) }
     val secureContacts = secureContactViewModel.uiState.collectAsState().value.secureContacts
-    val hasSecureContacts = secureContactViewModel.uiState.collectAsState().value.secureContacts.isNotEmpty()
+    val hasSecureContacts =
+        secureContactViewModel.uiState.collectAsState().value.secureContacts.isNotEmpty()
     val smsPermissionState = rememberPermissionState(Manifest.permission.SEND_SMS)
     val context = LocalContext.current
     val screenAction = ScreenAction()
+    val userMessage = profileViewModel.helpMessage.collectAsState()
     LaunchedEffect(Unit) {
         secureContactViewModel.getAllSecureContacts()
     }
     val sendSms = {
         // Permission granted, proceed with sending SMS
         var countSmsSent = 0
-        secureContacts.forEach {
+        secureContacts.forEach { secureContact ->
             val orderHHelp = HelpRequest(
-                phoneNumber = it.phoneNumber,
+                phoneNumber = secureContact.phoneNumber,
                 location = LatLng(
                     userLocation?.latitude ?: 0.0,
                     userLocation?.longitude ?: 0.0,
                 ),
                 createdAt = LocalDateTime.now(),
             )
+            val messageFormatedWithLocation =
+                "${userMessage.takeIf { it.value.isNotEmpty() }?.value ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${orderHHelp.location.latitude},${orderHHelp.location.longitude}"
             val hasBeenSent = onOrderHelp(
-                orderHHelp.phoneNumber,
-                orderHHelp.linkMap,
+                orderHHelp,
+                messageFormatedWithLocation,
                 context,
             )
             if (hasBeenSent) {
@@ -116,7 +122,9 @@ fun HomeScreen(
             ).show()
         }
         if (homeViewModel.isCheckboxChecked.value != isShowSendConfirmation) {
-            settingsViewModel.setToggleSetting(SettingsEnum.SEND_CONFIRMATION, homeViewModel.isCheckboxChecked.value)
+            settingsViewModel.setToggleSetting(
+                SettingsEnum.SEND_CONFIRMATION, homeViewModel.isCheckboxChecked.value
+            )
         }
     }
     val requestPermissionLauncher = rememberLauncherForActivityResult(

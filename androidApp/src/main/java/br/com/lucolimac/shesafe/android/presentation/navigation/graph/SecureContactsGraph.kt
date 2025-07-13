@@ -29,7 +29,13 @@ fun NavGraphBuilder.secureContactsGraph(
         secureContactsScreen(navController, secureContactViewModel)
         registerSecureContactScreen(secureContactViewModel, navController)
         homeScreen(
-            navController, homeViewModel, secureContactViewModel, authViewModel, settingsViewModel
+            navController,
+            homeViewModel,
+            secureContactViewModel,
+            authViewModel,
+            settingsViewModel,
+            profileViewModel,
+            helpRequestViewModel
         )
         profileScreen(
             profileViewModel,
