@@ -22,6 +22,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.android.domain.entity.HelpRequest
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -64,11 +66,12 @@ fun LastSentCard(lastSent: HelpRequest) {
 
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.clickable { uriHandler.openUri(lastSent.linkMap) }
-                )
+                    modifier = Modifier.clickable { uriHandler.openUri(lastSent.linkMap) })
             }
             Text(
-                text = lastSent.createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+                text = LocalDateTime.ofInstant(
+                    lastSent.createdAt.toInstant(), ZoneId.systemDefault()
+                ).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )

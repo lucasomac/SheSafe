@@ -10,14 +10,13 @@ class HelpRequestRepositoryImpl(
 ) : HelpRequestRepository {
     override suspend fun getHelpRequests(): List<HelpRequest> {
         return helpRequestDataSource.getHelpRequests().map {
-            HelpRequest(
-                phoneNumber = it.phoneNumber, location = it.location, createdAt = it.createdAt
-            )
+            it.toEntity()
         }
     }
 
     override suspend fun registerHelpRequest(helpRequest: HelpRequest): Boolean {
         return helpRequestDataSource.registerHelpRequest(
-            HelpRequestModel.fromEntity(helpRequest))
+            HelpRequestModel.fromEntity(helpRequest)
+        )
     }
 }

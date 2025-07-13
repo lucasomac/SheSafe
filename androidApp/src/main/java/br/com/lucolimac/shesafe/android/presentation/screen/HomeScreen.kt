@@ -42,11 +42,12 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.GeoPoint
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
-import java.time.LocalDateTime
 
 /**
  * Composable function for the home screen of the application.
@@ -88,11 +89,11 @@ fun HomeScreen(
         secureContacts.forEach { secureContact ->
             val orderHHelp = HelpRequest(
                 phoneNumber = secureContact.phoneNumber,
-                location = LatLng(
+                location = GeoPoint(
                     userLocation?.latitude ?: 0.0,
                     userLocation?.longitude ?: 0.0,
                 ),
-                createdAt = LocalDateTime.now(),
+                createdAt = Timestamp.now(),
             )
             val messageFormatedWithLocation =
                 "${userMessage.takeIf { it.value.isNotEmpty() }?.value ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${orderHHelp.location.latitude},${orderHHelp.location.longitude}"
