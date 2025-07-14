@@ -11,6 +11,9 @@ data class HelpRequestModel(
     @SerializedName("location") val location: GeoPoint,
     @ServerTimestamp @SerializedName("createdAt") val createdAt: Timestamp
 ) {
+    constructor() : this(
+        phoneNumber = "", location = GeoPoint(0.0, 0.0), createdAt = Timestamp.now()
+    )
 
     fun toEntity(): HelpRequest {
         return HelpRequest(phoneNumber, location, createdAt)
