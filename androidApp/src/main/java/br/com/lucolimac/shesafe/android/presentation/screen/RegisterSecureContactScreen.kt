@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
+import br.com.lucolimac.shesafe.android.presentation.utils.StringExtensions.validateName
+import br.com.lucolimac.shesafe.android.presentation.utils.StringExtensions.validatePhone
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import org.koin.java.KoinJavaComponent.inject
 
@@ -49,10 +52,14 @@ fun RegisterSecureContactScreen(
     val secureContact = secureContactViewModel.uiState.collectAsState().value.selectedContact
     var name by remember { mutableStateOf(secureContact?.name ?: "") }
     var phoneNumber by remember { mutableStateOf(secureContact?.phoneNumber ?: "") }
+    var nameErrorId by remember { mutableStateOf<Int?>(null) }
+    var phoneErrorId by remember { mutableStateOf<Int?>(null) }
     LaunchedEffect(secureContact) {
         name = secureContact?.name ?: ""
         phoneNumber = secureContact?.phoneNumber ?: ""
     }
+    val isFormValid =
+        nameErrorId == null && phoneErrorId == null && name.isNotBlank() && phoneNumber.isNotBlank()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,30 +69,57 @@ fun RegisterSecureContactScreen(
     ) {
         OutlinedTextField(
             value = name,
-            onValueChange = { name = it },
+            onValueChange = {
+                name = it
+                nameErrorId = it.validateName()
+            },
             label = { Text(stringResource(R.string.label_secure_contact_name)) },
+            isError = nameErrorId != null,
             textStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium),
             modifier = Modifier.fillMaxWidth(),
         )
+        if (nameErrorId != null) {
+            Text(
+                stringResource(nameErrorId!!),
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 12.sp
+            )
+        }
         Spacer(modifier = Modifier.padding(8.dp))
         OutlinedTextField(
             value = phoneNumber,
-            onValueChange = { phoneNumber = it },
+            onValueChange = {
+                phoneNumber = it
+                phoneErrorId = it.validatePhone()
+            },
             label = { Text(stringResource(R.string.label_secure_contact_phone)) },
+            isError = phoneErrorId != null,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             textStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium),
             modifier = Modifier.fillMaxWidth(),
         )
+        if (phoneErrorId != null) {
+            Text(
+                stringResource(phoneErrorId!!),
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 12.sp
+            )
+        }
         Spacer(modifier = Modifier.weight(1F))
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                secureContactViewModel.saveSecureContact(
-                    secureContactPhoneNumber, SecureContact(name, phoneNumber)
-                )
-                onBack()
+                nameErrorId = name.validateName()
+                phoneErrorId = phoneNumber.validatePhone()
+                if (isFormValid) {
+                    secureContactViewModel.saveSecureContact(
+                        secureContactPhoneNumber, SecureContact(name, phoneNumber)
+                    )
+                    onBack()
+                }
             },
             shape = RoundedCornerShape(8.dp),
+            enabled = isFormValid,
         ) {
             Text(
                 text = stringResource(

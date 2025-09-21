@@ -52,7 +52,7 @@ fun SecureContactCard(
                 style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold),
             )
             Text(
-                text = secureContact.phoneNumber,
+                text = formatPhoneNumber(secureContact.phoneNumber),
                 style = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary),
             )
         }
@@ -82,6 +82,22 @@ fun SecureContactCard(
         }
     }
     HorizontalDivider()
+}
+
+fun formatPhoneNumber(raw: String): String {
+    var number = raw.trim()
+    // Ensure country code
+    if (!number.startsWith("55")) {
+        number = "55$number"
+    }
+    // Remove any non-digit characters
+    number = number.filter { it.isDigit() }
+    if (number.length != 13) return raw // fallback if not expected length
+    val country = number.substring(0, 2)
+    val area = number.substring(2, 4)
+    val prefix = number.substring(4, 9)
+    val suffix = number.substring(9, 13)
+    return "+$country($area) $prefix-$suffix"
 }
 
 @Composable
