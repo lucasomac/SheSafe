@@ -2,6 +2,7 @@ package br.com.lucolimac.shesafe.android.presentation.screen
 
 import android.Manifest
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -64,28 +66,73 @@ fun HomeScreen(
     authViewModel: AuthViewModel,
     settingsViewModel: SettingsViewModel,
     profileViewModel: ProfileViewModel,
-    onOrderHelp: (HelpRequest, String, Context) -> Boolean,
+    onOrderHelp: (HelpRequest, String, Context) -> Unit,
     onNoContacts: () -> Unit,
+    smsStatus: Boolean?,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(Unit) { authViewModel.setFieldsOfLoggedUser() }
+    LaunchedEffect(Unit) {
+        authViewModel.setFieldsOfLoggedUser()
+        secureContactViewModel.getAllSecureContacts()
+        profileViewModel.getHelpMessages()
+        profileViewModel
+    }
+    // Contadores para SMS enviados e total
+    var countSmsSent by remember { mutableIntStateOf(0) }
+    var countSmsTotal by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
+    LaunchedEffect(smsStatus) {
+        if (smsStatus == true) {
+            countSmsSent = countSmsSent + 1
+            Log.d("SMS", "SMS enviado com sucesso! Total: $countSmsSent/$countSmsTotal")
+        }
+    }
+    // Configuração do mapa e localização do usuário
     val userLocation = rememberLocation()
+    val cameraPositionState = rememberCameraPositionState {
+        position = if (userLocation != null) {
+            CameraPosition.fromLatLngZoom(
+                LatLng(userLocation.latitude, userLocation.longitude),
+                10F,
+            )
+        } else {
+            CameraPosition.fromLatLngZoom(LatLng(1.35, 103.87), 10f)
+        }
+    }
+
+    var mapLoaded by remember { mutableStateOf(false) }
+    LaunchedEffect(userLocation, mapLoaded) {
+        if (userLocation != null && mapLoaded) {
+            try {
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(userLocation.latitude, userLocation.longitude),
+                        16f,
+                    ),
+                )
+                Log.d(
+                    "MAP",
+                    "Camera atualizada para: ${userLocation.latitude},${userLocation.longitude}"
+                )
+            } catch (e: Exception) {
+                Log.e("MAP", "Erro ao atualizar camera: ${e.message}")
+            }
+        }
+    }
+    // Estados para diálogo e configurações
     var showDialog by remember { mutableStateOf(false) }
     var isShowSendConfirmation by remember { mutableStateOf(settingsViewModel.mapOfSettings.value[SettingsEnum.SEND_CONFIRMATION]) }
     var dialogModel by remember { mutableStateOf<DialogModel?>(null) }
     val secureContacts = secureContactViewModel.uiState.collectAsState().value.secureContacts
-    val hasSecureContacts =
-        secureContactViewModel.uiState.collectAsState().value.secureContacts.isNotEmpty()
+    val hasSecureContacts = secureContacts.isNotEmpty()
     val smsPermissionState = rememberPermissionState(Manifest.permission.SEND_SMS)
-    val context = LocalContext.current
     val screenAction = ScreenAction()
-    val userMessage = profileViewModel.helpMessage.collectAsState()
-    LaunchedEffect(Unit) {
-        secureContactViewModel.getAllSecureContacts()
-    }
+    val userMessage by profileViewModel.helpMessage.collectAsState()
+
     val sendSms = {
-        // Permission granted, proceed with sending SMS
-        var countSmsSent = 0
+        countSmsSent = 0 // Reset counter before sending
+        countSmsTotal = secureContacts.size
+
         secureContacts.forEach { secureContact ->
             val orderHHelp = HelpRequest(
                 phoneNumber = secureContact.phoneNumber,
@@ -96,36 +143,35 @@ fun HomeScreen(
                 createdAt = Timestamp.now(),
             )
             val messageFormatedWithLocation =
-                "${userMessage.takeIf { it.value.isNotEmpty() }?.value ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${orderHHelp.location.latitude},${orderHHelp.location.longitude}"
-            val hasBeenSent = onOrderHelp(
+                "${userMessage.takeIf { it.isNotEmpty() } ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${orderHHelp.location.latitude},${orderHHelp.location.longitude}"
+            Log.d("SMS", "Enviando SMS para: ${secureContact.phoneNumber}")
+            onOrderHelp(
                 orderHHelp,
                 messageFormatedWithLocation,
                 context,
             )
-            if (hasBeenSent) {
-                countSmsSent++
-            }
         }
+        // Só mostra o Toast quando todos os SMSs foram processados
         if (countSmsSent > 0) {
-            Toast.makeText(
-                context,
-                context.getString(
-                    R.string.sms_sent,
-                    countSmsSent.toString(),
-                ),
-                Toast.LENGTH_SHORT,
-            ).show()
+            if (countSmsSent == countSmsTotal) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.sms_sent),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            } else {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.sms_sent_partially, countSmsSent.toString()),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
         } else {
             Toast.makeText(
                 context,
                 context.getString(R.string.sms_not_sent),
                 Toast.LENGTH_SHORT,
             ).show()
-        }
-        if (homeViewModel.isCheckboxChecked.value != isShowSendConfirmation) {
-            settingsViewModel.setToggleSetting(
-                SettingsEnum.SEND_CONFIRMATION, homeViewModel.isCheckboxChecked.value
-            )
         }
     }
     val requestPermissionLauncher = rememberLauncherForActivityResult(
@@ -142,36 +188,13 @@ fun HomeScreen(
             ).show()
         }
     }
-
     LocationPermissionRequester {
-        val cameraPositionState = rememberCameraPositionState {
-            position = if (userLocation != null) {
-                CameraPosition.fromLatLngZoom(
-                    LatLng(userLocation.latitude, userLocation.longitude),
-                    10F,
-                )
-            } else {
-                CameraPosition.fromLatLngZoom(LatLng(1.35, 103.87), 10f) // Default
-            }
-        }
-
-        LaunchedEffect(key1 = userLocation) {
-            if (userLocation != null) {
-                cameraPositionState.animate(
-                    CameraUpdateFactory.newLatLngZoom(
-                        LatLng(userLocation.latitude, userLocation.longitude),
-                        16f,
-                    ),
-                )
-            }
-        }
         Column {
             HomeHeader(
                 stringResource(R.string.title_home),
                 modifier = modifier.align(Alignment.CenterHorizontally),
             )
             Box(modifier = modifier.fillMaxSize()) {
-                // Map (placed first, so it's in the background)
                 GoogleMap(
                     modifier = modifier.fillMaxSize(),
                     cameraPositionState = cameraPositionState,
@@ -181,7 +204,11 @@ fun HomeScreen(
                         mapToolbarEnabled = false,
                     ),
                     properties = MapProperties(isMyLocationEnabled = true),
-                )
+                    onMapLoaded = {
+                        mapLoaded = true
+                        Log.d("MAP", "Mapa carregado com sucesso!")
+                    })
+
                 RoundedButton(
                     text = stringResource(R.string.request_help),
                     onClick = {
@@ -223,19 +250,18 @@ fun HomeScreen(
                             }
 
                             is PermissionStatus.Denied -> {
-                                // Handle the case when permission is denied
                                 requestPermissionLauncher.launch(Manifest.permission.SEND_SMS)
                             }
                         }
                     },
                     modifier = modifier
-                        .align(Alignment.BottomCenter) // Align at the bottom center
+                        .align(Alignment.BottomCenter)
                         .padding(16.dp),
-                    // Add some padding
                 )
             }
         }
     }
+
     if (showDialog && dialogModel != null) {
         SheSafeDialog(
             dialogModel = dialogModel!!,
