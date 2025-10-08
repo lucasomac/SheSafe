@@ -77,4 +77,12 @@ class RegisterSecureContactViewModel(private val secureContactUseCase: SecureCon
             }
         }
     }
+
+    /**
+     * Reseta o estado do ViewModel para o estado inicial
+     * Deve ser chamado quando navegar para um novo cadastro
+     */
+    fun resetState() {
+        _secureContactUiState.value = RegisterSecureContactUiState.Empty
+    }
 }

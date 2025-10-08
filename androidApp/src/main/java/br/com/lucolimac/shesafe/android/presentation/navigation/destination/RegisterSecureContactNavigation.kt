@@ -21,6 +21,10 @@ fun NavGraphBuilder.registerSecureContactScreen(
         val secureContactPhoneNumber =
             it.arguments?.getString(SECURE_CONTACT_PHONE_NUMBER_ARGUMENT) ?: ""
         LaunchedEffect(Unit) {
+            // Resetar o estado do ViewModel para limpar dados anteriores
+            registerSecureContactViewModel.resetState()
+            
+            // Se há um número de telefone, carregar os dados do contato para edição
             secureContactPhoneNumber.takeIf { phoneNumber -> phoneNumber.isNotEmpty() }
                 ?.let { phoneNumber ->
                     registerSecureContactViewModel.getSecureContactByPhoneNumber(phoneNumber)
@@ -41,9 +45,8 @@ fun NavGraphBuilder.registerSecureContactScreen(
 
 fun NavHostController.navigateToRegisterSecureContact(secureContactPhoneNumber: String = "") {
     this.navigate("${BASE_SECURE_CONTACT_ROUTE}/$secureContactPhoneNumber") {
-        // re-selecting the same item
+        // Não restaurar estado para garantir formulário limpo
         launchSingleTop = true
-        // Restore state when re-selecting a previously selected item
-        restoreState = true
+        restoreState = false
     }
 }

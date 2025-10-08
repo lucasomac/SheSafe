@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,11 +56,22 @@ fun RegisterSecureContactScreen(
         RegisterSecureContactUiState.Loading -> SheSafeLoading()
         is RegisterSecureContactUiState.Success, RegisterSecureContactUiState.Empty -> {
             val secureContact =
-                if (state is RegisterSecureContactUiState.Success) state.secureContact else SecureContact()
+                if (state is RegisterSecureContactUiState.Success) state.secureContact else null
             var name by remember { mutableStateOf(secureContact?.name ?: "") }
             var phoneNumber by remember { mutableStateOf(secureContact?.phoneNumber ?: "") }
             var nameErrorId by remember { mutableStateOf<Int?>(null) }
             var phoneErrorId by remember { mutableStateOf<Int?>(null) }
+            
+            // Limpar formulário quando o estado for Empty (novo cadastro)
+            LaunchedEffect(state) {
+                if (state is RegisterSecureContactUiState.Empty) {
+                    name = ""
+                    phoneNumber = ""
+                    nameErrorId = null
+                    phoneErrorId = null
+                }
+            }
+            
             val isFormValid =
                 nameErrorId == null && phoneErrorId == null && name.isNotBlank() && phoneNumber.isNotBlank()
             Column(
