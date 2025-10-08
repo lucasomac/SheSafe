@@ -35,6 +35,7 @@ fun SecureContactCard(
     secureContact: SecureContact,
     onEditClick: (SecureContact) -> Unit,
     onDeleteClick: (SecureContact) -> Unit,
+    onSelectedContact: (SecureContact) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) } // For the dropdown
@@ -57,7 +58,10 @@ fun SecureContactCard(
             )
         }
         Box {
-            IconButton(onClick = { expanded = true }) {
+            IconButton(onClick = {
+                onSelectedContact(secureContact)
+                expanded = true
+            }) {
                 Icon(Icons.Filled.MoreVert, contentDescription = "More options")
             }
 
@@ -104,6 +108,6 @@ fun formatPhoneNumber(raw: String): String {
 @Preview(showBackground = true)
 fun ContactListItemPreview() {
     SheSafeTheme {
-        SecureContactCard(SecureContact("John", "123-456-7890"), {}, {})
+        SecureContactCard(SecureContact("John", "123-456-7890"), {}, {}, {})
     }
 }

@@ -45,6 +45,7 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.RegisterSecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -95,5 +96,6 @@ object SheSafeDependenciesInjection {
         viewModelOf(::AuthViewModel)
         viewModelOf(::HomeViewModel)
         viewModelOf(::ProfileViewModel)
+        viewModelOf(::RegisterSecureContactViewModel)
     }
 }

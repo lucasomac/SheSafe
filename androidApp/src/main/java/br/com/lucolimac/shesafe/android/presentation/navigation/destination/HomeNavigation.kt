@@ -8,11 +8,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.telephony.SmsManager
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
@@ -75,6 +77,20 @@ fun sendSmsWithCallback(
     smsManager?.sendTextMessage(phoneNumber, null, message, sentIntent, deliveredIntent)
 }
 
+fun sendSmsIntent(context: Context, phoneNumber: String, message: String) {
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = "smsto:$phoneNumber".toUri() // Apenas apps de SMS devem lidar com isso
+        putExtra("sms_body", message)
+    }
+    // Verifica se há um aplicativo para lidar com a intent
+    if (intent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(intent)
+    } else {
+        // Informa ao usuário que não há aplicativo de SMS disponível
+        Toast.makeText(context, "Nenhum aplicativo de SMS encontrado.", Toast.LENGTH_SHORT).show()
+    }
+}
+
 const val HOME_ROUTE = "home"
 fun NavGraphBuilder.homeScreen(
     navController: NavHostController,
@@ -85,6 +101,7 @@ fun NavGraphBuilder.homeScreen(
     profileViewModel: ProfileViewModel,
     helpRequestViewModel: HelpRequestViewModel
 ) {
+    homeViewModel.getAllSecureContacts()
     composable(HOME_ROUTE) {
         var smsSent by remember { mutableStateOf<Boolean?>(null) }
 //        var smsDelivered by remember { mutableStateOf<Boolean?>(null) }
@@ -98,15 +115,16 @@ fun NavGraphBuilder.homeScreen(
             profileViewModel = profileViewModel,
             onOrderHelp = { helpRequest, message, context ->
                 try {
-                    sendSmsWithCallback(
-                        context, helpRequest.phoneNumber, message
-                    ) { sent, delivered ->
-                        // Atualiza o estado com o resultado do SMS
-//                        smsStatus = Pair(sent, delivered)
-                        smsSent = sent
-//                        smsDelivered = delivered
-                        if (sent) helpRequestViewModel.registerHelpRequest(helpRequest)
-                    }
+                    sendSmsIntent(context, helpRequest.phoneNumber, message)
+//                    sendSmsWithCallback(
+//                        context, helpRequest.phoneNumber, message
+//                    ) { sent, delivered ->
+//                        // Atualiza o estado com o resultado do SMS
+////                        smsStatus = Pair(sent, delivered)
+//                        smsSent = sent
+////                        smsDelivered = delivered
+//                        if (sent) helpRequestViewModel.registerHelpRequest(helpRequest)
+//                    }
                 } catch (_: Exception) {
                     // Em caso de erro, define ambos como false
 //                    smsStatus = Pair(false, false)

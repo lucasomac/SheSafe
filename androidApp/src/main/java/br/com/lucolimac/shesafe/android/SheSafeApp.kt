@@ -34,6 +34,7 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.RegisterSecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
@@ -48,6 +49,7 @@ fun SheSafeApp(
     authViewModel: AuthViewModel,
     homeViewModel: HomeViewModel,
     profileViewModel: ProfileViewModel,
+    registerSecureContactViewModel: RegisterSecureContactViewModel,
     isShownBottomBar: Boolean = true,
     isShowFab: Boolean = false,
     isShowTopBar: Boolean = false,
@@ -81,7 +83,7 @@ fun SheSafeApp(
                     navigationIcon = {
                         IconButton(onClick = {
                             navController.popBackStack()
-                            secureContactViewModel.resetSelectedSecureContact()
+//                            secureContactViewModel.resetSelectedSecureContact()
                         }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -129,6 +131,7 @@ fun SheSafeApp(
             authViewModel,
             helpRequestViewModel,
             settingsViewModel,
+            registerSecureContactViewModel,
             modifier = Modifier.padding(innerPadding)
         )
     }

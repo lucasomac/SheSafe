@@ -28,43 +28,25 @@ import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeLoading
 import br.com.lucolimac.shesafe.android.presentation.component.contact.SecureContactCard
 import br.com.lucolimac.shesafe.android.presentation.state.SecureContactUiState
-import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
-import org.koin.java.KoinJavaComponent.inject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecureContactsScreen(
-    secureContactViewModel: SecureContactViewModel,
+    uiState: SecureContactUiState,
     onEditAction: (SecureContact) -> Unit,
     onDeleteAction: (SecureContact) -> Unit,
-    uiState: SecureContactUiState,
     modifier: Modifier = Modifier
 ) {
-    val secureContacts = uiState.secureContacts
-    val isLoading = uiState.isLoading
-//    val hasBeenDeleted = uiState.hasBeenDeletedSecureContact
     val sheetState = rememberModalBottomSheetState()
-    var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedContact = uiState.selectedContact
-//    LaunchedEffect(Unit) {
-//        uiState.getAllSecureContacts()
-//    }
-//    LaunchedEffect(hasBeenDeleted) {
-//        if (hasBeenDeleted) {
-//            uiState.getAllSecureContacts()
-//        }
-//    }
+    var showBottomSheetDelete by remember { mutableStateOf(false) }
+    var selectedContact by remember { mutableStateOf<SecureContact?>(null) }
     Column {
         HomeHeader(
             stringResource(R.string.title_secure_contacts),
             modifier = modifier.align(Alignment.CenterHorizontally)
         )
-        when {
-            isLoading -> {
-                SheSafeLoading()
-            }
-
-            secureContacts.isEmpty() -> {
+        when (uiState) {
+            SecureContactUiState.Empty -> {
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -75,27 +57,10 @@ fun SecureContactsScreen(
                 }
             }
 
-            showBottomSheet -> ModalBottomSheet(
-                onDismissRequest = {
-                    showBottomSheet = false
-                }, sheetState = sheetState
-            ) {
-                SheSafeBottomSheet(
-                    contactName = selectedContact?.name ?: "",
-                    onConfirmDelete = {
-                        onDeleteAction(selectedContact ?: return@SheSafeBottomSheet)
-                        selectedContact = null
-//                        uiState.getAllSecureContacts()
-                        showBottomSheet = false
-                    },
-                    onDismiss = {
-                        showBottomSheet = false
-                    },
-                    sheetState = sheetState,
-                )
-            }
-
-            else -> {
+            is SecureContactUiState.Error -> TODO()
+            SecureContactUiState.Loading -> SheSafeLoading()
+            is SecureContactUiState.Success -> {
+                val secureContacts = uiState.secureContacts
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -107,12 +72,35 @@ fun SecureContactsScreen(
                             secureContact = secureContacts[index],
                             onEditClick = onEditAction,
                             onDeleteClick = {
-                                secureContactViewModel.setSelectedSecureContact(secureContacts[index])
-                                showBottomSheet = true
+                                showBottomSheetDelete = true
                             },
-                        )
+                            onSelectedContact = {
+                                selectedContact = it
+                            })
                     }
                 }
+            }
+
+            SecureContactUiState.Idle -> return
+        }
+        when {
+            showBottomSheetDelete -> ModalBottomSheet(
+                onDismissRequest = {
+                    showBottomSheetDelete = false
+                }, sheetState = sheetState
+            ) {
+                SheSafeBottomSheet(
+                    contactName = selectedContact?.name ?: "",
+                    onConfirmDelete = {
+                        onDeleteAction(selectedContact ?: return@SheSafeBottomSheet)
+                        selectedContact = null
+                        showBottomSheetDelete = false
+                    },
+                    onDismiss = {
+                        showBottomSheetDelete = false
+                    },
+                    sheetState = sheetState,
+                )
             }
         }
     }
@@ -121,6 +109,17 @@ fun SecureContactsScreen(
 @Preview(showBackground = true)
 @Composable
 fun ContactsScreenPreview() {
-    val secureContactViewModel by  inject<SecureContactViewModel>(SecureContactViewModel::class.java)
-    SecureContactsScreen(secureContactViewModel, {}, {}, SecureContactUiState(), modifier = Modifier)
+    SecureContactsScreen(
+        uiState = SecureContactUiState.Success(
+        listOf(
+            SecureContact(
+                name = "Contato 1",
+                phoneNumber = "123456789",
+            ),
+            SecureContact(
+                name = "Contato 2",
+                phoneNumber = "987654321",
+            ),
+        )
+    ), onEditAction = {}, onDeleteAction = {})
 }
