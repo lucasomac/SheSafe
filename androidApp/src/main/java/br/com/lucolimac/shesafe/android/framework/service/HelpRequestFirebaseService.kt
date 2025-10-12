@@ -15,8 +15,8 @@ class HelpRequestFirebaseService(firestore: FirebaseFirestore, firebaseAuth: Fir
         var helpRequestList = mutableListOf<HelpRequestModel>()
         try {
             val querySnapshot = helpRequestCollection.get().await() // Use .await() here
-            helpRequestList = querySnapshot.documents.mapNotNull {
-                it.toObject(HelpRequestModel::class.java)
+            helpRequestList = querySnapshot.documents.mapNotNull { document ->
+                document.toObject(HelpRequestModel::class.java)
             }.toMutableList()
         } catch (e: Exception) {
             e.printStackTrace()

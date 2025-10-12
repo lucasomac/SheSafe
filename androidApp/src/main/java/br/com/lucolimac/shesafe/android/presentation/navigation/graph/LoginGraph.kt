@@ -7,7 +7,9 @@ import br.com.lucolimac.shesafe.android.presentation.navigation.destination.LOGI
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.homeScreen
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.loginScreen
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
@@ -17,12 +19,20 @@ fun NavGraphBuilder.loginGraph(
     homeViewModel: HomeViewModel,
     secureContactViewModel: SecureContactViewModel,
     authViewModel: AuthViewModel,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    profileViewModel: ProfileViewModel,
+    helpRequestViewModel: HelpRequestViewModel,
 ) {
     navigation(startDestination = LOGIN_ROUTE, route = LOGIN_GRAPH_ROUTE) {
         loginScreen(navController)
         homeScreen(
-            navController, homeViewModel, secureContactViewModel, authViewModel, settingsViewModel
+            navController,
+            homeViewModel,
+            secureContactViewModel,
+            authViewModel,
+            settingsViewModel,
+            profileViewModel,
+            helpRequestViewModel
         )
     }
 }

@@ -27,6 +27,7 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.RegisterSecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 import org.koin.java.KoinJavaComponent.inject
@@ -38,6 +39,10 @@ class MainActivity : ComponentActivity() {
     private val authViewModel by inject<AuthViewModel>(AuthViewModel::class.java)
     private val homeViewModel by inject<HomeViewModel>(HomeViewModel::class.java)
     private val profileViewModel by inject<ProfileViewModel>(ProfileViewModel::class.java)
+    private val registerSecureContactViewModel by inject<RegisterSecureContactViewModel>(
+        RegisterSecureContactViewModel::class.java
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -96,6 +101,7 @@ class MainActivity : ComponentActivity() {
                         authViewModel = authViewModel,
                         homeViewModel = homeViewModel,
                         profileViewModel = profileViewModel,
+                        registerSecureContactViewModel = registerSecureContactViewModel,
                         isShownBottomBar = isShownBottomBar,
                         isShowFab = isShownFab,
                         isShowTopBar = isShowAppBar,

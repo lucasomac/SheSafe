@@ -21,6 +21,7 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
+import br.com.lucolimac.shesafe.android.presentation.viewModel.RegisterSecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 
@@ -35,13 +36,20 @@ fun SheSafeNavHost(
     authViewModel: AuthViewModel,
     helpRequestViewModel: HelpRequestViewModel,
     settingsViewModel: SettingsViewModel,
+    registerSecureContactViewModel: RegisterSecureContactViewModel,
     modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController, startDestination = startDestination, modifier = modifier
     ) {
         loginGraph(
-            navController, homeViewModel, secureContactViewModel, authViewModel, settingsViewModel
+            navController,
+            homeViewModel,
+            secureContactViewModel,
+            authViewModel,
+            settingsViewModel,
+            profileViewModel,
+            helpRequestViewModel
         )
         homeGraph(
             navController,
@@ -59,7 +67,8 @@ fun SheSafeNavHost(
             helpRequestViewModel,
             settingsViewModel,
             homeViewModel,
-            profileViewModel
+            profileViewModel,
+            registerSecureContactViewModel
         )
         profileGraph(
             helpRequestViewModel,
@@ -70,7 +79,9 @@ fun SheSafeNavHost(
             secureContactViewModel,
             profileViewModel
         )
-        registerSecureContactGraph(secureContactViewModel, navController)
+        registerSecureContactGraph(
+            secureContactViewModel, registerSecureContactViewModel, navController
+        )
 
         helpRequestsGraph(
             profileViewModel,

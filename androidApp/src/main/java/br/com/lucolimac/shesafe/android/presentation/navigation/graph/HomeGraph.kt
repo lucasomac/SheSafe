@@ -28,7 +28,7 @@ fun NavGraphBuilder.homeGraph(
         startDestination = HOME_ROUTE, route = HOME_GRAPH_ROUTE
     ) {
         homeScreen(
-            navController, homeViewModel, secureContactViewModel, authViewModel, settingsViewModel
+            navController, homeViewModel, secureContactViewModel, authViewModel, settingsViewModel, profileViewModel, helpRequestViewModel
         )
         secureContactsScreen(navController, secureContactViewModel)
         profileScreen(

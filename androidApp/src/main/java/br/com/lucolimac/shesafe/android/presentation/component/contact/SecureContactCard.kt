@@ -35,6 +35,7 @@ fun SecureContactCard(
     secureContact: SecureContact,
     onEditClick: (SecureContact) -> Unit,
     onDeleteClick: (SecureContact) -> Unit,
+    onSelectedContact: (SecureContact) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) } // For the dropdown
@@ -52,12 +53,15 @@ fun SecureContactCard(
                 style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold),
             )
             Text(
-                text = secureContact.phoneNumber,
+                text = formatPhoneNumber(secureContact.phoneNumber),
                 style = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary),
             )
         }
         Box {
-            IconButton(onClick = { expanded = true }) {
+            IconButton(onClick = {
+                onSelectedContact(secureContact)
+                expanded = true
+            }) {
                 Icon(Icons.Filled.MoreVert, contentDescription = "More options")
             }
 
@@ -84,10 +88,26 @@ fun SecureContactCard(
     HorizontalDivider()
 }
 
+fun formatPhoneNumber(raw: String): String {
+    var number = raw.trim()
+    // Ensure country code
+    if (!number.startsWith("55")) {
+        number = "55$number"
+    }
+    // Remove any non-digit characters
+    number = number.filter { it.isDigit() }
+    if (number.length != 13) return raw // fallback if not expected length
+    val country = number.substring(0, 2)
+    val area = number.substring(2, 4)
+    val prefix = number.substring(4, 9)
+    val suffix = number.substring(9, 13)
+    return "+$country($area) $prefix-$suffix"
+}
+
 @Composable
 @Preview(showBackground = true)
 fun ContactListItemPreview() {
     SheSafeTheme {
-        SecureContactCard(SecureContact("John", "123-456-7890"), {}, {})
+        SecureContactCard(SecureContact("John", "123-456-7890"), {}, {}, {})
     }
 }

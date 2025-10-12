@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.R
@@ -102,6 +103,7 @@ fun ProfileScreen(
             )
 
             Text(
+                textAlign = TextAlign.Center,
                 text = userName ?: stringResource(R.string.default_user_name),
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(top = 8.dp),

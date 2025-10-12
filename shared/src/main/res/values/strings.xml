@@ -5,7 +5,8 @@
     <string name="title_secure_contacts">Contatos Seguro</string>
     <string name="title_profile">Perfil</string>
     <string name="message_order_help_sent">Pedido de ajuda enviado!!</string>
-    <string name="sms_sent">Pedido de ajuda enviado para %1$s contato(s) seguro!</string>
+    <string name="sms_sent">Pedido de ajuda enviado para toda sua lista de contatos seguros!</string>
+    <string name="sms_sent_partially">Pedido de ajuda enviado para %1$s contato(s) seguro!</string>
     <string name="sms_not_sent">Pedido de ajuda não foi enviado!</string>
     <string name="request_help">Pedir Ajuda</string>
     <string name="title_new_secure_contact">Novo contato seguro</string>
@@ -36,4 +37,6 @@
     <!--    Messages-->
     <string name="default_message_danger_user">Estou em perigo. Por favor se puder me ajudar esta é minha localização!</string>
     <string name="default_message_label">Sua mensagem</string>
+    <string name="error_name_blank">O nome não pode ser vazio!</string>
+    <string name="error_phone_digits">O celular deve conter apenas dígitos!</string>
 </resources>

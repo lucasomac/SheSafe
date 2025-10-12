@@ -3,8 +3,6 @@ package br.com.lucolimac.shesafe.android.presentation.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.shesafe.android.domain.usecase.AuthUseCase
-import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HOME_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.destination.LOGIN_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.graph.HOME_GRAPH_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.graph.LOGIN_GRAPH_ROUTE
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,7 +44,7 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
         viewModelScope.launch {
             authUseCase.isUserLoggedIn().collect { isLoggedIn ->
                 _startDestination.emit(
-                    if (isLoggedIn) HOME_GRAPH_ROUTE else LOGIN_ROUTE
+                    if (isLoggedIn) HOME_GRAPH_ROUTE else LOGIN_GRAPH_ROUTE
                 )
             }
         }
@@ -86,7 +84,7 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
         viewModelScope.launch {
             _logoutCompleteEvent.emit(false)
             _isUserLoggedIn.emit(false)
-            _startDestination.emit(LOGIN_ROUTE)
+            _startDestination.emit(LOGIN_GRAPH_ROUTE)
             _userEmail.emit(null)
             _userName.emit(null)
             _userPhotoUrl.emit(null)

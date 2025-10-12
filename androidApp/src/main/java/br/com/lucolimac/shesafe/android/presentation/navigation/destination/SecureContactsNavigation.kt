@@ -2,6 +2,7 @@ package br.com.lucolimac.shesafe.android.presentation.navigation.destination
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
@@ -14,18 +15,18 @@ fun NavGraphBuilder.secureContactsScreen(
     navController: NavHostController, secureContactViewModel: SecureContactViewModel
 ) {
     composable(SECURE_CONTACTS_ROUTE) {
-//        val secureContactViewModel: SecureContactViewModel by inject(SecureContactViewModel::class.java)
-        val uiState = secureContactViewModel.uiState.collectAsState().value
+        val uiState by secureContactViewModel.uiState.collectAsState()
         LaunchedEffect(Unit) {
             secureContactViewModel.getAllSecureContacts()
         }
         SecureContactsScreen(
-            secureContactViewModel, onEditAction = { secureContact ->
+            uiState = uiState,
+            onEditAction = { secureContact ->
                 navController.navigateToRegisterSecureContact(secureContact.phoneNumber)
-            }, onDeleteAction = {
+            },
+            onDeleteAction = {
                 secureContactViewModel.deleteSecureContact(it.phoneNumber)
-                secureContactViewModel.resetSelectedSecureContact()
-            }, uiState
+            },
         )
     }
 }

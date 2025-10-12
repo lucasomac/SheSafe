@@ -37,7 +37,13 @@ fun NavGraphBuilder.profileGraph(
         )
         secureContactsScreen(navController, secureContactViewModel)
         homeScreen(
-            navController, homeViewModel, secureContactViewModel, authViewModel, settingsViewModel
+            navController,
+            homeViewModel,
+            secureContactViewModel,
+            authViewModel,
+            settingsViewModel,
+            profileViewModel,
+            helpRequestViewModel
         )
         helpRequestsScreen(helpRequestViewModel)
         loginScreen(navController)
