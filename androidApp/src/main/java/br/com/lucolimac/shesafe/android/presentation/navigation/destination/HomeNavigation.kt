@@ -115,16 +115,16 @@ fun NavGraphBuilder.homeScreen(
             profileViewModel = profileViewModel,
             onOrderHelp = { helpRequest, message, context ->
                 try {
-                    sendSmsIntent(context, helpRequest.phoneNumber, message)
-//                    sendSmsWithCallback(
-//                        context, helpRequest.phoneNumber, message
-//                    ) { sent, delivered ->
-//                        // Atualiza o estado com o resultado do SMS
-////                        smsStatus = Pair(sent, delivered)
-//                        smsSent = sent
-////                        smsDelivered = delivered
-//                        if (sent) helpRequestViewModel.registerHelpRequest(helpRequest)
-//                    }
+//                    sendSmsIntent(context, helpRequest.phoneNumber, message)
+                    sendSmsWithCallback(
+                        context, helpRequest.phoneNumber, message
+                    ) { sent, delivered ->
+                        // Atualiza o estado com o resultado do SMS
+//                        smsStatus = Pair(sent, delivered)
+                        smsSent = sent
+//                        smsDelivered = delivered
+                        if (sent) helpRequestViewModel.registerHelpRequest(helpRequest)
+                    }
                 } catch (_: Exception) {
                     // Em caso de erro, define ambos como false
 //                    smsStatus = Pair(false, false)

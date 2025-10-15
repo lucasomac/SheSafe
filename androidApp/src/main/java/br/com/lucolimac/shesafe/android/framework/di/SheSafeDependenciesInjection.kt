@@ -37,6 +37,7 @@ import br.com.lucolimac.shesafe.android.framework.service.HelpMessageFirebaseSer
 import br.com.lucolimac.shesafe.android.framework.service.HelpMessageService
 import br.com.lucolimac.shesafe.android.framework.service.HelpRequestFirebaseService
 import br.com.lucolimac.shesafe.android.framework.service.HelpRequestService
+import br.com.lucolimac.shesafe.android.framework.service.PowerButtonService
 import br.com.lucolimac.shesafe.android.framework.service.SecureContactService
 import br.com.lucolimac.shesafe.android.framework.service.SecureContactFirebaseService
 import br.com.lucolimac.shesafe.android.framework.service.SettingsFirebaseService
@@ -75,6 +76,7 @@ object SheSafeDependenciesInjection {
         }
         factoryOf(::AuthFirebaseService) { bind<AuthService>() }
         factoryOf(::HelpMessageFirebaseService) { bind<HelpMessageService>() }
+        factoryOf(::PowerButtonService)
         factoryOf(::SecureSecureContactDataSourceImpl) { bind<SecureContactDataSource>() }
         factoryOf(::HelpRequestDataSourceImpl) { bind<HelpRequestDataSource>() }
         factoryOf(::SettingsDataSourceImpl) { bind<SettingsDataSource>() }
