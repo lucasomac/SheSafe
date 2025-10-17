@@ -5,7 +5,7 @@
     <string name="title_secure_contacts">Contatos Seguro</string>
     <string name="title_profile">Perfil</string>
     <string name="message_order_help_sent">Pedido de ajuda enviado!!</string>
-    <string name="sms_sent">Pedido de ajuda enviado para toda sua lista de contatos seguros!</string>
+    <string name="sms_sent">Pedido de ajuda enviado para sua lista de contatos seguros!</string>
     <string name="sms_sent_partially">Pedido de ajuda enviado para %1$s contato(s) seguro!</string>
     <string name="sms_not_sent">Pedido de ajuda não foi enviado!</string>
     <string name="request_help">Pedir Ajuda</string>

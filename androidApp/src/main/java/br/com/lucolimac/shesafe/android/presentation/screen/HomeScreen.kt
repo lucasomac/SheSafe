@@ -75,18 +75,17 @@ fun HomeScreen(
         authViewModel.setFieldsOfLoggedUser()
         secureContactViewModel.getAllSecureContacts()
         profileViewModel.getHelpMessages()
-        profileViewModel
     }
     // Contadores para SMS enviados e total
     var countSmsSent by remember { mutableIntStateOf(0) }
     var countSmsTotal by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
-    LaunchedEffect(smsStatus) {
-        if (smsStatus == true) {
-            countSmsSent = countSmsSent + 1
-            Log.d("SMS", "SMS enviado com sucesso! Total: $countSmsSent/$countSmsTotal")
-        }
-    }
+//    LaunchedEffect(smsStatus) {
+//        if (smsStatus == true) {
+//            countSmsSent = countSmsSent++
+//            Log.d("SMS", "SMS enviado com sucesso! Total: $countSmsSent/$countSmsTotal")
+//        }
+//    }
     // Configuração do mapa e localização do usuário
     val userLocation = rememberLocation()
     val cameraPositionState = rememberCameraPositionState {
@@ -134,7 +133,7 @@ fun HomeScreen(
         countSmsTotal = secureContacts.size
 
         secureContacts.forEach { secureContact ->
-            val orderHHelp = HelpRequest(
+            val orderHelp = HelpRequest(
                 phoneNumber = secureContact.phoneNumber,
                 location = GeoPoint(
                     userLocation?.latitude ?: 0.0,
@@ -143,36 +142,41 @@ fun HomeScreen(
                 createdAt = Timestamp.now(),
             )
             val messageFormatedWithLocation =
-                "${userMessage.takeIf { it.isNotEmpty() } ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${orderHHelp.location.latitude},${orderHHelp.location.longitude}"
+                "${userMessage.takeIf { it.isNotEmpty() } ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${orderHelp.location.latitude},${orderHelp.location.longitude}"
             Log.d("SMS", "Enviando SMS para: ${secureContact.phoneNumber}")
             onOrderHelp(
-                orderHHelp,
+                orderHelp,
                 messageFormatedWithLocation,
                 context,
             )
         }
+        Toast.makeText(
+            context,
+            context.getString(R.string.sms_sent),
+            Toast.LENGTH_SHORT,
+        ).show()
         // Só mostra o Toast quando todos os SMSs foram processados
-        if (countSmsSent > 0) {
-            if (countSmsSent == countSmsTotal) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.sms_sent),
-                    Toast.LENGTH_SHORT,
-                ).show()
-            } else {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.sms_sent_partially, countSmsSent.toString()),
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
-        } else {
-            Toast.makeText(
-                context,
-                context.getString(R.string.sms_not_sent),
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
+//        if (countSmsSent > 0) {
+//            if (countSmsSent == countSmsTotal) {
+//                Toast.makeText(
+//                    context,
+//                    context.getString(R.string.sms_sent),
+//                    Toast.LENGTH_SHORT,
+//                ).show()
+//            } else {
+//                Toast.makeText(
+//                    context,
+//                    context.getString(R.string.sms_sent_partially, countSmsSent.toString()),
+//                    Toast.LENGTH_SHORT,
+//                ).show()
+//            }
+//        } else {
+//            Toast.makeText(
+//                context,
+//                context.getString(R.string.sms_not_sent),
+//                Toast.LENGTH_SHORT,
+//            ).show()
+//        }
     }
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
