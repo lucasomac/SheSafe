@@ -109,8 +109,7 @@ fun NavGraphBuilder.homeScreen(
     composable(HOME_ROUTE) {
         val scope = rememberCoroutineScope()
         var smsSent by remember { mutableStateOf<Boolean?>(null) }
-//        var smsDelivered by remember { mutableStateOf<Boolean?>(null) }
-//        var smsStatus by remember { mutableStateOf<Pair<Boolean?, Boolean?>?>(null) }
+        var smsDelivered by remember { mutableStateOf<Boolean?>(null) }
         LaunchedEffect(Unit) {
             homeViewModel.getAllSecureContacts()
         }
@@ -125,26 +124,22 @@ fun NavGraphBuilder.homeScreen(
                     delay(1500L)
                 }
                 try {
-//                    sendSmsIntent(context, helpRequest.phoneNumber, message)
                     sendSmsWithCallback(
                         context, helpRequest.phoneNumber, message
                     ) { sent, delivered ->
                         // Atualiza o estado com o resultado do SMS
 //                        smsStatus = Pair(sent, delivered)
-                        smsSent = true
-//                        smsDelivered = delivered
+                        smsSent = sent
+                        smsDelivered = delivered
                         helpRequestViewModel.registerHelpRequest(helpRequest)
                     }
                 } catch (_: Exception) {
-                    // Em caso de erro, define ambos como false
-//                    smsStatus = Pair(false, false)
                     smsSent = false
-//                    smsDelivered = false
+                    smsDelivered = false
                 }
-                // Não retorna Pair, resultado é tratado via estado
             },
             onNoContacts = navController::navigateToSecureContacts,
-            smsStatus = true
+            smsStatus = smsSent
         )
     }
 }
