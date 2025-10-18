@@ -40,10 +40,9 @@ fun SecureContactCard(
 ) {
     var expanded by remember { mutableStateOf(false) } // For the dropdown
     Row(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 8.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -89,19 +88,37 @@ fun SecureContactCard(
 }
 
 fun formatPhoneNumber(raw: String): String {
-    var number = raw.trim()
-    // Ensure country code
-    if (!number.startsWith("55")) {
-        number = "55$number"
+    val digits = raw.filter { it.isDigit() }
+    if (digits.isEmpty()) return raw
+
+    // Strip leading Brazil country code if present and there's extra length
+    val d = if (digits.length > 11 && digits.startsWith("55")) digits.substring(2) else digits
+
+    return when {
+        d.length >= 11 -> {
+            val area = d.take(2)
+            val first = d.substring(2, 7) // 5 digits
+            val last = d.substring(7, 11) // 4 digits
+            "($area) $first-$last"
+        }
+
+        d.length == 10 -> {
+            val area = d.take(2)
+            val first = d.substring(2, 6) // 4 digits
+            val last = d.substring(6, 10) // 4 digits
+            "($area) $first-$last"
+        }
+
+        d.length >= 7 -> {
+            // For local numbers e.g. 8 or 9 digits show partial grouping: xxxx-xxxx or xxxxx-xxxx
+            val split = d.length - 4
+            val first = d.take(split)
+            val last = d.substring(split)
+            "$first-$last"
+        }
+
+        else -> raw // Not enough digits to format, return original
     }
-    // Remove any non-digit characters
-    number = number.filter { it.isDigit() }
-    if (number.length != 13) return raw // fallback if not expected length
-    val country = number.substring(0, 2)
-    val area = number.substring(2, 4)
-    val prefix = number.substring(4, 9)
-    val suffix = number.substring(9, 13)
-    return "+$country($area) $prefix-$suffix"
 }
 
 @Composable

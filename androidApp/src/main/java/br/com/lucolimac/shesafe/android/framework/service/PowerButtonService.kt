@@ -82,15 +82,13 @@ class PowerButtonService : Service() {
                 val geoPoint = GeoPoint(it.latitude, it.longitude)
                 CoroutineScope(Dispatchers.IO).launch {
                     secureContactUseCase.getSecureContacts().collect { contacts ->
-                        contacts.forEach { contact ->
                             helpRequestUseCase.registerHelpRequest(
                                 HelpRequest(
-                                    contact.phoneNumber,
+                                    contacts.map { it.phoneNumber },
                                     geoPoint,
                                     Timestamp.now()
                                 )
                             )
-                        }
                     }
                 }
             }

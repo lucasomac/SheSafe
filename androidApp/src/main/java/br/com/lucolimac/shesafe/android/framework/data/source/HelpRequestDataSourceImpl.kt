@@ -10,7 +10,7 @@ class HelpRequestDataSourceImpl(private val helpRequestService: HelpRequestServi
         return helpRequestService.getOrdersHelp()
     }
 
-    override suspend fun registerHelpRequest(contact: HelpRequestModel): Boolean {
-        return helpRequestService.registerOrderHelp(contact)
+    override suspend fun registerHelpRequest(helpRequestModel: HelpRequestModel): Boolean {
+        return helpRequestService.registerOrderHelp(helpRequestModel)
     }
 }

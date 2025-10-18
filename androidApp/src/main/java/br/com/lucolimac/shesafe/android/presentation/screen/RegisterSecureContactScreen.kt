@@ -61,7 +61,7 @@ fun RegisterSecureContactScreen(
             var phoneNumber by remember { mutableStateOf(secureContact?.phoneNumber ?: "") }
             var nameErrorId by remember { mutableStateOf<Int?>(null) }
             var phoneErrorId by remember { mutableStateOf<Int?>(null) }
-            
+
             // Limpar formulário quando o estado for Empty (novo cadastro)
             LaunchedEffect(state) {
                 if (state is RegisterSecureContactUiState.Empty) {
@@ -71,7 +71,7 @@ fun RegisterSecureContactScreen(
                     phoneErrorId = null
                 }
             }
-            
+
             val isFormValid =
                 nameErrorId == null && phoneErrorId == null && name.isNotBlank() && phoneNumber.isNotBlank()
             Column(
@@ -101,10 +101,14 @@ fun RegisterSecureContactScreen(
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
+                    prefix = { Text("+55") },
                     value = phoneNumber,
-                    onValueChange = {
-                        phoneNumber = it
-                        phoneErrorId = it.validatePhone()
+                    onValueChange = { input ->
+                        val filteredText = input.filter { it.isDigit() }
+                        if (filteredText.length <= 11) {
+                            phoneNumber = filteredText
+                            phoneErrorId = filteredText.validatePhone()
+                        }
                     },
                     label = { Text(stringResource(R.string.label_secure_contact_phone)) },
                     isError = phoneErrorId != null,

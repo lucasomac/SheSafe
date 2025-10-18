@@ -41,7 +41,7 @@ fun LastSentCard(lastSent: HelpRequest) {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = lastSent.phoneNumber,
+                    text = lastSent.phoneNumbers.toString(),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )

@@ -68,7 +68,6 @@ fun HomeScreen(
     profileViewModel: ProfileViewModel,
     onOrderHelp: (HelpRequest, String, Context) -> Unit,
     onNoContacts: () -> Unit,
-    smsStatus: Boolean?,
     modifier: Modifier = Modifier,
 ) {
     LaunchedEffect(Unit) {
@@ -76,17 +75,7 @@ fun HomeScreen(
         secureContactViewModel.getAllSecureContacts()
         profileViewModel.getHelpMessages()
     }
-    // Contadores para SMS enviados e total
-    var countSmsSent by remember { mutableIntStateOf(0) }
-    var countSmsTotal by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
-//    LaunchedEffect(smsStatus) {
-//        if (smsStatus == true) {
-//            countSmsSent = countSmsSent++
-//            Log.d("SMS", "SMS enviado com sucesso! Total: $countSmsSent/$countSmsTotal")
-//        }
-//    }
-    // Configuração do mapa e localização do usuário
     val userLocation = rememberLocation()
     val cameraPositionState = rememberCameraPositionState {
         position = if (userLocation != null) {
@@ -129,27 +118,22 @@ fun HomeScreen(
     val userMessage by profileViewModel.helpMessage.collectAsState()
 
     val sendSms = {
-        countSmsSent = 0 // Reset counter before sending
-        countSmsTotal = secureContacts.size
-
-        secureContacts.forEach { secureContact ->
-            val orderHelp = HelpRequest(
-                phoneNumber = secureContact.phoneNumber,
-                location = GeoPoint(
-                    userLocation?.latitude ?: 0.0,
-                    userLocation?.longitude ?: 0.0,
-                ),
-                createdAt = Timestamp.now(),
-            )
-            val messageFormatedWithLocation =
-                "${userMessage.takeIf { it.isNotEmpty() } ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${orderHelp.location.latitude},${orderHelp.location.longitude}"
-            Log.d("SMS", "Enviando SMS para: ${secureContact.phoneNumber}")
-            onOrderHelp(
-                orderHelp,
-                messageFormatedWithLocation,
-                context,
-            )
-        }
+        val orderHelp = HelpRequest(
+            phoneNumbers = secureContacts.map { it.phoneNumber },
+            location = GeoPoint(
+                userLocation?.latitude ?: 0.0,
+                userLocation?.longitude ?: 0.0,
+            ),
+            createdAt = Timestamp.now(),
+        )
+        val messageFormatedWithLocation =
+            "${userMessage.takeIf { it.isNotEmpty() } ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${orderHelp.location.latitude},${orderHelp.location.longitude}"
+        Log.d("SMS", "Enviando SMS para: ${orderHelp.phoneNumbers}")
+        onOrderHelp(
+            orderHelp,
+            messageFormatedWithLocation,
+            context,
+        )
         Toast.makeText(
             context,
             context.getString(R.string.sms_sent),
@@ -187,7 +171,7 @@ fun HomeScreen(
             // Permission denied, show a message to the user
             Toast.makeText(
                 context,
-                "Permission to send SMS is required to use this feature.",
+                "O aplicativo requer permissão para enviar SMS.",
                 Toast.LENGTH_SHORT,
             ).show()
         }

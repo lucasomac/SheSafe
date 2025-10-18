@@ -5,5 +5,5 @@ import br.com.lucolimac.shesafe.android.data.model.HelpRequestModel
 interface HelpRequestDataSource {
     suspend fun getHelpRequests(): List<HelpRequestModel>
 
-    suspend fun registerHelpRequest(contact: HelpRequestModel): Boolean
+    suspend fun registerHelpRequest(helpRequestModel: HelpRequestModel): Boolean
 }
