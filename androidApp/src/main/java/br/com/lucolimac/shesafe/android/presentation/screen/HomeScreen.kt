@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.domain.entity.HelpRequest
+import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.presentation.actions.ScreenAction
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeDialog
@@ -66,7 +67,7 @@ fun HomeScreen(
     authViewModel: AuthViewModel,
     settingsViewModel: SettingsViewModel,
     profileViewModel: ProfileViewModel,
-    onOrderHelp: (HelpRequest, String, Context) -> Unit,
+    onOrderHelp: (List<SecureContact>, String, GeoPoint) -> Int,
     onNoContacts: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -118,49 +119,29 @@ fun HomeScreen(
     val userMessage by profileViewModel.helpMessage.collectAsState()
 
     val sendSms = {
-        val orderHelp = HelpRequest(
-            phoneNumbers = secureContacts.map { it.phoneNumber },
-            location = GeoPoint(
+//        val orderHelp = HelpRequest(
+//            phoneNumbers = secureContacts.map { it.phoneNumber },
+//            location = GeoPoint(
+//                userLocation?.latitude ?: 0.0,
+//                userLocation?.longitude ?: 0.0,
+//            ),
+//            createdAt = Timestamp.now(),
+//        )
+        val messageFormatedWithLocation =
+            "${userMessage.takeIf { it.isNotEmpty() } ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${userLocation?.latitude ?: 0.0},${userLocation?.longitude ?: 0.0}"
+//        Log.d("SMS", "Enviando SMS para: ${orderHelp.phoneNumbers}")
+        val numberOfSuccess = onOrderHelp(
+            secureContacts, messageFormatedWithLocation, GeoPoint(
                 userLocation?.latitude ?: 0.0,
                 userLocation?.longitude ?: 0.0,
-            ),
-            createdAt = Timestamp.now(),
+            )
         )
-        val messageFormatedWithLocation =
-            "${userMessage.takeIf { it.isNotEmpty() } ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${orderHelp.location.latitude},${orderHelp.location.longitude}"
-        Log.d("SMS", "Enviando SMS para: ${orderHelp.phoneNumbers}")
-        onOrderHelp(
-            orderHelp,
-            messageFormatedWithLocation,
-            context,
-        )
-        Toast.makeText(
-            context,
-            context.getString(R.string.sms_sent),
-            Toast.LENGTH_SHORT,
-        ).show()
-        // Só mostra o Toast quando todos os SMSs foram processados
-//        if (countSmsSent > 0) {
-//            if (countSmsSent == countSmsTotal) {
-//                Toast.makeText(
-//                    context,
-//                    context.getString(R.string.sms_sent),
-//                    Toast.LENGTH_SHORT,
-//                ).show()
-//            } else {
-//                Toast.makeText(
-//                    context,
-//                    context.getString(R.string.sms_sent_partially, countSmsSent.toString()),
-//                    Toast.LENGTH_SHORT,
-//                ).show()
-//            }
-//        } else {
-//            Toast.makeText(
-//                context,
-//                context.getString(R.string.sms_not_sent),
-//                Toast.LENGTH_SHORT,
-//            ).show()
-//        }
+        if (numberOfSuccess != 0)
+            Toast.makeText(
+                context,
+                context.getString(R.string.sms_sent),
+                Toast.LENGTH_SHORT,
+            ).show()
     }
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),

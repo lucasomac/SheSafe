@@ -10,7 +10,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
-import br.com.lucolimac.shesafe.android.presentation.utils.SmsFunctions.sendSmsWithCallback
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
@@ -41,19 +40,21 @@ fun NavGraphBuilder.homeScreen(
             authViewModel = authViewModel,
             settingsViewModel = settingsViewModel,
             profileViewModel = profileViewModel,
-            onOrderHelp = { helpRequest, message, context ->
-                try {
-                    sendSmsWithCallback(
-                        context, helpRequest.phoneNumbers, message
-                    ) { sent, delivered ->
-                        smsSentCount = if (sent) smsSentCount++ else smsSentCount
-                        smsDeliveredCount = if (delivered) smsDeliveredCount++ else smsSentCount
-                    }
-                    helpRequestViewModel.registerHelpRequest(helpRequest)
-                } catch (_: Exception) {
-                    smsSentCount = 0
-                    smsDeliveredCount = 0
-                }
+            onOrderHelp = { contacts, message, location ->
+//                try {
+//                    sendSmsWithCallback(
+//                        context, helpRequest.phoneNumbers, message
+//                    ) { sent, delivered ->
+//                        smsSentCount = if (sent) smsSentCount++ else smsSentCount
+//                        smsDeliveredCount = if (delivered) smsDeliveredCount++ else smsSentCount
+//                    }
+//                    helpRequestViewModel.registerHelpRequest(helpRequest)
+//                } catch (_: Exception) {
+//                    smsSentCount = 0
+//                    smsDeliveredCount = 0
+//                }
+                helpRequestViewModel.sendSms(contacts, message, location)
+                helpRequestViewModel.sendSmsState.value
             },
             onNoContacts = navController::navigateToSecureContacts,
         )
