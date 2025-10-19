@@ -3,7 +3,7 @@ package br.com.lucolimac.shesafe.android.data.repository
 import android.util.Log
 import br.com.lucolimac.shesafe.android.data.model.request.SmsDevItemRequest
 import br.com.lucolimac.shesafe.android.data.model.response.SmsDevItemResponse
-import br.com.lucolimac.shesafe.android.data.source.SmsDevDataSource
+import br.com.lucolimac.shesafe.android.data.source.api.SmsDevDataSource
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevBody
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevEntity
 import br.com.lucolimac.shesafe.android.domain.repository.SmsDevRepository

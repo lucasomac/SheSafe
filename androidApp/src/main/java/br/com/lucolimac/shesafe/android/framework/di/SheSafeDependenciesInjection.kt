@@ -12,7 +12,7 @@ import br.com.lucolimac.shesafe.android.data.source.HelpMessageDataSource
 import br.com.lucolimac.shesafe.android.data.source.HelpRequestDataSource
 import br.com.lucolimac.shesafe.android.data.source.SecureContactDataSource
 import br.com.lucolimac.shesafe.android.data.source.SettingsDataSource
-import br.com.lucolimac.shesafe.android.data.source.SmsDevDataSource
+import br.com.lucolimac.shesafe.android.data.source.api.SmsDevDataSource
 import br.com.lucolimac.shesafe.android.domain.repository.AuthRepository
 import br.com.lucolimac.shesafe.android.domain.repository.HelpMessageRepository
 import br.com.lucolimac.shesafe.android.domain.repository.HelpRequestRepository

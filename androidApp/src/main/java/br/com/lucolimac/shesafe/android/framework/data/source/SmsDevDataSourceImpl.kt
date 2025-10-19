@@ -2,8 +2,8 @@ package br.com.lucolimac.shesafe.android.framework.data.source
 
 import br.com.lucolimac.shesafe.android.data.model.request.SmsDevItemRequest
 import br.com.lucolimac.shesafe.android.data.model.response.SmsDevItemResponse
-import br.com.lucolimac.shesafe.android.data.source.SmsDevDataSource
-import br.com.lucolimac.shesafe.android.framework.service.SmsDevService
+import br.com.lucolimac.shesafe.android.data.source.api.SmsDevDataSource
+import br.com.lucolimac.shesafe.android.framework.service.api.SmsDevService
 import retrofit2.Response
 import retrofit2.Retrofit
 
