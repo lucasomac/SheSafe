@@ -18,8 +18,8 @@ import br.com.lucolimac.shesafe.android.domain.repository.HelpMessageRepository
 import br.com.lucolimac.shesafe.android.domain.repository.HelpRequestRepository
 import br.com.lucolimac.shesafe.android.domain.repository.SecureContactRepository
 import br.com.lucolimac.shesafe.android.domain.repository.SettingsRepository
-import br.com.lucolimac.shesafe.android.domain.repository.SmsDevRepository
-import br.com.lucolimac.shesafe.android.domain.repository.SmsDevUseCaseImpl
+import br.com.lucolimac.shesafe.android.domain.repository.api.SmsDevRepository
+import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.AuthUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.AuthUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.HelpMessageUseCase
@@ -30,7 +30,7 @@ import br.com.lucolimac.shesafe.android.domain.usecase.SecureContactUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.SecureContactUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.SettingsUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.SettingsUseCaseImpl
-import br.com.lucolimac.shesafe.android.domain.usecase.SmsDevUseCase
+import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCase
 import br.com.lucolimac.shesafe.android.framework.constants.SmsDevApi.provideOkHttpClient
 import br.com.lucolimac.shesafe.android.framework.constants.SmsDevApi.provideRetrofit
 import br.com.lucolimac.shesafe.android.framework.data.source.AuthDataSourceImpl

@@ -1,8 +1,8 @@
-package br.com.lucolimac.shesafe.android.domain.repository
+package br.com.lucolimac.shesafe.android.domain.usecase.api
 
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevBody
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevEntity
-import br.com.lucolimac.shesafe.android.domain.usecase.SmsDevUseCase
+import br.com.lucolimac.shesafe.android.domain.repository.api.SmsDevRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

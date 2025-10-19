@@ -7,7 +7,7 @@ import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevBody
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevEntity
 import br.com.lucolimac.shesafe.android.domain.usecase.HelpRequestUseCase
-import br.com.lucolimac.shesafe.android.domain.usecase.SmsDevUseCase
+import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCase
 import br.com.lucolimac.shesafe.android.presentation.state.SmsStatusState
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth

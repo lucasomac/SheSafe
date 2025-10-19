@@ -6,7 +6,7 @@ import br.com.lucolimac.shesafe.android.data.model.response.SmsDevItemResponse
 import br.com.lucolimac.shesafe.android.data.source.api.SmsDevDataSource
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevBody
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevEntity
-import br.com.lucolimac.shesafe.android.domain.repository.SmsDevRepository
+import br.com.lucolimac.shesafe.android.domain.repository.api.SmsDevRepository
 
 class SmsDevRepositoryImpl(private val dataSource: SmsDevDataSource) : SmsDevRepository {
     override suspend fun sendSms(body: List<SmsDevBody>): List<SmsDevEntity> {

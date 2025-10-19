@@ -1,4 +1,4 @@
-package br.com.lucolimac.shesafe.android.domain.repository
+package br.com.lucolimac.shesafe.android.domain.repository.api
 
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevBody
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevEntity
