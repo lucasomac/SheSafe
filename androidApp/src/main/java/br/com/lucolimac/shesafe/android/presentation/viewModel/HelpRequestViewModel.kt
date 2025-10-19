@@ -8,6 +8,7 @@ import br.com.lucolimac.shesafe.android.domain.entity.SmsDevBody
 import br.com.lucolimac.shesafe.android.domain.entity.SmsDevEntity
 import br.com.lucolimac.shesafe.android.domain.usecase.HelpRequestUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.SmsDevUseCase
+import br.com.lucolimac.shesafe.android.presentation.state.SmsStatusState
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
@@ -28,8 +29,8 @@ class HelpRequestViewModel(
     val isLoading: StateFlow<Boolean> = _isLoading
     private val _helpRequests = MutableStateFlow<List<HelpRequest>>(emptyList())
     val helpRequests = _helpRequests.asStateFlow()
-    private val _sendSmsState = MutableStateFlow(0)
-    val sendSmsState: StateFlow<Int> = _sendSmsState.asStateFlow()
+    private val _smsStatusSent = MutableStateFlow<SmsStatusState>(SmsStatusState.Idle)
+    val smsStatusSent: StateFlow<SmsStatusState> = _smsStatusSent.asStateFlow()
     private val authListener = FirebaseAuth.AuthStateListener { auth ->
         val user = auth.currentUser
         if (user != null) {
@@ -50,7 +51,7 @@ class HelpRequestViewModel(
         viewModelScope.launch {
             helpRequestUseCase.getHelpRequests().onStart { _isLoading.emit(true) }
                 .onCompletion { _isLoading.emit(false) }.collect { helpRequests ->
-                    _helpRequests.emit(helpRequests)
+                    _helpRequests.emit(helpRequests.sortedByDescending { it.createdAt })
                 }
         }
     }
@@ -73,11 +74,13 @@ class HelpRequestViewModel(
                     key = API_KEY, msg = message, number = it.phoneNumber.toLong(), type = TYPE_SEND
                 )
             }
-            smsDevUseCase.sendSms(body = body).onStart { _sendSmsState.update { 0 } }.collect {
+            smsDevUseCase.sendSms(body = body).collect {
                 val data: List<SmsDevEntity> = it
-                _sendSmsState.update { data.count { it.codigo == "OK" } }
+                _smsStatusSent.update {
+                    SmsStatusState.Result(data.any { it.situacao == "OK" })
+                }
                 val helpRequest = HelpRequest(
-                    phoneNumbers = contacts.map { it.phoneNumber },
+                    phoneNumbers = contacts.map { contact -> contact.phoneNumber },
                     location = location,
                     createdAt = Timestamp.now()
                 )
@@ -85,7 +88,9 @@ class HelpRequestViewModel(
             }
         }
     }
-
+    fun resetSmsStatus() {
+        _smsStatusSent.value = SmsStatusState.Idle
+    }
     fun resetAllStates() {
         viewModelScope.launch {
             _isLoading.emit(true)
@@ -99,7 +104,8 @@ class HelpRequestViewModel(
     }
 
     companion object {
-        const val API_KEY = ""
+        const val API_KEY =
+            "DE7IVGCICFQ54IXAM14B63U0IG8EVSKMC515IBVY1EQQTITSTHDPTURVVGXQ8X5OKRANUT9NFU10LNSCYM3ONCI7LYWR90NL50ENC2G9CFPFHK8U21FWANW6P6F3UW9K"
         const val TYPE_SEND = 9
     }
 }

@@ -1,7 +1,6 @@
 package br.com.lucolimac.shesafe.android.presentation.screen
 
 import android.Manifest
-import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -14,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.R
-import br.com.lucolimac.shesafe.android.domain.entity.HelpRequest
 import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.presentation.actions.ScreenAction
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
@@ -45,7 +42,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.GeoPoint
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
@@ -67,7 +63,7 @@ fun HomeScreen(
     authViewModel: AuthViewModel,
     settingsViewModel: SettingsViewModel,
     profileViewModel: ProfileViewModel,
-    onOrderHelp: (List<SecureContact>, String, GeoPoint) -> Int,
+    onOrderHelp: (List<SecureContact>, String, GeoPoint) -> Unit,
     onNoContacts: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -119,29 +115,14 @@ fun HomeScreen(
     val userMessage by profileViewModel.helpMessage.collectAsState()
 
     val sendSms = {
-//        val orderHelp = HelpRequest(
-//            phoneNumbers = secureContacts.map { it.phoneNumber },
-//            location = GeoPoint(
-//                userLocation?.latitude ?: 0.0,
-//                userLocation?.longitude ?: 0.0,
-//            ),
-//            createdAt = Timestamp.now(),
-//        )
         val messageFormatedWithLocation =
-            "${userMessage.takeIf { it.isNotEmpty() } ?: context.getString(R.string.default_message_danger_user)} \nhttps://www.google.com/maps/search/?api=1&query=${userLocation?.latitude ?: 0.0},${userLocation?.longitude ?: 0.0}"
-//        Log.d("SMS", "Enviando SMS para: ${orderHelp.phoneNumbers}")
-        val numberOfSuccess = onOrderHelp(
+            "${userMessage.takeIf { it.isNotEmpty() } ?: context.getString(R.string.default_message_danger_user)} https://www.google.com/maps/search/?api=1&query=${userLocation?.latitude ?: 0.0},${userLocation?.longitude ?: 0.0}"
+        onOrderHelp(
             secureContacts, messageFormatedWithLocation, GeoPoint(
                 userLocation?.latitude ?: 0.0,
                 userLocation?.longitude ?: 0.0,
             )
         )
-        if (numberOfSuccess != 0)
-            Toast.makeText(
-                context,
-                context.getString(R.string.sms_sent),
-                Toast.LENGTH_SHORT,
-            ).show()
     }
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
