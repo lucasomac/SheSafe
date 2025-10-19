@@ -38,7 +38,7 @@ import br.com.lucolimac.shesafe.android.framework.data.source.HelpMessageDataSou
 import br.com.lucolimac.shesafe.android.framework.data.source.HelpRequestDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.SecureSecureContactDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.SettingsDataSourceImpl
-import br.com.lucolimac.shesafe.android.framework.data.source.SmsDevDataSourceImpl
+import br.com.lucolimac.shesafe.android.framework.data.source.api.SmsDevDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.service.AuthFirebaseService
 import br.com.lucolimac.shesafe.android.framework.service.AuthService
 import br.com.lucolimac.shesafe.android.framework.service.HelpMessageFirebaseService

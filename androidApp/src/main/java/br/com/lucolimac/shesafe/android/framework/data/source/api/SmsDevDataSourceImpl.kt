@@ -1,4 +1,4 @@
-package br.com.lucolimac.shesafe.android.framework.data.source
+package br.com.lucolimac.shesafe.android.framework.data.source.api
 
 import br.com.lucolimac.shesafe.android.data.model.request.SmsDevItemRequest
 import br.com.lucolimac.shesafe.android.data.model.response.SmsDevItemResponse
