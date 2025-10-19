@@ -11,7 +11,7 @@ import br.com.lucolimac.shesafe.android.domain.repository.api.SmsDevRepository
 class SmsDevRepositoryImpl(private val dataSource: SmsDevDataSource) : SmsDevRepository {
     override suspend fun sendSms(body: List<SmsDevBody>): List<SmsDevEntity> {
         return try {
-            val response = dataSource.sendSms(body.map { SmsDevItemRequest.Companion.fromEntity(it) })
+            val response = dataSource.sendSms(body.map { SmsDevItemRequest.fromEntity(it) })
             if (response.isSuccessful) {
                 val smsResponse: List<SmsDevItemResponse>? = response.body()
                 smsResponse?.map { it.toEntity() } ?: emptyList()
