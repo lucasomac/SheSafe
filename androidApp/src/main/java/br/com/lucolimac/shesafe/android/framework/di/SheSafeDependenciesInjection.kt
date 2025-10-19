@@ -6,7 +6,7 @@ import br.com.lucolimac.shesafe.android.data.repository.HelpMessageRepositoryImp
 import br.com.lucolimac.shesafe.android.data.repository.HelpRequestRepositoryImpl
 import br.com.lucolimac.shesafe.android.data.repository.SecureContactRepositoryImpl
 import br.com.lucolimac.shesafe.android.data.repository.SettingsRepositoryImpl
-import br.com.lucolimac.shesafe.android.data.repository.SmsDevRepositoryImpl
+import br.com.lucolimac.shesafe.android.data.repository.api.SmsDevRepositoryImpl
 import br.com.lucolimac.shesafe.android.data.source.AuthDataSource
 import br.com.lucolimac.shesafe.android.data.source.HelpMessageDataSource
 import br.com.lucolimac.shesafe.android.data.source.HelpRequestDataSource
