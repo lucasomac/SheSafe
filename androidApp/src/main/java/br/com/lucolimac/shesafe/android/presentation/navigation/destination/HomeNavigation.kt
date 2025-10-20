@@ -58,7 +58,7 @@ fun NavGraphBuilder.homeScreen(
             settingsViewModel = settingsViewModel,
             profileViewModel = profileViewModel,
             onOrderHelp = { contacts, message, location ->
-                helpRequestViewModel.sendSms(contacts, message, location)
+                helpRequestViewModel.sendSmsInfoBip(contacts, message, location)
             },
             onNoContacts = navController::navigateToSecureContacts,
         )

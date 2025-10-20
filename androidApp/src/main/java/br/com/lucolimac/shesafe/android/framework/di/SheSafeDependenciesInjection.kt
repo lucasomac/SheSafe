@@ -6,18 +6,21 @@ import br.com.lucolimac.shesafe.android.data.repository.HelpMessageRepositoryImp
 import br.com.lucolimac.shesafe.android.data.repository.HelpRequestRepositoryImpl
 import br.com.lucolimac.shesafe.android.data.repository.SecureContactRepositoryImpl
 import br.com.lucolimac.shesafe.android.data.repository.SettingsRepositoryImpl
+import br.com.lucolimac.shesafe.android.data.repository.api.InfoBipRepositoryImpl
 import br.com.lucolimac.shesafe.android.data.repository.api.SmsDevRepositoryImpl
 import br.com.lucolimac.shesafe.android.data.source.AuthDataSource
 import br.com.lucolimac.shesafe.android.data.source.HelpMessageDataSource
 import br.com.lucolimac.shesafe.android.data.source.HelpRequestDataSource
 import br.com.lucolimac.shesafe.android.data.source.SecureContactDataSource
 import br.com.lucolimac.shesafe.android.data.source.SettingsDataSource
+import br.com.lucolimac.shesafe.android.data.source.api.InfoBipDataSource
 import br.com.lucolimac.shesafe.android.data.source.api.SmsDevDataSource
 import br.com.lucolimac.shesafe.android.domain.repository.AuthRepository
 import br.com.lucolimac.shesafe.android.domain.repository.HelpMessageRepository
 import br.com.lucolimac.shesafe.android.domain.repository.HelpRequestRepository
 import br.com.lucolimac.shesafe.android.domain.repository.SecureContactRepository
 import br.com.lucolimac.shesafe.android.domain.repository.SettingsRepository
+import br.com.lucolimac.shesafe.android.domain.repository.api.InfoBipRepository
 import br.com.lucolimac.shesafe.android.domain.repository.api.SmsDevRepository
 import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.AuthUseCase
@@ -30,14 +33,18 @@ import br.com.lucolimac.shesafe.android.domain.usecase.SecureContactUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.SecureContactUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.SettingsUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.SettingsUseCaseImpl
+import br.com.lucolimac.shesafe.android.domain.usecase.api.InfoBipUseCase
+import br.com.lucolimac.shesafe.android.domain.usecase.api.InfoBipUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCase
 import br.com.lucolimac.shesafe.android.framework.constants.SmsDevApi.provideOkHttpClient
 import br.com.lucolimac.shesafe.android.framework.constants.SmsDevApi.provideRetrofit
+import br.com.lucolimac.shesafe.android.framework.constants.SmsDevApi.provideRetrofitSmsDev
 import br.com.lucolimac.shesafe.android.framework.data.source.AuthDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.HelpMessageDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.HelpRequestDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.SecureSecureContactDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.SettingsDataSourceImpl
+import br.com.lucolimac.shesafe.android.framework.data.source.api.InfoBipDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.api.SmsDevDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.service.AuthFirebaseService
 import br.com.lucolimac.shesafe.android.framework.service.AuthService
@@ -92,18 +99,21 @@ object SheSafeDependenciesInjection {
         factoryOf(::AuthDataSourceImpl) { bind<AuthDataSource>() }
         factoryOf(::HelpMessageDataSourceImpl) { bind<HelpMessageDataSource>() }
         factoryOf(::SmsDevDataSourceImpl) { bind<SmsDevDataSource>() }
+        factoryOf(::InfoBipDataSourceImpl) { bind<InfoBipDataSource>() }
         factoryOf(::SecureContactRepositoryImpl) { bind<SecureContactRepository>() }
         factoryOf(::HelpRequestRepositoryImpl) { bind<HelpRequestRepository>() }
         factoryOf(::SettingsRepositoryImpl) { bind<SettingsRepository>() }
         factoryOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
         factoryOf(::HelpMessageRepositoryImpl) { bind<HelpMessageRepository>() }
         factoryOf(::SmsDevRepositoryImpl) { bind<SmsDevRepository>() }
+        factoryOf(::InfoBipRepositoryImpl) { bind<InfoBipRepository>() }
         factoryOf(::SecureContactUseCaseImpl) { bind<SecureContactUseCase>() }
         factoryOf(::HelpRequestUseCaseImpl) { bind<HelpRequestUseCase>() }
         factoryOf(::SettingsUseCaseImpl) { bind<SettingsUseCase>() }
         factoryOf(::AuthUseCaseImpl) { bind<AuthUseCase>() }
         factoryOf(::HelpMessageUseCaseImpl) { bind<HelpMessageUseCase>() }
         factoryOf(::SmsDevUseCaseImpl) { bind<SmsDevUseCase>() }
+        factoryOf(::InfoBipUseCaseImpl) { bind<InfoBipUseCase>() }
         viewModelOf(::SecureContactViewModel)
         viewModelOf(::HelpRequestViewModel)
         viewModelOf(::SettingsViewModel)
@@ -114,7 +124,6 @@ object SheSafeDependenciesInjection {
 
 
         factory { provideOkHttpClient() }
-        factory<Retrofit> { provideRetrofit(get()) }
-
+        factory<Retrofit> { provideRetrofit(get(), Api.INFO_BIP) }
     }
 }
