@@ -22,7 +22,6 @@ import br.com.lucolimac.shesafe.android.domain.repository.SecureContactRepositor
 import br.com.lucolimac.shesafe.android.domain.repository.SettingsRepository
 import br.com.lucolimac.shesafe.android.domain.repository.api.InfoBipRepository
 import br.com.lucolimac.shesafe.android.domain.repository.api.SmsDevRepository
-import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.AuthUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.AuthUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.HelpMessageUseCase
@@ -36,9 +35,9 @@ import br.com.lucolimac.shesafe.android.domain.usecase.SettingsUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.api.InfoBipUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.api.InfoBipUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCase
+import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCaseImpl
 import br.com.lucolimac.shesafe.android.framework.constants.SmsDevApi.provideOkHttpClient
 import br.com.lucolimac.shesafe.android.framework.constants.SmsDevApi.provideRetrofit
-import br.com.lucolimac.shesafe.android.framework.constants.SmsDevApi.provideRetrofitSmsDev
 import br.com.lucolimac.shesafe.android.framework.data.source.AuthDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.HelpMessageDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.HelpRequestDataSourceImpl
@@ -52,7 +51,6 @@ import br.com.lucolimac.shesafe.android.framework.service.HelpMessageFirebaseSer
 import br.com.lucolimac.shesafe.android.framework.service.HelpMessageService
 import br.com.lucolimac.shesafe.android.framework.service.HelpRequestFirebaseService
 import br.com.lucolimac.shesafe.android.framework.service.HelpRequestService
-import br.com.lucolimac.shesafe.android.framework.service.PowerButtonService
 import br.com.lucolimac.shesafe.android.framework.service.SecureContactFirebaseService
 import br.com.lucolimac.shesafe.android.framework.service.SecureContactService
 import br.com.lucolimac.shesafe.android.framework.service.SettingsFirebaseService
@@ -92,7 +90,6 @@ object SheSafeDependenciesInjection {
         }
         factoryOf(::AuthFirebaseService) { bind<AuthService>() }
         factoryOf(::HelpMessageFirebaseService) { bind<HelpMessageService>() }
-        factoryOf(::PowerButtonService)
         factoryOf(::SecureSecureContactDataSourceImpl) { bind<SecureContactDataSource>() }
         factoryOf(::HelpRequestDataSourceImpl) { bind<HelpRequestDataSource>() }
         factoryOf(::SettingsDataSourceImpl) { bind<SettingsDataSource>() }

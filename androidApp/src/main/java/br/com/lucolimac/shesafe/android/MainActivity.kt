@@ -1,6 +1,5 @@
 package br.com.lucolimac.shesafe.android
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -16,10 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import br.com.lucolimac.shesafe.android.framework.service.PowerButtonService
+import br.com.lucolimac.shesafe.android.presentation.navigation.NavigationItem
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HELP_REQUESTS_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HOME_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.NavigationItem
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.PROFILE_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.REGISTER_SECURE_CONTACT_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.SECURE_CONTACTS_ROUTE
@@ -47,9 +45,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Intent(this, PowerButtonService::class.java).also {
-            startService(it)
-        }
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
