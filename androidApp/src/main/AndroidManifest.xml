@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".SheSafeApplication"
@@ -27,10 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".framework.service.PowerButtonService"
-            android:enabled="true"
-            android:exported="false" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA8_jLkXAjtlHmYm_H-7ytgmjK9o3a4oSc" />
