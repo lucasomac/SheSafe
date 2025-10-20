@@ -4,21 +4,41 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.shesafe.android.domain.usecase.SettingsUseCase
 import br.com.lucolimac.shesafe.enum.SettingsEnum
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SettingsViewModel(private val settingsUseCase: SettingsUseCase) : ViewModel() {
+class SettingsViewModel(
+    private val settingsUseCase: SettingsUseCase,
+    private val firebaseAuth: FirebaseAuth
+) : ViewModel() {
     private val _mapOfSettings = MutableStateFlow(mutableMapOf<SettingsEnum, Boolean>())
     val mapOfSettings: StateFlow<Map<SettingsEnum, Boolean>> = _mapOfSettings.asStateFlow()
 
+    private val authListener = FirebaseAuth.AuthStateListener { auth ->
+        val user = auth.currentUser
+        if (user != null) {
+            // novo usuário logado -> carregar todas as configurações
+            SettingsEnum.entries.forEach { setting ->
+                getToggleSetting(setting)
+            }
+        } else {
+            // sem usuário -> limpar o estado
+            resetAllStates()
+        }
+    }
+
     init {
-        // Initialize the settings map with default values
-        SettingsEnum.entries.forEach { setting ->
-            _mapOfSettings.value[setting] = false // Default value can be adjusted as needed
-            getToggleSetting(setting) // Load the current setting value
+        // registrar listener para reagir à mudanças de autenticação
+        firebaseAuth.addAuthStateListener(authListener)
+        // carregar inicialmente se já houver usuário logado
+        if (firebaseAuth.currentUser != null) {
+            SettingsEnum.entries.forEach { setting ->
+                getToggleSetting(setting)
+            }
         }
     }
 
@@ -48,5 +68,10 @@ class SettingsViewModel(private val settingsUseCase: SettingsUseCase) : ViewMode
         viewModelScope.launch {
             _mapOfSettings.emit(mutableMapOf())
         }
+    }
+
+    override fun onCleared() {
+        firebaseAuth.removeAuthStateListener(authListener)
+        super.onCleared()
     }
 }

@@ -83,6 +83,16 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest) // Use the latest version
 
+    //Retrofit
+    implementation(libs.square.retrofit)
+    implementation(libs.square.retrofit.converter.gson)
+
+    // OKHttpClient
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp3.okhttp)
+    implementation(libs.okhttp3.logging.interceptor)
+
+
     // Optional: For more advanced scenarios or specific libraries you're using
     // androidTestImplementation "androidx.navigation:navigation-testing:2.7.7" // If testing navigation
     // androidTestImplementation "io.mockk:mockk-android:1.13.5" // For mocking

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -164,9 +165,11 @@ fun ProfileScreen(
 
                 else -> {
                     LazyColumn {
-                        items(lastSentList.take(5).size) { index ->
-                            LastSentCard(lastSent = lastSentList[index])
+                        //Pega os ultimos 5 envios do lastSent ordenado pelo time stamp
+                        items(lastSentList.take(5)) { helpRequest ->
+                            LastSentCard(helpRequest)
                         }
+
                     }
                 }
             }

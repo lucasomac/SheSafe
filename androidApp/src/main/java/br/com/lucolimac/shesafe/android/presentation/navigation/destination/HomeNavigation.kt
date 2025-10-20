@@ -1,16 +1,17 @@
 package br.com.lucolimac.shesafe.android.presentation.navigation.destination
 
+import android.widget.Toast
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
-import br.com.lucolimac.shesafe.android.presentation.utils.SmsFunctions.sendSmsWithCallback
+import br.com.lucolimac.shesafe.android.presentation.state.SmsStatusState
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
@@ -30,10 +31,25 @@ fun NavGraphBuilder.homeScreen(
 ) {
     homeViewModel.getAllSecureContacts()
     composable(HOME_ROUTE) {
-        var smsSentCount by remember { mutableIntStateOf(0) }
-        var smsDeliveredCount by remember { mutableIntStateOf(0) }
+        val smsStatusSent by helpRequestViewModel.smsStatusSent.collectAsStateWithLifecycle()
         LaunchedEffect(Unit) {
             homeViewModel.getAllSecureContacts()
+        }
+        val context = LocalContext.current
+        LaunchedEffect(smsStatusSent) {
+            when (smsStatusSent) {
+                is SmsStatusState.Result -> {
+                    val res = smsStatusSent as SmsStatusState.Result
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.sms_sent),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                    helpRequestViewModel.resetSmsStatus()
+                }
+
+                else -> return@LaunchedEffect
+            }
         }
         HomeScreen(
             homeViewModel = homeViewModel,
@@ -41,19 +57,8 @@ fun NavGraphBuilder.homeScreen(
             authViewModel = authViewModel,
             settingsViewModel = settingsViewModel,
             profileViewModel = profileViewModel,
-            onOrderHelp = { helpRequest, message, context ->
-                try {
-                    sendSmsWithCallback(
-                        context, helpRequest.phoneNumbers, message
-                    ) { sent, delivered ->
-                        smsSentCount = if (sent) smsSentCount++ else smsSentCount
-                        smsDeliveredCount = if (delivered) smsDeliveredCount++ else smsSentCount
-                    }
-                    helpRequestViewModel.registerHelpRequest(helpRequest)
-                } catch (_: Exception) {
-                    smsSentCount = 0
-                    smsDeliveredCount = 0
-                }
+            onOrderHelp = { contacts, message, location ->
+                helpRequestViewModel.sendSmsInfoBip(contacts, message, location)
             },
             onNoContacts = navController::navigateToSecureContacts,
         )

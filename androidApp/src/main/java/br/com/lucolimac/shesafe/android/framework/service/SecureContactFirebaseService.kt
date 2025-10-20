@@ -2,19 +2,27 @@ package br.com.lucolimac.shesafe.android.framework.service
 
 import br.com.lucolimac.shesafe.android.data.model.SecureContactModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
-class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: FirebaseAuth) :
+class SecureContactFirebaseService(private val firestore: FirebaseFirestore, private val firebaseAuth: FirebaseAuth) :
     SecureContactService {
-    private val userEmail = firebaseAuth.currentUser?.email
-    private val secureContactCollection =
-        firestore.collection("secureContacts").document(userEmail.toString()).collection("contacts")
+    // Remove fixed userEmail and secureContactCollection initialization and resolve collection dynamically
+    private fun getSecureContactCollection(): CollectionReference? {
+        val userEmail = firebaseAuth.currentUser?.email
+        return if (userEmail.isNullOrBlank()) {
+            null
+        } else {
+            firestore.collection("secureContacts").document(userEmail).collection("contacts")
+        }
+    }
 
     override suspend fun getSecureContacts(): List<SecureContactModel> {
+        val collection = getSecureContactCollection() ?: return emptyList()
         var secureContactList = mutableListOf<SecureContactModel>()
         try {
-            val querySnapshot = secureContactCollection.get().await() // Use .await() here
+            val querySnapshot = collection.get().await()
             secureContactList = querySnapshot.documents.mapNotNull {
                 it.toObject(SecureContactModel::class.java)
             }.toMutableList()
@@ -25,9 +33,10 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
     }
 
     override suspend fun getSecureContactByPhoneNumber(phoneNumber: String): SecureContactModel? {
+        val collection = getSecureContactCollection() ?: return null
         return try {
             val documentSnapshot =
-                secureContactCollection.whereEqualTo("phoneNumber", phoneNumber).get()
+                collection.whereEqualTo("phoneNumber", phoneNumber).get()
                     .await().documents
             documentSnapshot.firstOrNull()?.toObject(SecureContactModel::class.java)
         } catch (e: Exception) {
@@ -37,8 +46,9 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
     }
 
     override suspend fun registerSecureContact(secureContactModel: SecureContactModel): Boolean {
+        val collection = getSecureContactCollection() ?: return false
         return try {
-            secureContactCollection.document().set(secureContactModel).await()
+            collection.document().set(secureContactModel).await()
             true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -49,9 +59,10 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
     override suspend fun updateSecureContact(
         phoneNumber: String, secureContactModel: SecureContactModel
     ): Boolean {
+        val collection = getSecureContactCollection() ?: return false
         return try {
             val querySnapshot =
-                secureContactCollection.whereEqualTo("phoneNumber", phoneNumber).get().await()
+                collection.whereEqualTo("phoneNumber", phoneNumber).get().await()
 
             val document = querySnapshot.documents.firstOrNull()
             if (document != null) {
@@ -67,9 +78,10 @@ class SecureContactFirebaseService(firestore: FirebaseFirestore, firebaseAuth: F
     }
 
     override suspend fun deleteSecureContact(phoneNumber: String): Boolean {
+        val collection = getSecureContactCollection() ?: return false
         return try {
             val querySnapshot =
-                secureContactCollection.whereEqualTo("phoneNumber", phoneNumber).get().await()
+                collection.whereEqualTo("phoneNumber", phoneNumber).get().await()
             val document = querySnapshot.documents.firstOrNull()
             if (document != null) {
                 document.reference.delete().await()
