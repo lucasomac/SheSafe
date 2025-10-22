@@ -4,7 +4,7 @@ data class InfoBipBody(
     val messages: List<Message>
 ) {
     data class Message(
-        val content: Content, val destinations: List<Destination>, val sender: String
+        val content: Content, val destinations: List<Destination>
     ) {
         data class Destination(
             val to: String

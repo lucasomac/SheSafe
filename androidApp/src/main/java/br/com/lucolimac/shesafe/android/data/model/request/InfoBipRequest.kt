@@ -9,7 +9,6 @@ data class InfoBipRequest(
     data class Message(
         @SerializedName("content") val content: Content,
         @SerializedName("destinations") val destinations: List<Destination>,
-        @SerializedName("sender") val sender: String
     ) {
         data class Destination(
             @SerializedName("to") val to: String
@@ -35,7 +34,6 @@ data class InfoBipRequest(
             fun fromEntity(body: InfoBipBody.Message) = Message(
                 content = Content.fromEntity(body.content),
                 destinations = body.destinations.map { Destination.fromEntity(it) },
-                sender = body.sender
             )
         }
     }

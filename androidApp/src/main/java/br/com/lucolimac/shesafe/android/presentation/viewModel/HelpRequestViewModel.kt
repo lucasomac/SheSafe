@@ -102,15 +102,12 @@ class HelpRequestViewModel(
             val body = InfoBipBody(
                 messages = listOf(
                     InfoBipBody.Message(
-                        content = InfoBipBody.Message.Content(text = message),
-                        destinations = contacts.map { contact ->
-                            InfoBipBody.Message.Destination(
-                                "55${contact.phoneNumber}"
-                            )
-                        },
-                        sender = "SheSafeApp"
-                    )
-                ),
+                    content = InfoBipBody.Message.Content(text = message),
+                    destinations = contacts.map { contact ->
+                        InfoBipBody.Message.Destination(
+                            "55${contact.phoneNumber}"
+                        )
+                    })),
             )
 
 
