@@ -2,9 +2,6 @@ package br.com.lucolimac.shesafe.android
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -18,17 +15,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.presentation.component.BottomBarItems
 import br.com.lucolimac.shesafe.android.presentation.component.SheSafeBottomBar
+import br.com.lucolimac.shesafe.android.presentation.navigation.NavigationItem
+import br.com.lucolimac.shesafe.android.presentation.navigation.SheSafeNavHost
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.BASE_SECURE_CONTACT_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HELP_REQUESTS_ROUTE
-import br.com.lucolimac.shesafe.android.presentation.navigation.NavigationItem
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.REGISTER_SECURE_CONTACT_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.SECURE_CONTACT_PHONE_NUMBER_ARGUMENT
-import br.com.lucolimac.shesafe.android.presentation.navigation.SheSafeNavHost
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.navigateToRegisterSecureContact
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
@@ -86,7 +84,7 @@ fun SheSafeApp(
 //                            secureContactViewModel.resetSelectedSecureContact()
                         }) {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                painter = painterResource(R.drawable.arrow_back_24px),
                                 contentDescription = "Navigation Icon",
                             )
                         }
@@ -114,7 +112,7 @@ fun SheSafeApp(
                     containerColor = MaterialTheme.colorScheme.primary,
                     content = {
                         Icon(
-                            imageVector = Icons.Filled.Add,
+                            painter = painterResource(R.drawable.add_24px),
                             contentDescription = "Add Icon",
                         )
                     },

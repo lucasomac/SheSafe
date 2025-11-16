@@ -1,24 +1,20 @@
 package br.com.lucolimac.shesafe.android.presentation.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.ui.graphics.vector.ImageVector
+import br.com.lucolimac.shesafe.R
 
 sealed class NavigationItem(
-    val icon: ImageVector
+    val iconRes: Int
 ) {
     object SecureContacts : NavigationItem(
-        icon = Icons.AutoMirrored.Filled.List
+        iconRes = R.drawable.list_24px
     )
 
     object Home : NavigationItem(
-        icon = Icons.Filled.Home
+        iconRes = R.drawable.home_24px
     )
 
     object Profile : NavigationItem(
-        icon = Icons.Filled.Person
+        iconRes = R.drawable.person_24px
     )
 }
 

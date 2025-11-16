@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -22,11 +20,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.lucolimac.shesafe.R
 import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
 
@@ -61,7 +61,10 @@ fun SecureContactCard(
                 onSelectedContact(secureContact)
                 expanded = true
             }) {
-                Icon(Icons.Filled.MoreVert, contentDescription = "More options")
+                Icon(
+                    painter = painterResource(R.drawable.more_vert_24px),
+                    contentDescription = "More options"
+                )
             }
 
             DropdownMenu(
