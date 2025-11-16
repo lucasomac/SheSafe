@@ -19,6 +19,8 @@
 
 SheSafe is a mobile application designed to enhance personal safety and provide users with tools and resources to navigate challenging situations with confidence. This project is built using Kotlin, Android, and Jetpack Compose, offering a modern and intuitive user experience.
 
+The academic document is in [Monografia](docs/IFSP-SheSafe.pdf)
+
 ## Features
 
 *   **Emergency Contacts:** Quickly access and contact your designated emergency contacts with a single touch.
