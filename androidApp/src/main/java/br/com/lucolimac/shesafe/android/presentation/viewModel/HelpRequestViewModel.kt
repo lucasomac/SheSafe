@@ -1,14 +1,11 @@
 package br.com.lucolimac.shesafe.android.presentation.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.shesafe.android.domain.entity.HelpRequest
-import br.com.lucolimac.shesafe.android.domain.entity.InfoBipBody
 import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
-import br.com.lucolimac.shesafe.android.domain.entity.SheSafeResult
-import br.com.lucolimac.shesafe.android.domain.entity.SmsDevBody
-import br.com.lucolimac.shesafe.android.domain.entity.SmsDevEntity
+import br.com.lucolimac.shesafe.android.domain.provider.SmsProviderFactory
+import br.com.lucolimac.shesafe.android.domain.provider.SmsProviderType
 import br.com.lucolimac.shesafe.android.domain.usecase.HelpRequestUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.api.InfoBipUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCase
@@ -28,8 +25,16 @@ class HelpRequestViewModel(
     private val helpRequestUseCase: HelpRequestUseCase,
     private val smsDevUseCase: SmsDevUseCase,
     private val infoBipUseCase: InfoBipUseCase,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val smsProviderType: SmsProviderType
 ) : ViewModel() {
+    private val smsProviderFactory = SmsProviderFactory(
+        smsDevUseCase = smsDevUseCase,
+        infoBipUseCase = infoBipUseCase,
+        smsDevApiKey = SMS_DEV_API_KEY,
+        infoBipApiKey = INFO_BIP_API_KEY
+    )
+
     private val _isLoading = MutableStateFlow(true) // Add a loading state
     val isLoading: StateFlow<Boolean> = _isLoading
     private val _helpRequests = MutableStateFlow<List<HelpRequest>>(emptyList())
@@ -72,65 +77,22 @@ class HelpRequestViewModel(
         }
     }
 
-    fun sendSms(contacts: List<SecureContact>, message: String, location: GeoPoint) {
+    fun sendSms(
+        contacts: List<SecureContact>, message: String, location: GeoPoint
+    ) {
         viewModelScope.launch {
-            val body = contacts.map {
-                SmsDevBody(
-                    key = SMS_DEV_API_KEY,
-                    msg = message,
-                    number = it.phoneNumber.toLong(),
-                    type = TYPE_SEND
-                )
-            }
-            smsDevUseCase.sendSms(body = body).collect {
-                val data: List<SmsDevEntity> = it
-                _smsStatusSent.update {
-                    SmsStatusState.Result(data.any { it.situacao == "OK" })
-                }
-                val helpRequest = HelpRequest(
-                    phoneNumbers = contacts.map { contact -> contact.phoneNumber },
-                    location = location,
-                    createdAt = Timestamp.now()
-                )
-                registerHelpRequest(helpRequest)
-            }
-        }
-    }
-
-    fun sendSmsInfoBip(contacts: List<SecureContact>, message: String, location: GeoPoint) {
-        viewModelScope.launch {
-            val body = InfoBipBody(
-                messages = listOf(
-                    InfoBipBody.Message(
-                    content = InfoBipBody.Message.Content(text = message),
-                    destinations = contacts.map { contact ->
-                        InfoBipBody.Message.Destination(
-                            "55${contact.phoneNumber}"
-                        )
-                    })),
-            )
-
-
-            infoBipUseCase.sendSms(body = body, authorization = "App $INFO_BIP_API_KEY").collect {
-                when (it) {
-                    is SheSafeResult.Error -> {
-                        Log.e("SmsDevViewModel", "sendSms: ", it.throwable)
-
-                    }
-
-                    is SheSafeResult.Failure -> {
-                        Log.e("SmsDevViewModel", "sendSms:  ${it.data}")
-                    }
-
-                    is SheSafeResult.Success -> {
-                        _smsStatusSent.update { SmsStatusState.Result(true) }
-                        val helpRequest = HelpRequest(
-                            phoneNumbers = contacts.map { contact -> contact.phoneNumber },
-                            location = location,
-                            createdAt = Timestamp.now()
-                        )
-                        registerHelpRequest(helpRequest)
-                    }
+            val smsProvider = smsProviderFactory.getProvider(smsProviderType)
+            smsProvider.sendSms(
+                contacts = contacts, message = message, location = location
+            ) { isSuccess ->
+                _smsStatusSent.update { SmsStatusState.Result(isSuccess) }
+                if (isSuccess) {
+                    val helpRequest = HelpRequest(
+                        phoneNumbers = contacts.map { it.phoneNumber },
+                        location = location,
+                        createdAt = Timestamp.now()
+                    )
+                    registerHelpRequest(helpRequest)
                 }
             }
         }

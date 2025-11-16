@@ -50,6 +50,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.google.firebase.analytics)
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.config)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)

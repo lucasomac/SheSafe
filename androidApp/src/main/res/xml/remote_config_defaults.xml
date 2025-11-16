@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defaults>
+    <entry>
+        <key>she_safe_api_server</key>
+        <value>SMS_DEV</value>
+    </entry>
+</defaults>

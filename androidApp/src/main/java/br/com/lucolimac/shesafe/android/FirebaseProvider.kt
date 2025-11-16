@@ -7,6 +7,8 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.initialize
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.remoteConfig
 
 object FirebaseProvider {
     fun initialize(context: Context) {
@@ -17,4 +19,6 @@ object FirebaseProvider {
         get() = Firebase.firestore
     val auth: FirebaseAuth
         get() = Firebase.auth
+    val remoteConfig: FirebaseRemoteConfig
+        get() = Firebase.remoteConfig
 }
