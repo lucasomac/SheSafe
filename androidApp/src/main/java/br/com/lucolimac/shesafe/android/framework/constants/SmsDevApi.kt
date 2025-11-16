@@ -1,9 +1,9 @@
 package br.com.lucolimac.shesafe.android.framework.constants
 
 import android.util.Log
+import br.com.lucolimac.shesafe.android.domain.provider.SmsProviderType
 import br.com.lucolimac.shesafe.android.framework.constants.Endpoints.INFO_BIP_HOST
 import br.com.lucolimac.shesafe.android.framework.constants.Endpoints.SMS_DEV_HOST
-import br.com.lucolimac.shesafe.android.framework.di.Api
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,10 +30,10 @@ object SmsDevApi {
             .addConverterFactory(GsonConverterFactory.create()).build()
     }
 
-    fun provideRetrofit(okHttpClient: OkHttpClient, api: Api): Retrofit {
-        return when (api) {
-            Api.SMS_DEV -> provideRetrofitSmsDev(okHttpClient)
-            Api.INFO_BIP -> provideRetrofitInfoBip(okHttpClient)
+    fun provideRetrofit(okHttpClient: OkHttpClient, smsApiProvider: SmsProviderType): Retrofit {
+        return when (smsApiProvider) {
+            SmsProviderType.SMS_DEV -> provideRetrofitSmsDev(okHttpClient)
+            SmsProviderType.INFO_BIP -> provideRetrofitInfoBip(okHttpClient)
         }
     }
 }

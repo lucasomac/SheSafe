@@ -1,5 +1,6 @@
 package br.com.lucolimac.shesafe.android.framework.di
 
+import android.util.Log
 import br.com.lucolimac.shesafe.android.FirebaseProvider
 import br.com.lucolimac.shesafe.android.data.repository.AuthRepositoryImpl
 import br.com.lucolimac.shesafe.android.data.repository.HelpMessageRepositoryImpl
@@ -15,6 +16,7 @@ import br.com.lucolimac.shesafe.android.data.source.SecureContactDataSource
 import br.com.lucolimac.shesafe.android.data.source.SettingsDataSource
 import br.com.lucolimac.shesafe.android.data.source.api.InfoBipDataSource
 import br.com.lucolimac.shesafe.android.data.source.api.SmsDevDataSource
+import br.com.lucolimac.shesafe.android.domain.provider.SmsProviderType
 import br.com.lucolimac.shesafe.android.domain.repository.AuthRepository
 import br.com.lucolimac.shesafe.android.domain.repository.HelpMessageRepository
 import br.com.lucolimac.shesafe.android.domain.repository.HelpRequestRepository
@@ -64,11 +66,14 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactView
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import org.koin.java.KoinJavaComponent
 import retrofit2.Retrofit
+import java.util.Locale
 
 object SheSafeDependenciesInjection {
     val sheSafeModule = module {
@@ -78,6 +83,7 @@ object SheSafeDependenciesInjection {
         factory<FirebaseFirestore> {
             FirebaseProvider.firestore
         }
+        factory<FirebaseRemoteConfig> { FirebaseProvider.remoteConfig }
         //Define a factory injection for SecureContactFirebaseService
         factoryOf(::SecureContactFirebaseService) {
             bind<SecureContactService>()
@@ -118,9 +124,22 @@ object SheSafeDependenciesInjection {
         viewModelOf(::HomeViewModel)
         viewModelOf(::ProfileViewModel)
         viewModelOf(::RegisterSecureContactViewModel)
+        factory<SmsProviderType> { getSSmsProvider() }
 
 
         factory { provideOkHttpClient() }
-        factory<Retrofit> { provideRetrofit(get(), Api.INFO_BIP) }
+        factory<Retrofit> { provideRetrofit(get(), get()) }
+    }
+
+    private fun getSSmsProvider(): SmsProviderType {
+        val remote = KoinJavaComponent.get<FirebaseRemoteConfig>(FirebaseRemoteConfig::class.java)
+        val providerRaw = remote.getString("she_safe_api_server")
+        val provider = providerRaw.trim().uppercase(Locale.getDefault())
+        Log.d("SheSafeDI", "RemoteConfig she_safe_api_server='$providerRaw' normalized='$provider'")
+        return when (provider) {
+            SmsProviderType.SMS_DEV.name -> SmsProviderType.SMS_DEV
+            SmsProviderType.INFO_BIP.name -> SmsProviderType.INFO_BIP
+            else -> SmsProviderType.SMS_DEV
+        }
     }
 }
