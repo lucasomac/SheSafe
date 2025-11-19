@@ -6,6 +6,8 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import br.com.lucolimac.shesafe.android.presentation.navigation.NavigationItem
 
 val BottomBarItems = listOf(
@@ -27,7 +29,7 @@ fun SheSafeBottomBar(
         menus.forEach {
             NavigationBarItem(icon = {
                 Icon(
-                    imageVector = it.icon, contentDescription = ""
+                    imageVector = ImageVector.vectorResource(it.iconRes), contentDescription = ""
                 )
             }, selected = selected == it, onClick = { onBottomAppBarItemSelectedChange(it) })
         }

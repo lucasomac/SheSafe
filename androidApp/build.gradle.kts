@@ -45,6 +45,7 @@ dependencies {
     implementation(projects.shared)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
+    runtimeOnly(libs.androidx.material.icons.extended)
     implementation(libs.androidx.activity.compose)
     debugImplementation(libs.compose.ui.tooling)
     implementation(platform(libs.firebase.bom))

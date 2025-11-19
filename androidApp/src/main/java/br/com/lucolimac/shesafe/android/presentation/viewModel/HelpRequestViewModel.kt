@@ -1,5 +1,6 @@
 package br.com.lucolimac.shesafe.android.presentation.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.shesafe.android.domain.entity.HelpRequest
@@ -82,6 +83,9 @@ class HelpRequestViewModel(
     ) {
         viewModelScope.launch {
             val smsProvider = smsProviderFactory.getProvider(smsProviderType)
+            Log.d(
+                "HelpRequestViewModel", "Sending SMS by ${smsProvider.javaClass.simpleName}"
+            )
             smsProvider.sendSms(
                 contacts = contacts, message = message, location = location
             ) { isSuccess ->

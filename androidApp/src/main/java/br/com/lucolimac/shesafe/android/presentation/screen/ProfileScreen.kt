@@ -12,10 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -125,14 +121,14 @@ fun ProfileScreen(
                     .padding(bottom = 16.dp),
             ) {
                 ActionIcon(
-                    Icons.Default.Settings,
+                    painter = painterResource(R.drawable.settings_24px),
                     description = "Settings",
                 ) { showSettingsBottomSheet = true }
                 ActionIcon(
-                    Icons.Default.Menu,
+                    painter = painterResource(R.drawable.menu_24px),
                     description = "Menu",
                     onClick = { onHelpRequestsShowClick() })
-                ActionIcon(Icons.Default.Edit, description = "Edit") {
+                ActionIcon(painter = painterResource(R.drawable.edit_24px), description = "Edit") {
                     showUserMessageBottomSheet = true
                 }
                 ActionIcon(
