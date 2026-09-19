@@ -38,6 +38,8 @@ kotlin {
         androidMain.dependencies {
             // Keep Android authentication integrations out of the iOS framework
             // until their platform services are migrated behind common APIs.
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.auth)
             implementation(libs.kmpauth.google)
             implementation(libs.kmpauth.firebase)
             implementation(libs.kmpauth.uihelper)
