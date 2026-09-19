@@ -36,6 +36,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
         }
         androidMain.dependencies {
+            implementation(libs.play.services.location)
             // Keep Android authentication integrations out of the iOS framework
             // until their platform services are migrated behind common APIs.
             implementation(project.dependencies.platform(libs.firebase.bom))

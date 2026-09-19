@@ -46,6 +46,8 @@
 	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>SheSafe uses your location to include it in help requests.</string>
 
 	<key>GIDServerClientID</key>
 	<string>$(GOOGLE_SERVER_CLIENT_ID)</string>

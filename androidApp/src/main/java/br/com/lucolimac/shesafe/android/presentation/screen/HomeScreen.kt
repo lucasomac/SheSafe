@@ -22,6 +22,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.shesafe.R
+import br.com.lucolimac.shesafe.platform.HelpRequestComposer
+import br.com.lucolimac.shesafe.platform.LocationCoordinates
 import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.presentation.actions.ScreenAction
 import br.com.lucolimac.shesafe.android.presentation.component.HomeHeader
@@ -115,8 +117,14 @@ fun HomeScreen(
     val userMessage by profileViewModel.helpMessage.collectAsState()
 
     val sendSms = {
-        val messageFormatedWithLocation =
-            "${userMessage.takeIf { it.isNotEmpty() } ?: context.getString(R.string.default_message_danger_user)} https://www.google.com/maps/search/?api=1&query=${userLocation?.latitude ?: 0.0},${userLocation?.longitude ?: 0.0}"
+        val messageFormatedWithLocation = HelpRequestComposer.composeMessage(
+            message = userMessage.takeIf { it.isNotEmpty() }
+                ?: context.getString(R.string.default_message_danger_user),
+            location = LocationCoordinates(
+                latitude = userLocation?.latitude ?: 0.0,
+                longitude = userLocation?.longitude ?: 0.0,
+            ),
+        )
         onOrderHelp(
             secureContacts, messageFormatedWithLocation, GeoPoint(
                 userLocation?.latitude ?: 0.0,
