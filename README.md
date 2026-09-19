@@ -64,6 +64,14 @@ The academic document is in [Monografia](docs/IFSP-SheSafe.pdf)
 * `gradle/` : Configuration files of gradle.
 * `gradlew/` : Gradle wrapper.
 
+### Compose Multiplatform migration
+
+The iOS app now hosts `SheSafeSharedApp` from the shared Compose framework through
+`MainViewController`. This is the Phase 2 migration seam: the shared shell is
+intentionally small while Android-only services, dependency injection, and
+navigation remain in `androidApp`. Those features can move behind common
+interfaces incrementally without changing the iOS host integration.
+
 ## Contributing
 
 We welcome contributions! Please follow these steps:
