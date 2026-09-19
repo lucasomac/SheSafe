@@ -6,6 +6,7 @@ import br.com.lucolimac.shesafe.platform.LocationService
 import br.com.lucolimac.shesafe.platform.platformLocationService
 import br.com.lucolimac.shesafe.presentation.HomeScreen
 import br.com.lucolimac.shesafe.presentation.HomeScreenState
+import br.com.lucolimac.shesafe.presentation.LoginScreen
 
 /**
  * Shared application seam for the incremental Compose Multiplatform migration.
@@ -17,10 +18,15 @@ fun SheSafeSharedApp(
     state: HomeScreenState = HomeScreenState(),
     locationService: LocationService = platformLocationService(),
     onHelpRequested: (LocationCoordinates?) -> Unit = {},
+    showHome: Boolean = false,
 ) {
-    HomeScreen(
-        state = state,
-        locationService = locationService,
-        onHelpRequested = onHelpRequested,
-    )
+    if (showHome) {
+        HomeScreen(
+            state = state,
+            locationService = locationService,
+            onHelpRequested = onHelpRequested,
+        )
+    } else {
+        LoginScreen()
+    }
 }
