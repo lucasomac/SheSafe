@@ -48,19 +48,21 @@
 	<dict/>
 
 	<key>GIDServerClientID</key>
-    <string>712393037708-ju1eifha7h5jhusiqmjlk4lhbmior73r.apps.googleusercontent.com</string>
-    <key>GIDClientID</key>
-    <string>712393037708-sl6oh64v4v7aogq139caheuas1gk282d.apps.googleusercontent.com</string>
+	<string>$(GOOGLE_SERVER_CLIENT_ID)</string>
+	<key>GIDClientID</key>
+	<string>$(GOOGLE_CLIENT_ID)</string>
 
-    <key>CFBundleURLTypes</key>
-    <array>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>com.googleusercontent.apps.712393037708-ju1eifha7h5jhusiqmjlk4lhbmior73r</string>
-        </array>
-      </dict>
-    </array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>$(GOOGLE_REVERSED_CLIENT_ID)</string>
+			</array>
+		</dict>
+	</array>
 
 </dict>
 </plist>

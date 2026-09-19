@@ -1,0 +1,9 @@
+// Copy this file to GoogleSignIn.local.xcconfig and replace every value with the
+// iOS OAuth client values from the team's Google/Firebase project.
+//
+// GoogleSignIn.local.xcconfig is ignored by git because these values are
+// environment-specific configuration, not source code.
+
+GOOGLE_CLIENT_ID = <IOS_CLIENT_ID>.apps.googleusercontent.com
+GOOGLE_SERVER_CLIENT_ID = <WEB_CLIENT_ID>.apps.googleusercontent.com
+GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.<IOS_CLIENT_ID>
