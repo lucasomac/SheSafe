@@ -10,7 +10,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.lucolimac.shesafe.R
-import br.com.lucolimac.shesafe.android.presentation.screen.HomeScreen
 import br.com.lucolimac.shesafe.android.presentation.state.SmsStatusState
 import br.com.lucolimac.shesafe.android.presentation.viewModel.AuthViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.HelpRequestViewModel
@@ -18,6 +17,11 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.HomeViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
+import br.com.lucolimac.shesafe.platform.AndroidLocationService
+import br.com.lucolimac.shesafe.presentation.HomeScreen
+import br.com.lucolimac.shesafe.presentation.HomeScreenState
+import br.com.lucolimac.shesafe.platform.HelpRequestComposer
+import com.google.firebase.firestore.GeoPoint
 
 const val HOME_ROUTE = "home"
 fun NavGraphBuilder.homeScreen(
@@ -32,6 +36,8 @@ fun NavGraphBuilder.homeScreen(
     homeViewModel.getAllSecureContacts()
     composable(HOME_ROUTE) {
         val smsStatusSent by helpRequestViewModel.smsStatusSent.collectAsStateWithLifecycle()
+        val secureContacts by homeViewModel.secureContacts.collectAsStateWithLifecycle()
+        val userName by authViewModel.userName.collectAsStateWithLifecycle()
         LaunchedEffect(Unit) {
             homeViewModel.getAllSecureContacts()
         }
@@ -52,15 +58,28 @@ fun NavGraphBuilder.homeScreen(
             }
         }
         HomeScreen(
-            homeViewModel = homeViewModel,
-            secureContactViewModel = secureContactViewModel,
-            authViewModel = authViewModel,
-            settingsViewModel = settingsViewModel,
-            profileViewModel = profileViewModel,
-            onOrderHelp = { contacts, message, location ->
-                helpRequestViewModel.sendSms(contacts, message, location)
+            state = HomeScreenState(
+                userName = userName,
+                contactCount = secureContacts.size,
+            ),
+            locationService = AndroidLocationService(context),
+            onHelpRequested = { coordinates ->
+                if (secureContacts.isEmpty()) {
+                    navController.navigateToSecureContacts()
+                } else {
+                    val message = HelpRequestComposer.composeMessage(
+                        message = "Preciso de ajuda.",
+                        location = coordinates,
+                    )
+                    helpRequestViewModel.sendSms(
+                        secureContacts,
+                        message,
+                        coordinates?.let { GeoPoint(it.latitude, it.longitude) }
+                            ?: GeoPoint(0.0, 0.0),
+                    )
+                }
             },
-            onNoContacts = navController::navigateToSecureContacts,
+            onManageContacts = navController::navigateToSecureContacts,
         )
     }
 }

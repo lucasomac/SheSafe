@@ -26,6 +26,7 @@ class AndroidLocationService(
             return
         }
 
+
         LocationServices.getFusedLocationProviderClient(context)
             .getCurrentLocation(
                 Priority.PRIORITY_HIGH_ACCURACY,

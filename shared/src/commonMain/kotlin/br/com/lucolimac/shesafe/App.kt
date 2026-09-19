@@ -1,47 +1,26 @@
 package br.com.lucolimac.shesafe
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import br.com.lucolimac.shesafe.platform.LocationCoordinates
+import br.com.lucolimac.shesafe.platform.LocationService
+import br.com.lucolimac.shesafe.platform.platformLocationService
+import br.com.lucolimac.shesafe.presentation.HomeScreen
+import br.com.lucolimac.shesafe.presentation.HomeScreenState
 
 /**
  * Shared application seam for the incremental Compose Multiplatform migration.
  *
- * Platform-specific services and the existing Android navigation remain outside
- * this shell until their common interfaces are ready to be migrated.
+ * Platform-specific services are supplied through common interfaces.
  */
 @Composable
-fun SheSafeSharedApp() {
-    MaterialTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background,
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    text = "SheSafe",
-                    style = MaterialTheme.typography.h4,
-                )
-                Text(
-                    modifier = Modifier.padding(top = 8.dp),
-                    text = "Your personal safety companion",
-                    style = MaterialTheme.typography.body1,
-                )
-            }
-        }
-    }
+fun SheSafeSharedApp(
+    state: HomeScreenState = HomeScreenState(),
+    locationService: LocationService = platformLocationService(),
+    onHelpRequested: (LocationCoordinates?) -> Unit = {},
+) {
+    HomeScreen(
+        state = state,
+        locationService = locationService,
+        onHelpRequested = onHelpRequested,
+    )
 }

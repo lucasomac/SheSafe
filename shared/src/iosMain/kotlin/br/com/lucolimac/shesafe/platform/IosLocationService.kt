@@ -22,6 +22,7 @@ class IosLocationService : LocationService {
         manager.delegate = Delegate()
     }
 
+
     override fun requestCurrentLocation(onResult: (LocationResult) -> Unit) {
         result = onResult
         when (manager.authorizationStatus) {

@@ -15,6 +15,7 @@ class IosSmsService : SmsService {
             return
         }
 
+
         val composer = MFMessageComposeViewController()
         composer.recipients = request.recipients
         composer.body = request.message
