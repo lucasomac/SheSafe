@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.google.services)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrainsCompose)
 }
@@ -35,10 +34,16 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            // KmpAuth
-            api(libs.kmpauth.google) //Google One Tap Sign-In
-            api(libs.kmpauth.firebase) //Integrated Authentications with Firebase
-            api(libs.kmpauth.uihelper) //UiHelper SignIn buttons (AppleSignIn, GoogleSignInButton)
+        }
+        androidMain.dependencies {
+            implementation(libs.play.services.location)
+            // Keep Android authentication integrations out of the iOS framework
+            // until their platform services are migrated behind common APIs.
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.auth)
+            implementation(libs.kmpauth.google)
+            implementation(libs.kmpauth.firebase)
+            implementation(libs.kmpauth.uihelper)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

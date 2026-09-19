@@ -1,12 +1,16 @@
 package br.com.lucolimac.shesafe
 
 import kotlin.test.Test
-import kotlin.test.assertTrue
+import br.com.lucolimac.shesafe.platform.HelpRequestComposer
+import kotlin.test.assertEquals
 
-class IosGreetingTest {
+class IosPlatformBoundaryTest {
 
     @Test
-    fun testExample() {
-        assertTrue(Greeting().greet().contains("iOS"), "Check iOS is mentioned")
+    fun helpRequestCompositionIsAvailableToIos() {
+        assertEquals(
+            "Help",
+            HelpRequestComposer.composeMessage("Help", null),
+        )
     }
 }

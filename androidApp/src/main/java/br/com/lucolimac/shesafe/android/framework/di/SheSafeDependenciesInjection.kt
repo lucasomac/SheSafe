@@ -47,8 +47,6 @@ import br.com.lucolimac.shesafe.android.framework.data.source.SecureSecureContac
 import br.com.lucolimac.shesafe.android.framework.data.source.SettingsDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.api.InfoBipDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.api.SmsDevDataSourceImpl
-import br.com.lucolimac.shesafe.android.framework.service.AuthFirebaseService
-import br.com.lucolimac.shesafe.android.framework.service.AuthService
 import br.com.lucolimac.shesafe.android.framework.service.HelpMessageFirebaseService
 import br.com.lucolimac.shesafe.android.framework.service.HelpMessageService
 import br.com.lucolimac.shesafe.android.framework.service.HelpRequestFirebaseService
@@ -64,6 +62,8 @@ import br.com.lucolimac.shesafe.android.presentation.viewModel.ProfileViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.RegisterSecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SecureContactViewModel
 import br.com.lucolimac.shesafe.android.presentation.viewModel.SettingsViewModel
+import br.com.lucolimac.shesafe.auth.AuthService
+import br.com.lucolimac.shesafe.auth.platformAuthService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -94,7 +94,7 @@ object SheSafeDependenciesInjection {
         factoryOf(::SettingsFirebaseService) {
             bind<SettingsService>()
         }
-        factoryOf(::AuthFirebaseService) { bind<AuthService>() }
+        factory<AuthService> { platformAuthService() }
         factoryOf(::HelpMessageFirebaseService) { bind<HelpMessageService>() }
         factoryOf(::SecureSecureContactDataSourceImpl) { bind<SecureContactDataSource>() }
         factoryOf(::HelpRequestDataSourceImpl) { bind<HelpRequestDataSource>() }

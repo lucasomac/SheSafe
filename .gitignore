@@ -11,3 +11,4 @@ xcuserdata
 .kotlin
 google-services.json
 GoogleService-Info.plist
+iosApp/Config/GoogleSignIn.local.xcconfig

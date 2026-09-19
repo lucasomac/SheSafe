@@ -64,6 +64,31 @@ The academic document is in [Monografia](docs/IFSP-SheSafe.pdf)
 * `gradle/` : Configuration files of gradle.
 * `gradlew/` : Gradle wrapper.
 
+### Compose Multiplatform migration
+
+The iOS app now hosts `SheSafeSharedApp` from the shared Compose framework through
+`MainViewController`. This is the Phase 2 migration seam: the shared shell is
+intentionally small while Android-only services, dependency injection, and
+navigation remain in `androidApp`. Those features can move behind common
+interfaces incrementally without changing the iOS host integration.
+
+### iOS product configuration
+
+The iOS target uses the repository bundle identifier
+`br.com.lucolimac.shesafe.ios`. Replace it with the Apple Developer/App Store
+identifier selected by the team before signing or distributing the app.
+
+Google Sign-In is linked through the `GoogleSignIn-iOS` Swift package. For local
+authentication setup, copy
+`iosApp/Config/GoogleSignIn.xcconfig.example` to
+`iosApp/Config/GoogleSignIn.local.xcconfig` and fill in the iOS client ID, web/server
+client ID, and reversed client ID from the team's Google/Firebase console. The
+local file and `GoogleService-Info.plist` are intentionally ignored and must
+not be committed. Register the same bundle identifier and reversed client URL
+scheme in the iOS OAuth client, then enable Google as a Firebase sign-in
+provider. The callback is handled by the Swift app delegate and SwiftUI
+`onOpenURL` bridge.
+
 ## Contributing
 
 We welcome contributions! Please follow these steps:

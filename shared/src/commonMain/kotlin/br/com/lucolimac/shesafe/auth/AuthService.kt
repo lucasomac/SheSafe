@@ -1,4 +1,4 @@
-package br.com.lucolimac.shesafe.android.framework.service
+package br.com.lucolimac.shesafe.auth
 
 interface AuthService {
     fun isUserLoggedIn(): Boolean
@@ -7,3 +7,5 @@ interface AuthService {
     fun getUserName(): String?
     fun getUserPhotoUrl(): String?
 }
+
+expect fun platformAuthService(): AuthService

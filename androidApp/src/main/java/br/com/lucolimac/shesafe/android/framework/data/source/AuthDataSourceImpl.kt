@@ -1,7 +1,7 @@
 package br.com.lucolimac.shesafe.android.framework.data.source
 
 import br.com.lucolimac.shesafe.android.data.source.AuthDataSource
-import br.com.lucolimac.shesafe.android.framework.service.AuthService
+import br.com.lucolimac.shesafe.auth.AuthService
 
 class AuthDataSourceImpl(private val authService: AuthService) : AuthDataSource {
     override fun isUserLoggedIn(): Boolean {
