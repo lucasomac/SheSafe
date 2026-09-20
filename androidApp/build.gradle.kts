@@ -73,11 +73,25 @@ dependencies {
     //Navigation
     implementation(libs.androidx.navigation.compose)
 
+    configurations.all {
+        resolutionStrategy {
+            force("androidx.concurrent:concurrent-futures:1.2.0")
+        }
+    }
+
     // Core AndroidX Test
-    androidTestImplementation(libs.androidx.runner)
-    androidTestImplementation(libs.androidx.rules)
-    androidTestImplementation(libs.androidx.test.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.runner) {
+        exclude(group = "androidx.concurrent", module = "concurrent-futures")
+    }
+    androidTestImplementation(libs.androidx.rules) {
+        exclude(group = "androidx.concurrent", module = "concurrent-futures")
+    }
+    androidTestImplementation(libs.androidx.test.junit) {
+        exclude(group = "androidx.concurrent", module = "concurrent-futures")
+    }
+    androidTestImplementation(libs.androidx.espresso.core) {
+        exclude(group = "androidx.concurrent", module = "concurrent-futures")
+    }
 
     //Detekt
     detektPlugins(libs.detekt.formatting)
