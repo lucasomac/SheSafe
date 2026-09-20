@@ -26,7 +26,7 @@ object SmsFunctions {
             override fun onReceive(ctx: Context?, intent: Intent?) {
                 sentResult = resultCode == Activity.RESULT_OK
                 if (deliveredResult != null) {
-                    onResult(sentResult ?: false, deliveredResult ?: false)
+                    onResult(sentResult, deliveredResult ?: false)
                     context.unregisterReceiver(this)
                     Log.d("SMS_SENT", "SMS enviado com sucesso!")
                 }
@@ -36,7 +36,7 @@ object SmsFunctions {
             override fun onReceive(ctx: Context?, intent: Intent?) {
                 deliveredResult = resultCode == Activity.RESULT_OK
                 if (sentResult != null) {
-                    onResult(sentResult ?: false, deliveredResult ?: false)
+                    onResult(sentResult, deliveredResult)
                     context.unregisterReceiver(this)
                     Log.d("SMS_DELIVERED", "SMS recebido com sucesso!")
                 }
@@ -65,7 +65,7 @@ object SmsFunctions {
         // Build lists with one PendingIntent per message part
         val sentIntents = ArrayList<PendingIntent?>()
         val deliveredIntents = ArrayList<PendingIntent?>()
-        for (i in 0 until partsList.size) {
+        for (i in partsList.indices) {
             sentIntents.add(sentIntent)
             deliveredIntents.add(deliveredIntent)
         }

@@ -14,18 +14,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.lucolimac.shesafe.android.presentation.navigation.destination.HOME_ROUTE
 import br.com.lucolimac.shesafe.android.presentation.theme.SheSafeTheme
-import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
+import com.mmk.kmpauth.core.auth.KMPAuthUser
+import com.mmk.kmpauth.google.rememberGoogleAuthState
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
-import dev.gitlive.firebase.auth.FirebaseUser
 
 @Composable
 fun SignInArea(navController: NavController, modifier: Modifier = Modifier) {
-    val onFirebaseResult: (Result<FirebaseUser?>) -> Unit = {
+    val onFirebaseResult: (Result<KMPAuthUser>) -> Unit = {
         // Handle the result of the sign-in process
         it.fold(onSuccess = { user ->
             //Should be navigate to home screen
             // Handle successful sign-in
-            Log.d("SignInArea", "User signed in: ${user?.uid}")
+            Log.d("SignInArea", "User signed in: ${user.uid}")
             navController.navigate(HOME_ROUTE)
 
         }, onFailure = { exception ->
@@ -35,16 +35,17 @@ fun SignInArea(navController: NavController, modifier: Modifier = Modifier) {
 //            navController.navigate(NavigationItem.Error.route)
         })
     }
+    val googleSignIn = rememberGoogleAuthState(linkAccount = false, onResult = onFirebaseResult)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier
     ) {
         AppLogo()
         Spacer(modifier = Modifier.height(32.dp))
-        GoogleButtonUiContainerFirebase(linkAccount = false, onResult = onFirebaseResult) {
-            GoogleSignInButton(modifier = Modifier
+        GoogleSignInButton(
+            modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)) { this.onClick() }
-        }
+                .height(48.dp)
+        ) { googleSignIn.launch() }
     }
 }
 
