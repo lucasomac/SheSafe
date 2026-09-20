@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ApplicationExtension
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
@@ -8,7 +10,7 @@ plugins {
     alias(libs.plugins.detekt)
 }
 
-android {
+extensions.configure<ApplicationExtension> {
     namespace = "br.com.lucolimac.shesafe.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {

@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.android.build.api.dsl.LibraryExtension
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -52,7 +53,7 @@ kotlin {
     }
 }
 
-android {
+extensions.configure<LibraryExtension> {
     namespace = "br.com.lucolimac.shesafe"
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
