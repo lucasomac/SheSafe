@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val helpMessageUseCase: HelpMessageUseCase) : ViewModel() {
+    private val _helpMessage: MutableStateFlow<String> = MutableStateFlow("")
+    val helpMessage: StateFlow<String> = _helpMessage.asStateFlow()
+
     init {
         getHelpMessages()
     }
-
-    private val _helpMessage: MutableStateFlow<String> = MutableStateFlow("")
-    val helpMessage: StateFlow<String> = _helpMessage.asStateFlow()
     fun getHelpMessages() = viewModelScope.launch {
         helpMessageUseCase.getHelpMessages().collect { message ->
             _helpMessage.emit(message)

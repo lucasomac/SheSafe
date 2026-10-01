@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.ktorfit)
 }
 
 extensions.configure<ApplicationExtension> {
@@ -102,14 +104,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest) // Use the latest version
 
-    //Retrofit
-    implementation(libs.square.retrofit)
-    implementation(libs.square.retrofit.converter.gson)
-
-    // OKHttpClient
-    implementation(platform(libs.okhttp.bom))
-    implementation(libs.okhttp3.okhttp)
-    implementation(libs.okhttp3.logging.interceptor)
+    // Ktor client Android
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktorfit.lib)
 
 
     // Optional: For more advanced scenarios or specific libraries you're using

@@ -10,10 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
-    init {
-        setStartDestination()
-    }
-
     // SharedFlow is good for one-time events like navigation or showing a toast
     private val _logoutCompleteEvent = MutableStateFlow<Boolean>(false)
     val logoutCompleteEvent = _logoutCompleteEvent.asStateFlow()
@@ -27,6 +23,10 @@ class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
     val userName = _userName.asStateFlow()
     private val _userPhotoUrl = MutableStateFlow<String?>(null)
     val userPhotoUrl = _userPhotoUrl.asStateFlow()
+
+    init {
+        setStartDestination()
+    }
 
     fun logoutUser() {
         viewModelScope.launch {

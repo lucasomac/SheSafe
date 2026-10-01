@@ -1,6 +1,6 @@
 package br.com.lucolimac.shesafe.android.domain.provider
 
-import br.com.lucolimac.shesafe.android.domain.entity.InfoBipBody
+import br.com.lucolimac.shesafe.domain.entity.InfoBipBody
 import br.com.lucolimac.shesafe.android.domain.entity.SecureContact
 import br.com.lucolimac.shesafe.android.domain.entity.SheSafeResult
 import br.com.lucolimac.shesafe.android.domain.usecase.api.InfoBipUseCase

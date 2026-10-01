@@ -38,8 +38,9 @@ import br.com.lucolimac.shesafe.android.domain.usecase.api.InfoBipUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.api.InfoBipUseCaseImpl
 import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCase
 import br.com.lucolimac.shesafe.android.domain.usecase.api.SmsDevUseCaseImpl
-import br.com.lucolimac.shesafe.android.framework.constants.SmsDevApi.provideOkHttpClient
-import br.com.lucolimac.shesafe.android.framework.constants.SmsDevApi.provideRetrofit
+import br.com.lucolimac.shesafe.framework.constants.SmsDevApi.provideHttpClient
+import br.com.lucolimac.shesafe.framework.constants.SmsDevApi.provideKtorfitInfoBip
+import br.com.lucolimac.shesafe.framework.constants.SmsDevApi.provideKtorfitSmsDev
 import br.com.lucolimac.shesafe.android.framework.data.source.AuthDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.HelpMessageDataSourceImpl
 import br.com.lucolimac.shesafe.android.framework.data.source.HelpRequestDataSourceImpl
@@ -67,12 +68,13 @@ import br.com.lucolimac.shesafe.auth.platformAuthService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import de.jensklingenberg.ktorfit.Ktorfit
+import io.ktor.client.HttpClient
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent
-import retrofit2.Retrofit
 import java.util.Locale
 
 object SheSafeDependenciesInjection {
@@ -116,7 +118,7 @@ object SheSafeDependenciesInjection {
         factoryOf(::AuthUseCaseImpl) { bind<AuthUseCase>() }
         factoryOf(::HelpMessageUseCaseImpl) { bind<HelpMessageUseCase>() }
         factoryOf(::SmsDevUseCaseImpl) { bind<SmsDevUseCase>() }
-        factoryOf(::InfoBipUseCaseImpl) { bind<InfoBipUseCase>() }
+        factoryOf(::InfoBipUseCaseImpl) { bind<InfoBipUseCase>()}
         viewModelOf(::SecureContactViewModel)
         viewModelOf(::HelpRequestViewModel)
         viewModelOf(::SettingsViewModel)
@@ -126,9 +128,15 @@ object SheSafeDependenciesInjection {
         viewModelOf(::RegisterSecureContactViewModel)
         factory<SmsProviderType> { getSSmsProvider() }
 
-
-        factory { provideOkHttpClient() }
-        factory<Retrofit> { provideRetrofit(get(), get()) }
+        factory<HttpClient> { provideHttpClient() }
+        factory<Ktorfit> {
+            val provider = get<SmsProviderType>()
+            val client = get<HttpClient>()
+            when (provider) {
+                SmsProviderType.SMS_DEV -> provideKtorfitSmsDev(client)
+                SmsProviderType.INFO_BIP -> provideKtorfitInfoBip(client)
+            }
+        }
     }
 
     private fun getSSmsProvider(): SmsProviderType {

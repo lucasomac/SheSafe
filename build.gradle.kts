@@ -11,6 +11,9 @@ plugins {
     alias(libs.plugins.jetbrainsCompose) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.detekt)
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.ktorfit) apply false
+
 }
 detekt {
     toolVersion = libs.versions.detekt.get()
