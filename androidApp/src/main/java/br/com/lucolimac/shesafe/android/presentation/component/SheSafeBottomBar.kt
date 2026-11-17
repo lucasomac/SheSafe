@@ -26,12 +26,22 @@ fun SheSafeBottomBar(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground
     ) {
-        menus.forEach {
-            NavigationBarItem(icon = {
-                Icon(
-                    imageVector = ImageVector.vectorResource(it.iconRes), contentDescription = ""
-                )
-            }, selected = selected == it, onClick = { onBottomAppBarItemSelectedChange(it) })
+        menus.forEach { item ->
+            val description = when (item) {
+                NavigationItem.Home -> "Início"
+                NavigationItem.SecureContacts -> "Contatos Seguros"
+                NavigationItem.Profile -> "Perfil"
+            }
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(item.iconRes),
+                        contentDescription = description
+                    )
+                },
+                selected = selected == item,
+                onClick = { onBottomAppBarItemSelectedChange(item) }
+            )
         }
     }
 }
