@@ -8,9 +8,23 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 
+/**
+ * Android implementation of [LocationService] powered by Google Play Services' Fused Location Provider.
+ *
+ * @property context Android [Context] used to verify location permissions and obtain the fused location client.
+ */
 class AndroidLocationService(
     private val context: Context,
 ) : LocationService {
+    /**
+     * Queries a high-accuracy single-shot device location fix after verifying runtime location permissions.
+     *
+     * Immediately reports [LocationResult.PermissionRequired] when neither fine nor coarse location
+     * permission is granted.
+     *
+     * @param onResult Callback invoked with [LocationResult.Available], [LocationResult.Unavailable],
+     *   [LocationResult.PermissionRequired], or [LocationResult.Failed].
+     */
     @SuppressLint("MissingPermission")
     override fun requestCurrentLocation(onResult: (LocationResult) -> Unit) {
         val hasFinePermission = ContextCompat.checkSelfPermission(

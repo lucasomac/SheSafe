@@ -11,6 +11,9 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.mp.KoinPlatformTools
 
+/**
+ * Aggregated list of Koin dependency injection modules shared across all SheSafe features and core layers.
+ */
 val appModules = listOf(
     coreModule,
     authModule,
@@ -20,6 +23,12 @@ val appModules = listOf(
     profileModule,
 )
 
+/**
+ * Starts the global Koin dependency injection container with [appModules] if it has not been started yet.
+ *
+ * @param appDeclaration Optional platform-specific Koin configuration block (e.g., Android context binding).
+ * @return The newly started [KoinApplication] instance, or `null` if Koin was already initialized.
+ */
 fun initKoin(appDeclaration: KoinAppDeclaration = {}): KoinApplication? {
     if (KoinPlatformTools.defaultContext().getOrNull() != null) {
         return null

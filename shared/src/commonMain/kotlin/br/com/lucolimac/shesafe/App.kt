@@ -8,6 +8,12 @@ import androidx.compose.ui.Modifier
 import br.com.lucolimac.shesafe.core.designsystem.theme.SheSafeTheme
 import br.com.lucolimac.shesafe.navigation.SheSafeNavigation
 
+/**
+ * Root multiplatform composable entry point for the SheSafe application.
+ *
+ * Applies [SheSafeTheme], provides a full-screen background [Surface], and hosts
+ * the main [SheSafeNavigation] graph shared across target platforms.
+ */
 @Composable
 fun SheSafeSharedApp() {
     SheSafeTheme {

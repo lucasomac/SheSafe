@@ -75,6 +75,14 @@ import shesafe.shared.generated.resources.title_input_your_message
 import shesafe.shared.generated.resources.title_settings
 import kotlin.time.Instant
 
+/**
+ * Displays a list item representing a trusted [SecureContact] with an overflow menu for edit and delete actions.
+ *
+ * @param secureContact Trusted contact domain model whose name and formatted phone number are shown.
+ * @param onEditClick Callback invoked with [secureContact] when the user selects the edit menu option.
+ * @param onDeleteClick Callback invoked with [secureContact] when the user selects the delete menu option.
+ * @param modifier Optional [Modifier] applied to the outer column container.
+ */
 @Composable
 fun SecureContactCard(
     secureContact: SecureContact,
@@ -136,14 +144,36 @@ fun SecureContactCard(
     }
 }
 
+/** Expected digit count for a Brazilian mobile number including a two-digit area code (DDD). */
 private const val BR_MOBILE_LEN = 11
+
+/** Expected digit count for a Brazilian landline number including a two-digit area code (DDD). */
 private const val BR_LANDLINE_LEN = 10
+
+/** Minimum digit count required to format a local phone number without an area code. */
 private const val MIN_LOCAL_LEN = 7
+
+/** Length of the Brazilian area code (DDD) or country code prefix (`55`). */
 private const val AREA_CODE_LEN = 2
+
+/** Exclusive end index of the 5-digit subscriber prefix in an 11-digit Brazilian mobile number. */
 private const val MOBILE_PREFIX_END = 7
+
+/** Exclusive end index of the 4-digit subscriber prefix in a 10-digit Brazilian landline number. */
 private const val LANDLINE_PREFIX_END = 6
+
+/** Length of the trailing subscriber suffix separated by a hyphen. */
 private const val SUFFIX_LEN = 4
 
+/**
+ * Formats a raw phone number string into standard Brazilian mobile, landline, or local display notation.
+ *
+ * Strips non-digit characters and an optional leading `55` country code before grouping digits.
+ * Returns [raw] unchanged when fewer than [MIN_LOCAL_LEN] digits are present.
+ *
+ * @param raw Unformatted or partially formatted phone number string.
+ * @return Human-readable formatted phone number string, or [raw] if formatting does not apply.
+ */
 fun formatPhoneNumber(raw: String): String {
     val digits = raw.filter(Char::isDigit)
     if (digits.isEmpty()) return raw
@@ -173,6 +203,12 @@ fun formatPhoneNumber(raw: String): String {
     }
 }
 
+/**
+ * Formats an [Instant] in the device's current system time zone using the `dd/MM/yyyy HH:mm:ss` pt-BR pattern.
+ *
+ * @param instant Point in time to format.
+ * @return Formatted date-time string in `dd/MM/yyyy HH:mm:ss` notation.
+ */
 fun formatInstantPtBr(instant: Instant): String {
     val dt = instant.toLocalDateTime(TimeZone.currentSystemDefault())
     fun Int.pad2() = toString().padStart(2, '0')
@@ -180,6 +216,12 @@ fun formatInstantPtBr(instant: Instant): String {
         "${dt.hour.pad2()}:${dt.minute.pad2()}:${dt.second.pad2()}"
 }
 
+/**
+ * Displays a summary card for a previously dispatched [HelpRequest], including recipients, map link, and timestamp.
+ *
+ * @param lastSent Dispatched help request record to display.
+ * @param modifier Optional [Modifier] applied to the [Card].
+ */
 @Composable
 fun LastSentCard(
     lastSent: HelpRequest,
@@ -242,6 +284,16 @@ fun LastSentCard(
     }
 }
 
+/**
+ * Bottom sheet content asking the user to confirm deletion of a trusted contact.
+ *
+ * Hides [sheetState] before invoking either [onDismiss] or [onConfirmDelete].
+ *
+ * @param contactName Display name of the contact interpolated into the confirmation prompt.
+ * @param sheetState Material 3 [SheetState] controlling the enclosing modal bottom sheet visibility.
+ * @param onConfirmDelete Callback invoked after the sheet finishes hiding when deletion is confirmed.
+ * @param onDismiss Callback invoked after the sheet finishes hiding when deletion is cancelled.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfirmDeleteBottomSheet(
@@ -300,6 +352,14 @@ fun ConfirmDeleteBottomSheet(
     }
 }
 
+/**
+ * Bottom sheet content allowing the user to customize the default emergency SOS message text.
+ *
+ * @param actualMessage Currently saved emergency message pre-populated into the text field.
+ * @param sheetState Material 3 [SheetState] controlling the enclosing modal bottom sheet visibility.
+ * @param onDismiss Callback invoked after the sheet hides when the user cancels editing.
+ * @param onConfirm Callback invoked with the updated non-blank message after the sheet hides on confirmation.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserMessageBottomSheet(
@@ -368,6 +428,14 @@ fun UserMessageBottomSheet(
     }
 }
 
+/**
+ * Bottom sheet content presenting toggleable user preferences such as emergency send confirmation.
+ *
+ * @param settings Current [UserSettings] snapshot backing the displayed switches.
+ * @param sheetState Material 3 [SheetState] controlling the enclosing modal bottom sheet visibility.
+ * @param onToggleSetting Callback invoked with the modified [SettingKey] and new boolean value on toggle.
+ * @param onDismiss Callback invoked after the sheet hides when the user taps the close button.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsBottomSheet(

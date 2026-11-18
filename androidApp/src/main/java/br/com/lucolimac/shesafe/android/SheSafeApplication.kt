@@ -13,7 +13,15 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import timber.log.Timber
 
+/**
+ * Custom Android [Application] entry point responsible for process-wide initialization of logging,
+ * Google authentication, Firebase Remote Config, and the Koin dependency graph.
+ */
 class SheSafeApplication : Application() {
+    /**
+     * Plants the appropriate [Timber] tree (`DebugTree` in debug builds or [CrashlyticsTree] in release),
+     * bootstraps Google Sign-In, configures Firebase Remote Config, and starts Koin with Android context.
+     */
     override fun onCreate() {
         super.onCreate()
 
@@ -32,6 +40,10 @@ class SheSafeApplication : Application() {
         }
     }
 
+    /**
+     * Applies XML defaults and fetch interval settings to Firebase Remote Config, then asynchronously
+     * fetches and activates remote parameters while safely tolerating missing Firebase configuration.
+     */
     private fun configureRemoteConfig() {
         runCatching {
             val remoteConfig = Firebase.remoteConfig
@@ -53,7 +65,10 @@ class SheSafeApplication : Application() {
     }
 
     private companion object {
+        /** Log tag used by [SheSafeApplication] lifecycle diagnostics. */
         const val TAG = "SheSafeApplication"
+
+        /** Minimum interval in seconds (1 hour) between Firebase Remote Config network fetches. */
         const val REMOTE_CONFIG_FETCH_INTERVAL_SECONDS = 3600L
     }
 }

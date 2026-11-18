@@ -56,6 +56,17 @@ import shesafe.shared.generated.resources.title_new_secure_contact
 import shesafe.shared.generated.resources.title_profile
 import shesafe.shared.generated.resources.title_secure_contacts
 
+/**
+ * Top-level navigation host and application chrome scaffold for SheSafe.
+ *
+ * Resolves the initial destination based on authentication status via [getCurrentUserUseCase],
+ * coordinates top app bar, bottom navigation bar, floating action button, and snackbar feedback,
+ * and registers all [SheSafeRoute] destinations.
+ *
+ * @param navController [NavHostController] managing the navigation back stack.
+ * @param getCurrentUserUseCase Use case queried once at startup to choose between [SheSafeRoute.Home]
+ *   and [SheSafeRoute.Login].
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SheSafeNavigation(
@@ -221,6 +232,13 @@ fun SheSafeNavigation(
     }
 }
 
+/**
+ * Renders the Material 3 bottom navigation bar displaying all top-level [BottomNavTab] destinations.
+ *
+ * @param selectedTab Currently active [BottomNavTab] highlighted in the bar.
+ * @param onTabSelected Callback invoked when the user selects a tab item.
+ * @param modifier Optional [Modifier] applied to the [NavigationBar].
+ */
 @Composable
 private fun SheSafeBottomNavigationBar(
     selectedTab: BottomNavTab,

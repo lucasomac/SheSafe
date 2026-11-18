@@ -53,6 +53,20 @@ import shesafe.shared.generated.resources.cd_loading
 import shesafe.shared.generated.resources.label_retry
 import shesafe.shared.generated.resources.logo
 
+/**
+ * UI model representing the content and callbacks of a confirmation dialog in [SheSafeDialog].
+ *
+ * @property title Heading text displayed at the top of the dialog.
+ * @property message Descriptive body text explaining the confirmation prompt.
+ * @property confirmButtonText Label displayed on the primary confirmation button.
+ * @property dismissButtonText Label displayed on the secondary dismissal button.
+ * @property onConfirm Callback invoked when the user presses the confirm button.
+ * @property onDismiss Callback invoked when the user presses the dismiss button.
+ * @property showCheckbox Whether an optional checkbox row is rendered above the action buttons.
+ * @property checkboxText Label displayed next to the optional checkbox when [showCheckbox] is `true`.
+ * @property initialCheckboxValue Initial checked state of the optional checkbox.
+ * @property onCheckboxCheckedChange Optional callback invoked whenever the checkbox state changes.
+ */
 data class DialogModel(
     val title: String,
     val message: String,
@@ -66,6 +80,12 @@ data class DialogModel(
     val onCheckboxCheckedChange: ((Boolean) -> Unit)? = null,
 )
 
+/**
+ * Displays a bold section or screen header marked with accessibility heading semantics.
+ *
+ * @param title Text to display as the header title.
+ * @param modifier Optional [Modifier] applied to the underlying text layout.
+ */
 @Composable
 fun HomeHeader(
     title: String,
@@ -80,6 +100,11 @@ fun HomeHeader(
     )
 }
 
+/**
+ * Renders the branded SheSafe typographic wordmark paired with the application logo illustration.
+ *
+ * @param modifier Optional [Modifier] applied to the outer vertical container.
+ */
 @Composable
 fun AppLogo(modifier: Modifier = Modifier) {
     Column(
@@ -123,6 +148,11 @@ fun AppLogo(modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * Displays a full-size centered circular progress indicator with localized accessibility description.
+ *
+ * @param modifier Optional [Modifier] applied to the full-size container box.
+ */
 @Composable
 fun SheSafeLoading(modifier: Modifier = Modifier) {
     val loadingDesc = stringResource(Res.string.cd_loading)
@@ -136,6 +166,13 @@ fun SheSafeLoading(modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * Displays an error state message centered horizontally along with a retry action button.
+ *
+ * @param message Localized or user-readable error message explaining what went wrong.
+ * @param onRetry Callback invoked when the user taps the retry button.
+ * @param modifier Optional [Modifier] applied to the outer column container.
+ */
 @Composable
 fun ErrorStateBanner(
     message: String,
@@ -162,6 +199,14 @@ fun ErrorStateBanner(
     }
 }
 
+/**
+ * Renders a full-width pill-shaped primary action button styled with the SheSafe theme colors.
+ *
+ * @param text Label displayed inside the button.
+ * @param onClick Callback invoked when the button is clicked.
+ * @param modifier Optional [Modifier] applied to the button.
+ * @param enabled Controls the enabled state of the button; when `false`, interaction is disabled.
+ */
 @Composable
 fun RoundedButton(
     text: String,
@@ -188,6 +233,14 @@ fun RoundedButton(
     }
 }
 
+/**
+ * Renders an action button for dialogs, styled either as an outlined dismiss button or a filled confirm button.
+ *
+ * @param text Label displayed inside the button.
+ * @param isDismiss When `true`, renders an outlined secondary button; otherwise renders a filled action button.
+ * @param onClick Callback invoked when the button is clicked.
+ * @param modifier Optional [Modifier] applied to the button.
+ */
 @Composable
 fun DialogButton(
     text: String,
@@ -219,6 +272,12 @@ fun DialogButton(
     }
 }
 
+/**
+ * Displays a modal confirmation dialog configured via [DialogModel], including an optional checkbox.
+ *
+ * @param dialogModel Configuration model containing dialog text, checkbox options, and button callbacks.
+ * @param onDismissRequest Callback invoked when the user dismisses the dialog via back press or outside tap.
+ */
 @Composable
 fun SheSafeDialog(
     dialogModel: DialogModel,
@@ -294,6 +353,14 @@ fun SheSafeDialog(
     }
 }
 
+/**
+ * Renders a 48dp accessible icon button tinted with the current surface content color.
+ *
+ * @param painter Vector or bitmap [Painter] drawn inside the button.
+ * @param description Accessibility content description announcing the button's purpose.
+ * @param modifier Optional [Modifier] applied to the [IconButton].
+ * @param onClick Callback invoked when the icon button is tapped.
+ */
 @Composable
 fun ActionIcon(
     painter: Painter,
@@ -313,6 +380,14 @@ fun ActionIcon(
     }
 }
 
+/**
+ * Renders a horizontal preference row pairing a text label with a toggleable [Switch].
+ *
+ * @param text Descriptive label for the setting.
+ * @param checked Current boolean state of the switch.
+ * @param onCheckedChange Callback invoked with the new state when the user toggles the switch.
+ * @param modifier Optional [Modifier] applied to the row container.
+ */
 @Composable
 fun SettingItem(
     text: String,

@@ -27,11 +27,28 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 
+/** Default fallback latitude centered on Brasilia, Brazil when no user fix is available. */
 private const val DEFAULT_BR_LAT = -15.793889
+
+/** Default fallback longitude centered on Brasilia, Brazil when no user fix is available. */
 private const val DEFAULT_BR_LNG = -47.882778
+
+/** Country-wide Google Maps camera zoom level used before a user location fix is obtained. */
 private const val INITIAL_ZOOM = 4f
+
+/** Street-level Google Maps camera zoom level used once [EmergencyMapView] centers on the user. */
 private const val FOCUSED_ZOOM = 16f
 
+/**
+ * Android implementation of [EmergencyMapView] backed by Google Maps Compose ([GoogleMap]).
+ *
+ * Animates the camera to [userLocation] once the map finishes loading and toggles the native
+ * my-location layer according to [hasLocationPermission].
+ *
+ * @param userLocation Current geographic coordinates of the user, or `null` to show the default Brazil overview.
+ * @param hasLocationPermission Whether fine or coarse location permission is granted for the my-location layer.
+ * @param modifier [Modifier] applied to the [GoogleMap] composable.
+ */
 @Composable
 actual fun EmergencyMapView(
     userLocation: LocationCoordinates?,
@@ -78,6 +95,16 @@ actual fun EmergencyMapView(
     )
 }
 
+/**
+ * Android implementation of [rememberLocationPermissionControl] using
+ * [ActivityResultContracts.RequestMultiplePermissions].
+ *
+ * Checks both `ACCESS_FINE_LOCATION` and `ACCESS_COARSE_LOCATION`, refreshes authorization state when
+ * the host lifecycle resumes, and invokes [onPermissionResult] after the system permission dialog completes.
+ *
+ * @param onPermissionResult Callback invoked with `true` when either fine or coarse location access is granted.
+ * @return Remembered [LocationPermissionControl] bound to the current Android activity context.
+ */
 @Composable
 actual fun rememberLocationPermissionControl(
     onPermissionResult: (Boolean) -> Unit,
