@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.ApplicationExtension
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -6,11 +7,19 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.ktorfit)
 }
+
+val localProps = Properties().apply {
+    val propsFile = rootProject.file("local.properties")
+    if (propsFile.exists()) {
+        propsFile.inputStream().use { load(it) }
+    }
+}
+
+val mapsApiKey: String = localProps.getProperty("MAPS_API_KEY")?.takeIf { it.isNotBlank() }
+    ?: System.getenv("MAPS_API_KEY")?.takeIf { it.isNotBlank() }
+    ?: ""
 
 extensions.configure<ApplicationExtension> {
     namespace = "br.com.lucolimac.shesafe.android"
@@ -22,9 +31,11 @@ extensions.configure<ApplicationExtension> {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -33,7 +44,12 @@ extensions.configure<ApplicationExtension> {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
     compileOptions {
@@ -44,74 +60,40 @@ extensions.configure<ApplicationExtension> {
 
 dependencies {
     implementation(projects.shared)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.material3)
-    runtimeOnly(libs.androidx.material.icons.extended)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
+
+    // Koin Android
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+
+    // Firebase Android host integrations
     implementation(platform(libs.firebase.bom))
     implementation(libs.google.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.config)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore.ktx)
-    implementation(libs.kmpauth.google)
-    implementation(libs.kmpauth.firebase)
-    implementation(libs.kmpauth.uihelper)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.gson)
-    implementation(libs.coil.compose)
-    implementation(libs.accompanist.permissions)
-    //Koin
-    implementation(project.dependencies.platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
-    implementation(libs.koin.compose)
-    implementation(libs.koin.compose.viewmodel)
-    implementation(libs.koin.compose.viewmodel.navigation)
-    //Maps
-    implementation(libs.play.services.maps)
-    implementation(libs.maps.compose)
-    implementation(libs.play.services.location)
 
-    //Navigation
-    implementation(libs.androidx.navigation.compose)
+    // Logging
+    implementation(libs.timber)
 
-    configurations.all {
-        resolutionStrategy {
-            force("androidx.concurrent:concurrent-futures:1.2.0")
-        }
-    }
-
-    // Core AndroidX Test
-    androidTestImplementation(libs.androidx.runner) {
-        exclude(group = "androidx.concurrent", module = "concurrent-futures")
-    }
-    androidTestImplementation(libs.androidx.rules) {
-        exclude(group = "androidx.concurrent", module = "concurrent-futures")
-    }
-    androidTestImplementation(libs.androidx.test.junit) {
-        exclude(group = "androidx.concurrent", module = "concurrent-futures")
-    }
-    androidTestImplementation(libs.androidx.espresso.core) {
-        exclude(group = "androidx.concurrent", module = "concurrent-futures")
-    }
-
-    //Detekt
+    // Detekt
     detektPlugins(libs.detekt.formatting)
-    // Jetpack Compose Testing
 
+    // AndroidX Instrumented Testing
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.test.manifest) // Use the latest version
+    debugImplementation(libs.androidx.ui.test.manifest)
+}
 
-    // Ktor client Android
-    implementation(libs.ktor.client.okhttp)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.ktorfit.lib)
-
-
-    // Optional: For more advanced scenarios or specific libraries you're using
-    // androidTestImplementation "androidx.navigation:navigation-testing:2.7.7" // If testing navigation
-    // androidTestImplementation "io.mockk:mockk-android:1.13.5" // For mocking
+detekt {
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
 }

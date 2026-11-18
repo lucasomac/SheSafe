@@ -1,20 +1,22 @@
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
-    //trick: for the same plugin versions in all sub-modules
-    alias(libs.plugins.androidApplication).apply(false)
-    alias(libs.plugins.androidLibrary).apply(false)
-    alias(libs.plugins.kotlinAndroid).apply(false)
-    alias(libs.plugins.kotlinMultiplatform).apply(false)
-    alias(libs.plugins.compose.compiler).apply(false)
-    alias(libs.plugins.google.services).apply(false)
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.kotlinAndroid) apply false
+    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.kotlinSerialization) apply false
+    alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.google.services) apply false
     alias(libs.plugins.jetbrainsCompose) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.ktorfit) apply false
-
+    alias(libs.plugins.room) apply false
+    alias(libs.plugins.buildkonfig) apply false
 }
+
 detekt {
     toolVersion = libs.versions.detekt.get()
     config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
@@ -22,6 +24,7 @@ detekt {
     allRules = false
     ignoreFailures = false
 }
+
 tasks.withType<Detekt>().configureEach {
     reports {
         xml.required.set(true)

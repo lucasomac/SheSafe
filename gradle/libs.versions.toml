@@ -1,42 +1,57 @@
 [versions]
-#Project
+# Project
 agp = "9.4.1"
 kotlin = "2.4.20"
 compileSdk = "37"
-log4jBom = "2.26.1"
 minSdk = "26"
 targetSdk = "37"
+ksp = "2.3.12"
+buildkonfig = "0.24.0"
 
-#Google
-accompanistPermissions = "0.37.3"
+# Google & Maps
 playServicesLocation = "21.4.0"
 playServicesMaps = "20.0.0"
 google-service = "4.5.0"
-gson = "2.14.0"
-ksp = "2.3.12"
+mapsCompose = "9.0.0"
 
-#Compose
+# Compose & JetBrains Multiplatform
 compose = "1.12.1"
 compose-plugin = "1.12.1"
 compose-material3 = "1.4.0"
-coilCompose = "2.7.0"
 androidx-activityCompose = "1.13.0"
-navigationCompose = "2.10.2"
-mapsCompose = "9.0.0"
-materialIconsExtended = "1.7.8"
+jetbrains-navigation = "2.10.0"
+jetbrains-lifecycle = "2.11.0"
+coil3 = "3.6.3"
 
-#Koin
+# Koin
 koin-bom = "4.2.2"
 
-#Ktor & Ktorfit
+# Ktor & Ktorfit
 ktor = "3.6.0"
 ktorfit = "2.7.5"
 
-#Firebase
+# Persistence (Room KMP & DataStore)
+room = "2.8.5"
+sqlite = "2.7.1"
+datastore = "1.3.0"
+
+# Firebase & Auth
 firebaseBom = "34.19.0"
 firebaseCrashlytics = "3.0.8"
+gitliveFirebase = "2.8.0"
+kmpauthGoogle = "3.0.6"
 
-#Test
+# KotlinX
+kotlinxCoroutines = "1.10.2"
+kotlinxSerializationJson = "1.11.0"
+kotlinxDatetime = "0.8.0"
+
+# Logging & Quality
+timber = "5.0.1"
+detekt = "1.23.8"
+
+# Test
+turbine = "1.2.1"
 rules = "1.7.0"
 runner = "1.7.0"
 androidx-test-junit = "1.3.0"
@@ -44,42 +59,33 @@ espressoCore = "3.7.0"
 uiTestJunit4 = "1.12.1"
 uiTestManifest = "1.12.1"
 
-#Other
-kmpauthGoogle = "3.0.6"
-kotlinxSerializationJson = "1.11.0"
-detekt = "1.23.8"
-
 [libraries]
-#Google
-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
-log4j-bom = { module = "org.apache.logging.log4j:log4j-bom", version.ref = "log4jBom" }
-log4j-core = { module = "org.apache.logging.log4j:log4j-core" }
-log4j-layout-template-json = { module = "org.apache.logging.log4j:log4j-layout-template-json" }
+# Google & Maps
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 
-
-#Compose
+# Compose & JetBrains Multiplatform
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
-androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+jetbrains-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "jetbrains-navigation" }
+jetbrains-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrains-lifecycle" }
+jetbrains-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrains-lifecycle" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil3" }
 
-
-#Koin
+# Koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
 koin-core = { module = "io.insert-koin:koin-core" }
 koin-android = { module = "io.insert-koin:koin-android" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation" }
+koin-test = { module = "io.insert-koin:koin-test" }
 
-#Ktor & Ktorfit
+# Ktor & Ktorfit
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
@@ -89,20 +95,41 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktorfit-lib = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "ktorfit" }
 ktorfit-ksp = { module = "de.jensklingenberg.ktorfit:ktorfit-ksp", version.ref = "ktorfit" }
 
+# Persistence (Room KMP & DataStore)
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
 
-#Firebase
+# Firebase & Auth
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-config = { module = "com.google.firebase:firebase-config" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore" }
 google-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+gitlive-firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "gitliveFirebase" }
+gitlive-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "gitliveFirebase" }
+gitlive-firebase-config = { module = "dev.gitlive:firebase-config", version.ref = "gitliveFirebase" }
 kmpauth-firebase = { module = "io.github.mirzemehdi:kmpauth-firebase", version.ref = "kmpauthGoogle" }
 kmpauth-google = { module = "io.github.mirzemehdi:kmpauth-google", version.ref = "kmpauthGoogle" }
 kmpauth-uihelper = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.ref = "kmpauthGoogle" }
 
-#Test
+# KotlinX
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+
+# Logging & Quality
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
+# Test
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
 androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
@@ -110,21 +137,18 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "uiTestJunit4" }
 androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestManifest" }
 
-#Other
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
-
-
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-service" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
-kotlin-parcelize = { id = "kotlin-parcelize" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
