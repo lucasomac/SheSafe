@@ -20,10 +20,10 @@ data class SmsDevItemRequest(
 
 @Serializable
 data class SmsDevItemResponse(
-    val codigo: String,
-    val descricao: String,
-    val id: String,
-    val situacao: String
+    val codigo: String = "",
+    val descricao: String = "",
+    val id: String = "",
+    val situacao: String = "",
 ) {
     fun toEntity() = SmsDevEntity(
         codigo = codigo, descricao = descricao, id = id, situacao = situacao

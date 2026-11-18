@@ -5,9 +5,11 @@ import br.com.lucolimac.shesafe.data.model.InfoBipResponse
 import br.com.lucolimac.shesafe.framework.constants.Endpoints.INFO_BIP_SEND_SMS
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.Header
+import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.POST
 
 interface InfoBipService {
+    @Headers("Content-Type: application/json", "Accept: application/json")
     @POST(INFO_BIP_SEND_SMS)
     suspend fun sendSms(
         @Header("Authorization") authorization: String,

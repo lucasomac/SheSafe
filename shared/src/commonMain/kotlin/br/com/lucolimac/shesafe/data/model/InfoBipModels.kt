@@ -52,15 +52,15 @@ data class InfoBipRequest(
 
 @Serializable
 data class InfoBipResponse(
-    val bulkId: String,
-    val messages: List<Message>
+    val bulkId: String = "",
+    val messages: List<Message> = emptyList(),
 ) {
     @Serializable
     data class Message(
-        val destination: String,
-        val details: Details?,
-        val messageId: String,
-        val status: Status
+        val destination: String = "",
+        val details: Details? = null,
+        val messageId: String = "",
+        val status: Status,
     ) {
         @Serializable
         data class Details(
