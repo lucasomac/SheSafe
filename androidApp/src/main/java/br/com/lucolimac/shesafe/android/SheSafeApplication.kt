@@ -1,45 +1,59 @@
 package br.com.lucolimac.shesafe.android
 
 import android.app.Application
-import android.util.Log
-import br.com.lucolimac.shesafe.AppInitializer
-import br.com.lucolimac.shesafe.android.framework.di.SheSafeDependenciesInjection.sheSafeModule
+import br.com.lucolimac.shesafe.AuthProviderBootstrap
+import br.com.lucolimac.shesafe.core.logging.CrashlyticsTree
+import br.com.lucolimac.shesafe.core.logging.logInfo
+import br.com.lucolimac.shesafe.core.logging.logWarn
+import br.com.lucolimac.shesafe.di.initKoin
 import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.GlobalContext.startKoin
+import timber.log.Timber
 
 class SheSafeApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        AppInitializer.onApplicationStart()
-        FirebaseProvider.initialize(this.applicationContext)
-        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
-        val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 10
-        }
-        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-        remoteConfig.setConfigSettingsAsync(configSettings)
 
-        // Fetch remote values and activate them before starting DI so that
-        // the Remote Config value for "she_safe_api_server" is available
-        // when Koin creates/injects SmsProviderType.
-        remoteConfig.fetchAndActivate()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("SheSafeApplication", "Remote config fetchAndActivate succeeded. Value for she_safe_api_server=${task.isSuccessful}")
-                } else {
-                    Log.w("SheSafeApplication", "Remote config fetchAndActivate failed, using defaults")
-                }
-            }
-        // Start Koin after remote config has been fetched (or failed)
-        startKoin {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        } else {
+            Timber.plant(CrashlyticsTree())
+        }
+
+        AuthProviderBootstrap.initializeGoogleAuth()
+        configureRemoteConfig()
+
+        initKoin {
             androidLogger()
             androidContext(this@SheSafeApplication)
-            modules(listOf(sheSafeModule))
         }
+    }
+
+    private fun configureRemoteConfig() {
+        runCatching {
+            val remoteConfig = Firebase.remoteConfig
+            val settings = remoteConfigSettings {
+                minimumFetchIntervalInSeconds = REMOTE_CONFIG_FETCH_INTERVAL_SECONDS
+            }
+            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+            remoteConfig.setConfigSettingsAsync(settings)
+            remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    logInfo(TAG, "Remote config activated")
+                } else {
+                    logWarn(TAG, "Remote config fetch failed; using defaults")
+                }
+            }
+        }.onFailure { error ->
+            logWarn(TAG, "Remote config initialization skipped: ${error.message}")
+        }
+    }
+
+    private companion object {
+        const val TAG = "SheSafeApplication"
+        const val REMOTE_CONFIG_FETCH_INTERVAL_SECONDS = 3600L
     }
 }
