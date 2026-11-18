@@ -16,6 +16,11 @@ import shesafe.shared.generated.resources.error_timeout
 import shesafe.shared.generated.resources.error_unauthorized
 import shesafe.shared.generated.resources.sms_not_sent
 
+/**
+ * Maps a domain [AppError] to its corresponding localized Compose Multiplatform [StringResource].
+ *
+ * @return User-facing [StringResource] suitable for rendering error feedback in the UI.
+ */
 fun AppError.toStringResource(): StringResource = when (this) {
     AppError.Network.NoConnection -> Res.string.error_no_connection
     AppError.Network.Timeout -> Res.string.error_timeout

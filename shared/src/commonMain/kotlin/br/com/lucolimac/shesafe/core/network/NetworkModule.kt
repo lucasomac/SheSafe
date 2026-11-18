@@ -26,17 +26,59 @@ import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
+/**
+ * Koin qualifier name identifying the [Ktorfit] instance configured for the SMSDev gateway API.
+ */
 const val QUALIFIER_SMS_DEV_KTORFIT = "smsDevKtorfit"
+
+/**
+ * Koin qualifier name identifying the [Ktorfit] instance configured for the Infobip SMS gateway API.
+ */
 const val QUALIFIER_INFO_BIP_KTORFIT = "infoBipKtorfit"
 
+/**
+ * Maximum duration in milliseconds allowed for an entire HTTP request-response cycle.
+ */
 private const val REQUEST_TIMEOUT_MS = 30_000L
+
+/**
+ * Maximum duration in milliseconds allowed when establishing a TCP/TLS connection.
+ */
 private const val CONNECT_TIMEOUT_MS = 15_000L
+
+/**
+ * Maximum inactivity duration in milliseconds between two data packets on an open socket.
+ */
 private const val SOCKET_TIMEOUT_MS = 30_000L
+
+/**
+ * Upper bound in milliseconds for exponential backoff delays between HTTP retries.
+ */
 private const val MAX_RETRY_DELAY_MS = 10_000L
+
+/**
+ * Randomization jitter window in milliseconds added to exponential retry delays.
+ */
 private const val JITTER_MS = 500L
+
+/**
+ * Lowest HTTP status code (inclusive) classified as a 5xx server error for retry policies.
+ */
 private const val HTTP_SERVER_ERROR_MIN = 500
+
+/**
+ * Highest HTTP status code (inclusive) classified as a 5xx server error for retry policies.
+ */
 private const val HTTP_SERVER_ERROR_MAX = 599
 
+/**
+ * Builds and configures the shared multiplatform Ktor [HttpClient].
+ *
+ * Installs JSON content negotiation, request/connect/socket timeouts, exponential-backoff retries
+ * for transient 5xx responses and network exceptions, and header-sanitized debug logging.
+ *
+ * @return A configured [HttpClient] ready for use by Ktorfit API services.
+ */
 @OptIn(ExperimentalSerializationApi::class)
 fun createAppHttpClient(): HttpClient = HttpClient {
     expectSuccess = true
@@ -84,6 +126,10 @@ fun createAppHttpClient(): HttpClient = HttpClient {
     }
 }
 
+/**
+ * Koin module providing the shared [HttpClient], qualified [Ktorfit] instances,
+ * and generated [SmsDevService] and [InfoBipService] API clients.
+ */
 val networkModule = module {
     single<HttpClient> { createAppHttpClient() }
 
