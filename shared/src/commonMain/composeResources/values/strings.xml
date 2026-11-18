@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SheSafe</string>
+
+    <!-- Navigation & Titles -->
+    <string name="title_home">Início</string>
+    <string name="title_secure_contacts">Contatos Seguros</string>
+    <string name="title_profile">Perfil</string>
+    <string name="title_new_secure_contact">Novo contato seguro</string>
+    <string name="title_edit_secure_contact">Editar contato seguro</string>
+    <string name="title_help_request_sent">Pedidos de Ajuda</string>
+    <string name="title_settings">Configurações</string>
+    <string name="title_last_sent">Últimos envios</string>
+    <string name="title_delete_secure_contact">Deletar contato seguro?</string>
+    <string name="title_input_your_message">Insira sua nova mensagem!</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_no_contacts_title">Atenção</string>
+    <string name="dialog_no_contacts_message">Você ainda não possui contatos seguros cadastrados. Gostaria de ir para o cadastro?</string>
+    <string name="dialog_no_contacts_confirm">Cadastrar</string>
+    <string name="dialog_confirm_help_title">Confirmar pedido de ajuda?</string>
+    <string name="dialog_confirm_help_message">Ao confirmar o seu pedido de ajuda toda a sua lista de contatos seguros receberá um SMS informando o seu pedido e a sua localização. Deseja enviar?</string>
+    <string name="dialog_confirm_help_send">Enviar</string>
+    <string name="dialog_dont_ask_again">Não perguntar novamente</string>
+
+    <!-- Actions & Labels -->
+    <string name="request_help">Pedir Ajuda</string>
+    <string name="label_cancel">Cancelar</string>
+    <string name="label_delete">Excluir</string>
+    <string name="label_edit">Editar</string>
+    <string name="label_change">Alterar</string>
+    <string name="label_close">Fechar</string>
+    <string name="label_retry">Tentar Novamente</string>
+    <string name="label_grant_location">Permitir localização</string>
+    <string name="label_continue_without_location">Continuar sem localização</string>
+    <string name="label_secure_contact_name">Nome</string>
+    <string name="label_secure_contact_phone">Celular</string>
+    <string name="label_secure_contact_phone_prefix">+55</string>
+    <string name="label_secure_contact_save">Salvar</string>
+    <string name="label_secure_contact_update">Atualizar</string>
+    <string name="label_setting_send_confirmation">Confirmação de envio</string>
+    <string name="default_user_name">Usuária</string>
+    <string name="default_message_label">Sua mensagem</string>
+
+    <!-- User Messages & Feedback -->
+    <string name="default_message_danger_user">Estou em perigo. Por favor se puder me ajudar esta é minha localização!</string>
+    <string name="description_input_your_message">Ela será enviada juntamente com a sua localização para os seus contatos.</string>
+    <string name="message_no_secure_contacts">Você ainda não possui contatos cadastrados!</string>
+    <string name="message_nothing_send_yet">Nenhum pedido de ajuda enviado ainda.</string>
+    <string name="message_delete_secure_contact">Tem certeza de que deseja excluir %1$s dos seus contatos seguros?</string>
+    <string name="message_location_unavailable">Localização indisponível</string>
+    <string name="message_location_permission_rationale">Permita o acesso à localização para anexar o link do mapa aos seus pedidos de ajuda.</string>
+    <string name="sms_sent">Pedido de ajuda enviado para sua lista de contatos seguros!</string>
+    <string name="sms_user_confirmation_required">Confirme o envio da mensagem no aplicativo de SMS.</string>
+    <string name="sms_not_sent">Não foi possível enviar o pedido de ajuda. Tente novamente.</string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_app_logo">Logotipo SheSafe</string>
+    <string name="cd_back">Voltar</string>
+    <string name="cd_add_contact">Adicionar contato seguro</string>
+    <string name="cd_more_options">Mais opções</string>
+    <string name="cd_profile_picture">Foto de perfil</string>
+    <string name="cd_settings">Configurações</string>
+    <string name="cd_help_history">Histórico de pedidos de ajuda</string>
+    <string name="cd_edit_message">Editar mensagem de emergência</string>
+    <string name="cd_logout">Sair da conta</string>
+    <string name="cd_loading">Carregando</string>
+
+    <!-- Errors -->
+    <string name="error_no_connection">Sem conexão com a internet. Verifique sua rede.</string>
+    <string name="error_timeout">Tempo de resposta esgotado. Tente novamente.</string>
+    <string name="error_unauthorized">Sua sessão expirou. Faça login novamente.</string>
+    <string name="error_rate_limited">Muitas tentativas. Aguarde alguns instantes e tente novamente.</string>
+    <string name="error_server">Erro no servidor (%1$d). Tente novamente mais tarde.</string>
+    <string name="error_not_found">Registro não encontrado.</string>
+    <string name="error_auth_failed">Falha na autenticação. Tente novamente.</string>
+    <string name="error_name_blank">O nome não pode ser vazio!</string>
+    <string name="error_phone_blank">O número de celular não pode ser vazio!</string>
+    <string name="error_phone_less_eleven_digits">O número de celular deve conter 11 dígitos!</string>
+    <string name="error_message_blank">A mensagem de ajuda não pode ser vazia!</string>
+    <string name="error_generic">Ocorreu um erro inesperado. Tente novamente.</string>
+</resources>

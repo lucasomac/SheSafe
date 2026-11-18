@@ -1,5 +1,8 @@
 package br.com.lucolimac.shesafe.platform
 
+import kotlin.coroutines.resume
+import kotlinx.coroutines.suspendCancellableCoroutine
+
 data class LocationCoordinates(
     val latitude: Double,
     val longitude: Double,
@@ -15,3 +18,12 @@ sealed interface LocationResult {
 interface LocationService {
     fun requestCurrentLocation(onResult: (LocationResult) -> Unit)
 }
+
+suspend fun LocationService.awaitCurrentLocation(): LocationResult =
+    suspendCancellableCoroutine { cont ->
+        requestCurrentLocation { result ->
+            if (cont.isActive) {
+                cont.resume(result)
+            }
+        }
+    }
