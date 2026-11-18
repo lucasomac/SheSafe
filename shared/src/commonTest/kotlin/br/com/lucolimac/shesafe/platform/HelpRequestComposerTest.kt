@@ -3,7 +3,14 @@ package br.com.lucolimac.shesafe.platform
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+/**
+ * Unit tests verifying emergency message formatting in [HelpRequestComposer].
+ */
 class HelpRequestComposerTest {
+    /**
+     * Verifies that [HelpRequestComposer.composeMessage] trims the base message and appends a
+     * Google Maps search URL when [LocationCoordinates] are provided.
+     */
     @Test
     fun appendsGoogleMapsLinkWhenLocationIsAvailable() {
         assertEquals(
@@ -15,6 +22,10 @@ class HelpRequestComposerTest {
         )
     }
 
+    /**
+     * Verifies that [HelpRequestComposer.composeMessage] returns only the trimmed message text
+     * when location coordinates are `null`.
+     */
     @Test
     fun leavesMessageWithoutLocationLinkWhenLocationIsUnavailable() {
         assertEquals("Help me", HelpRequestComposer.composeMessage(" Help me ", null))

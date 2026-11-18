@@ -43,21 +43,42 @@ import shesafe.shared.generated.resources.error_no_connection
 import shesafe.shared.generated.resources.sms_sent
 import shesafe.shared.generated.resources.sms_user_confirmation_required
 
+/**
+ * Unit tests verifying SOS dialog orchestration, confirmation preference persistence, and SMS
+ * outcome mapping in [HomeViewModel].
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
 
+    /** Unconfined test dispatcher installed on `Dispatchers.Main` for synchronous coroutine execution. */
     private val testDispatcher = UnconfinedTestDispatcher()
 
+    /**
+     * Installs [testDispatcher] as `Dispatchers.Main` before each test runs.
+     */
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
     }
 
+    /**
+     * Restores `Dispatchers.Main` after each test completes.
+     */
     @AfterTest
     fun tearDown() {
         Dispatchers.resetMain()
     }
 
+    /**
+     * Helper factory assembling a [HomeViewModel] wired with configurable in-memory test fakes.
+     *
+     * @param contactRepo Fake secure contacts repository.
+     * @param prefsRepo Fake profile preferences repository.
+     * @param gateway Fake emergency SMS gateway.
+     * @param helpRepo Fake help request history repository.
+     * @param locationService Fake platform location service.
+     * @return Configured [HomeViewModel] under test.
+     */
     private fun createViewModel(
         contactRepo: FakeSecureContactRepository = FakeSecureContactRepository(),
         prefsRepo: FakeProfilePreferencesRepository = FakeProfilePreferencesRepository(),
@@ -79,6 +100,10 @@ class HomeViewModelTest {
         )
     }
 
+    /**
+     * Verifies that tapping the SOS button with zero contacts opens [HomeDialogType.NO_CONTACTS]
+     * and confirming navigates to contact registration.
+     */
     @Test
     fun onRequestHelpClicked_whenNoContacts_showsNoContactsDialogAndNavigatesOnConfirm() = runTest {
         val viewModel = createViewModel()
@@ -94,6 +119,10 @@ class HomeViewModelTest {
         }
     }
 
+    /**
+     * Verifies that confirming an alert with "don't ask again" checked disables
+     * [SettingKey.SEND_CONFIRMATION], dispatches the emergency alert, and emits a success message.
+     */
     @Test
     fun onConfirmSendAlert_withDontAskAgainChecked_persistsSettingAndSendsAlert() = runTest {
         val contacts = listOf(SecureContact(name = "Maria", phoneNumber = "11999998888"))
@@ -129,6 +158,10 @@ class HomeViewModelTest {
         assertEquals(1, gateway.callCount)
     }
 
+    /**
+     * Verifies that when [SettingKey.SEND_CONFIRMATION] is disabled, tapping SOS dispatches immediately
+     * and maps both [AlertDeliveryOutcome.UserConfirmationRequired] and network errors to localized messages.
+     */
     @Test
     fun onRequestHelpClicked_whenConfirmationDisabled_dispatchesImmediatelyAndMapsGatewayOutcome() = runTest {
         val contacts = listOf(SecureContact(name = "Maria", phoneNumber = "11999998888"))

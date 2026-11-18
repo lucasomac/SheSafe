@@ -25,8 +25,15 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
 
+/**
+ * Unit tests verifying domain validation, normalization, side-effect recording, and [AppEvent]
+ * emissions across SheSafe use cases.
+ */
 class SheSafeUseCasesTest {
 
+    /**
+     * Verifies that [SaveSecureContactUseCase] rejects whitespace-only names with [AppError.Validation.EmptyName].
+     */
     @Test
     fun saveSecureContact_rejectsBlankName() = runTest {
         val repo = FakeSecureContactRepository()
@@ -39,6 +46,9 @@ class SheSafeUseCasesTest {
         assertEquals(AppError.Validation.EmptyName, error.error)
     }
 
+    /**
+     * Verifies that [SaveSecureContactUseCase] rejects phone numbers that do not meet the required digit length.
+     */
     @Test
     fun saveSecureContact_rejectsInvalidPhoneLength() = runTest {
         val repo = FakeSecureContactRepository()
@@ -51,6 +61,10 @@ class SheSafeUseCasesTest {
         assertEquals(AppError.Validation.InvalidPhoneDigits, error.error)
     }
 
+    /**
+     * Verifies that [SaveSecureContactUseCase] trims contact names, strips non-digit phone characters,
+     * persists the normalized contact, and emits [AppEvent.ContactsChanged].
+     */
     @Test
     fun saveSecureContact_normalizesDigitsAndEmitsContactsChanged() = runTest {
         val repo = FakeSecureContactRepository()
@@ -70,6 +84,10 @@ class SheSafeUseCasesTest {
         assertEquals("Maria Silva", saved.data.name)
     }
 
+    /**
+     * Verifies that [DeleteSecureContactUseCase] normalizes the target phone number, deletes the
+     * matching contact, and emits [AppEvent.ContactsChanged].
+     */
     @Test
     fun deleteSecureContact_removesContactAndEmitsContactsChanged() = runTest {
         val initial = SecureContact(name = "Ana", phoneNumber = "21988887777")
@@ -87,6 +105,10 @@ class SheSafeUseCasesTest {
         assertIs<Resource.Error>(repo.getSecureContactByPhone("21988887777"))
     }
 
+    /**
+     * Verifies that [TriggerEmergencyAlertUseCase] short-circuits with [AppError.Delivery.NoRecipients]
+     * without calling the SMS gateway or recording history when no contacts are provided.
+     */
     @Test
     fun triggerEmergencyAlert_returnsNoRecipientsWhenContactsEmpty() = runTest {
         val gateway = FakeEmergencySmsGateway()
@@ -106,6 +128,10 @@ class SheSafeUseCasesTest {
         assertTrue(helpRepo.recordedRequests.isEmpty())
     }
 
+    /**
+     * Verifies that [TriggerEmergencyAlertUseCase] appends Google Maps coordinates, dispatches the SMS,
+     * records the help request in history, and emits [AppEvent.HelpRequestsChanged].
+     */
     @Test
     fun triggerEmergencyAlert_composesLocationRecordsHistoryAndEmitsEvent() = runTest {
         val gateway = FakeEmergencySmsGateway()
@@ -133,6 +159,10 @@ class SheSafeUseCasesTest {
         assertEquals(coords, helpRepo.recordedRequests.first().location)
     }
 
+    /**
+     * Verifies that [TriggerEmergencyAlertUseCase] sends the base message without appending a dummy
+     * `(0,0)` link when location coordinates are unavailable.
+     */
     @Test
     fun triggerEmergencyAlert_withoutCoordinatesOmitsNullIslandLink() = runTest {
         val gateway = FakeEmergencySmsGateway()
@@ -152,6 +182,10 @@ class SheSafeUseCasesTest {
         assertNull(helpRepo.recordedRequests.first().location)
     }
 
+    /**
+     * Verifies that [UpdateHelpMessageUseCase] rejects blank messages with [AppError.Validation.EmptyMessage]
+     * and trims surrounding whitespace on valid messages before persisting.
+     */
     @Test
     fun updateHelpMessage_rejectsBlankInputAndTrimsValidInput() = runTest {
         val repo = FakeProfilePreferencesRepository()
@@ -166,6 +200,9 @@ class SheSafeUseCasesTest {
         assertEquals("Socorro urgente!", repo.currentMessage)
     }
 
+    /**
+     * Verifies that [SignOutUseCase] clears the active user session and emits [AppEvent.UserLoggedOut].
+     */
     @Test
     fun signOut_clearsSessionAndEmitsUserLoggedOut() = runTest {
         val authRepo = FakeAuthRepository(

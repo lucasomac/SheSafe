@@ -52,21 +52,37 @@ import kotlinx.coroutines.test.setMain
 import shesafe.shared.generated.resources.Res
 import shesafe.shared.generated.resources.error_no_connection
 
+/**
+ * Unit tests covering state transitions, form validation, bottom sheet management, and navigation
+ * events for [SecureContactsViewModel], [RegisterSecureContactViewModel], [ProfileViewModel], and
+ * [AuthViewModel].
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 class ContactsAndProfileViewModelTest {
 
+    /** Unconfined test dispatcher installed on `Dispatchers.Main` for deterministic ViewModel execution. */
     private val testDispatcher = UnconfinedTestDispatcher()
 
+    /**
+     * Installs [testDispatcher] as `Dispatchers.Main` prior to each test case.
+     */
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
     }
 
+    /**
+     * Resets `Dispatchers.Main` to its default state after each test case.
+     */
     @AfterTest
     fun tearDown() {
         Dispatchers.resetMain()
     }
 
+    /**
+     * Verifies that [SecureContactsViewModel] surfaces a connection error resource when the cache is
+     * empty and refresh fails, and clears the error once a retry succeeds.
+     */
     @Test
     fun secureContactsViewModel_exposesErrorResourceWhenEmptyAndRefreshFails() = runTest {
         val repo = FakeSecureContactRepository().apply {
@@ -91,6 +107,9 @@ class ContactsAndProfileViewModelTest {
         assertEquals(1, viewModel.uiState.value.contacts.size)
     }
 
+    /**
+     * Verifies that [SecureContactsViewModel] stages a contact for deletion and removes it upon confirmation.
+     */
     @Test
     fun secureContactsViewModel_confirmDeleteRemovesPendingContact() = runTest {
         val maria = SecureContact("Maria", "11999998888")
@@ -110,6 +129,10 @@ class ContactsAndProfileViewModelTest {
         assertTrue(viewModel.uiState.value.contacts.isEmpty())
     }
 
+    /**
+     * Verifies that [RegisterSecureContactViewModel] validates name and phone inputs in real time and
+     * emits [RegisterContactEvent.NavigateBack] after saving a valid contact.
+     */
     @Test
     fun registerSecureContactViewModel_validatesInputAndAwaitsSaveBeforeNavigateBack() = runTest {
         val repo = FakeSecureContactRepository()
@@ -139,6 +162,10 @@ class ContactsAndProfileViewModelTest {
         }
     }
 
+    /**
+     * Verifies that [ProfileViewModel] opens and dismisses the edit-message sheet, updates custom
+     * help messages and settings reactively, and emits [ProfileEvent.NavigateToLogin] on sign-out.
+     */
     @Test
     fun profileViewModel_opensAndDismissesEditMessageSheetAndLogsOut() = runTest {
         val authRepo = FakeAuthRepository(
@@ -188,6 +215,10 @@ class ContactsAndProfileViewModelTest {
         }
     }
 
+    /**
+     * Verifies that [AuthViewModel] updates authentication state and emits [AuthEvent.NavigateToHome]
+     * upon receiving valid Google OAuth tokens.
+     */
     @Test
     fun authViewModel_emitsNavigateToHomeWhenUserSignsIn() = runTest {
         val authRepo = FakeAuthRepository(initialUser = null)
