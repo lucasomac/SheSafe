@@ -15,18 +15,34 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
+/**
+ * Immutable UI state for the help requests history screen.
+ *
+ * @property isLoading Whether initial data or a retry refresh is currently in progress.
+ * @property helpRequests Ordered list of recorded [HelpRequest] items to display.
+ * @property errorResource Localized error message resource shown when loading fails with an empty cache.
+ */
 data class HelpRequestsUiState(
     val isLoading: Boolean = true,
     val helpRequests: List<HelpRequest> = emptyList(),
     val errorResource: StringResource? = null,
 )
 
+/**
+ * ViewModel managing state and remote refresh operations for the help requests history screen.
+ *
+ * @param observeHelpRequestsUseCase Use case streaming cached [HelpRequest] items.
+ * @param refreshHelpRequestsUseCase Use case synchronizing remote help requests into the local cache.
+ */
 class HelpRequestsViewModel(
     observeHelpRequestsUseCase: ObserveHelpRequestsUseCase,
     private val refreshHelpRequestsUseCase: RefreshHelpRequestsUseCase,
 ) : ViewModel() {
 
+    /** Backing mutable state flow holding the latest [HelpRequestsUiState]. */
     private val _uiState = MutableStateFlow(HelpRequestsUiState())
+
+    /** Publicly observable [StateFlow] of [HelpRequestsUiState] for UI consumption. */
     val uiState: StateFlow<HelpRequestsUiState> = _uiState.asStateFlow()
 
     init {
@@ -44,6 +60,12 @@ class HelpRequestsViewModel(
         refresh()
     }
 
+    /**
+     * Triggers a remote synchronization of the user's help request history.
+     *
+     * Displays a loading indicator only when the local list is empty, and surfaces an error banner
+     * only if synchronization fails while no cached items exist.
+     */
     fun refresh() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = _uiState.value.helpRequests.isEmpty(), errorResource = null) }

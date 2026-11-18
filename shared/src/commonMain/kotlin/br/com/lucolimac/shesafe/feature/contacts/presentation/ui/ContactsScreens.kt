@@ -60,6 +60,15 @@ import shesafe.shared.generated.resources.label_secure_contact_update
 import shesafe.shared.generated.resources.message_no_secure_contacts
 import shesafe.shared.generated.resources.title_secure_contacts
 
+/**
+ * Stateful screen composable displaying the user's trusted emergency contacts list and handling
+ * edit navigation and deletion confirmation events from [SecureContactsViewModel].
+ *
+ * @param onNavigateToEditContact Callback invoked with the contact's phone number to open edit mode.
+ * @param onShowMessage Callback invoked to display a localized feedback message to the user.
+ * @param modifier Optional [Modifier] applied to the root layout.
+ * @param viewModel [SecureContactsViewModel] managing contacts list state and events.
+ */
 @Composable
 fun SecureContactsScreen(
     onNavigateToEditContact: (String) -> Unit,
@@ -89,6 +98,18 @@ fun SecureContactsScreen(
     )
 }
 
+/**
+ * Stateless presentation composable rendering loading, error, empty, or populated states of the
+ * trusted contacts list along with an optional modal confirmation sheet for deletions.
+ *
+ * @param uiState Current [SecureContactsUiState] driving the UI.
+ * @param onEditClick Callback invoked when the edit action on a [SecureContact] card is clicked.
+ * @param onDeleteClick Callback invoked when the delete action on a [SecureContact] card is clicked.
+ * @param onConfirmDelete Callback invoked when the user confirms deletion in the bottom sheet.
+ * @param onDismissDelete Callback invoked when the delete confirmation bottom sheet is dismissed.
+ * @param onRetry Callback invoked when the user taps retry on the error banner.
+ * @param modifier Optional [Modifier] applied to the root [Column].
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecureContactsContent(
@@ -172,6 +193,16 @@ fun SecureContactsContent(
     }
 }
 
+/**
+ * Stateful screen composable for registering a new trusted emergency contact or editing an
+ * existing one identified by [phoneNumberArg].
+ *
+ * @param phoneNumberArg Optional phone number of an existing contact to edit; `null` for creation mode.
+ * @param onNavigateBack Callback invoked to pop back to the previous destination.
+ * @param onShowMessage Callback invoked to display a localized feedback message to the user.
+ * @param modifier Optional [Modifier] applied to the root layout.
+ * @param viewModel [RegisterSecureContactViewModel] managing form state, validation, and save actions.
+ */
 @Composable
 fun RegisterSecureContactScreen(
     phoneNumberArg: String?,
@@ -204,6 +235,16 @@ fun RegisterSecureContactScreen(
     )
 }
 
+/**
+ * Stateless form composable for entering or updating a trusted contact's name and phone number,
+ * complete with inline validation errors, accessibility error semantics, and keyboard focus chaining.
+ *
+ * @param uiState Current [RegisterContactUiState] representing field values and validation state.
+ * @param onNameChanged Callback invoked when the contact name input changes.
+ * @param onPhoneChanged Callback invoked when the phone number input changes.
+ * @param onSaveClicked Callback invoked when the user submits the form.
+ * @param modifier Optional [Modifier] applied to the root container.
+ */
 @Composable
 fun RegisterSecureContactContent(
     uiState: RegisterContactUiState,
@@ -309,6 +350,9 @@ fun RegisterSecureContactContent(
     }
 }
 
+/**
+ * Light-theme Compose preview for [SecureContactsContent] populated with sample contacts.
+ */
 @org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 private fun SecureContactsLightPreview() {
@@ -330,6 +374,9 @@ private fun SecureContactsLightPreview() {
     }
 }
 
+/**
+ * Dark-theme Compose preview for [RegisterSecureContactContent] with valid pre-filled form values.
+ */
 @org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 private fun RegisterSecureContactDarkPreview() {

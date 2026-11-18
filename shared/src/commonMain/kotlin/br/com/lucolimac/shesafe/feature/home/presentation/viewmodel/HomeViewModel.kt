@@ -35,12 +35,31 @@ import shesafe.shared.generated.resources.Res
 import shesafe.shared.generated.resources.sms_sent
 import shesafe.shared.generated.resources.sms_user_confirmation_required
 
+/**
+ * Represents the modal dialog variant currently presented on the home screen.
+ */
 enum class HomeDialogType {
+    /** No modal dialog is visible. */
     NONE,
+
+    /** Prompts the user to register at least one trusted contact before requesting help. */
     NO_CONTACTS,
+
+    /** Asks the user to confirm sending an emergency alert, with an optional "don't ask again" toggle. */
     CONFIRM_SEND,
 }
 
+/**
+ * Immutable UI state for the home screen and emergency SOS workflow.
+ *
+ * @property isSending Whether an emergency SOS alert dispatch is currently in flight.
+ * @property secureContacts Cached list of [SecureContact] recipients who will receive the alert.
+ * @property customHelpMessage User-configured custom SOS message, or blank when using the default text.
+ * @property requireSendConfirmation Whether user confirmation is required before sending an alert.
+ * @property dontAskAgainChecked Current checkbox state inside the [HomeDialogType.CONFIRM_SEND] dialog.
+ * @property userLocation Latest known [LocationCoordinates] of the device, or `null` if unavailable.
+ * @property activeDialog Currently visible [HomeDialogType] modal on the home screen.
+ */
 data class HomeUiState(
     val isSending: Boolean = false,
     val secureContacts: List<SecureContact> = emptyList(),
@@ -51,11 +70,37 @@ data class HomeUiState(
     val activeDialog: HomeDialogType = HomeDialogType.NONE,
 )
 
+/**
+ * One-off UI side-effect events emitted by [HomeViewModel].
+ */
 sealed interface HomeEvent {
+    /**
+     * Instructs the UI to navigate to the trusted contact registration screen.
+     */
     data object NavigateToRegisterContact : HomeEvent
+
+    /**
+     * Instructs the UI to display a transient localized feedback message.
+     *
+     * @property messageRes Localized [StringResource] for the message to display.
+     */
     data class ShowMessage(val messageRes: StringResource) : HomeEvent
 }
 
+/**
+ * ViewModel orchestrating the home map state, emergency contact readiness, confirmation preferences,
+ * device location acquisition, and SOS alert dispatch.
+ *
+ * @param observeSecureContactsUseCase Use case streaming the user's trusted emergency contacts.
+ * @property refreshSecureContactsUseCase Use case synchronizing trusted contacts from remote storage.
+ * @param observeHelpMessageUseCase Use case streaming the user's custom emergency message.
+ * @property refreshHelpMessageUseCase Use case synchronizing the custom emergency message remotely.
+ * @param observeSettingsUseCase Use case streaming user safety preferences.
+ * @property refreshSettingsUseCase Use case synchronizing user safety preferences remotely.
+ * @property updateSettingUseCase Use case persisting updates to individual user preferences.
+ * @property triggerEmergencyAlertUseCase Use case dispatching SOS alerts to trusted contacts.
+ * @property locationService Platform service providing current device GPS coordinates.
+ */
 class HomeViewModel(
     observeSecureContactsUseCase: ObserveSecureContactsUseCase,
     private val refreshSecureContactsUseCase: RefreshSecureContactsUseCase,
@@ -69,6 +114,10 @@ class HomeViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
+
+    /**
+     * Reactive stream of [HomeUiState] observed by the home screen.
+     */
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<HomeEvent>(
@@ -76,6 +125,10 @@ class HomeViewModel(
         extraBufferCapacity = 64,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
+
+    /**
+     * Stream of one-shot [HomeEvent] side effects for navigation and user feedback.
+     */
     val events: SharedFlow<HomeEvent> = _events.asSharedFlow()
 
     init {
@@ -99,6 +152,9 @@ class HomeViewModel(
         refreshInitialData()
     }
 
+    /**
+     * Triggers remote synchronization of trusted contacts, custom help message, and user settings.
+     */
     fun refreshInitialData() {
         viewModelScope.launch {
             refreshSecureContactsUseCase()
@@ -107,6 +163,10 @@ class HomeViewModel(
         }
     }
 
+    /**
+     * Queries [locationService] for the current device coordinates and updates [HomeUiState.userLocation]
+     * when a location fix is available.
+     */
     fun refreshLocation() {
         viewModelScope.launch {
             when (val result = locationService.awaitCurrentLocation()) {
@@ -121,6 +181,12 @@ class HomeViewModel(
         }
     }
 
+    /**
+     * Handles taps on the primary "Request Help" SOS button: prompts for contacts if none exist,
+     * shows a confirmation dialog if enabled, or immediately dispatches the emergency alert.
+     *
+     * @param defaultDangerMessage Fallback localized SOS message used when no custom message is configured.
+     */
     fun onRequestHelpClicked(defaultDangerMessage: String) {
         val current = _uiState.value
         when {
@@ -141,14 +207,25 @@ class HomeViewModel(
         }
     }
 
+    /**
+     * Updates the "don't ask again" checkbox state within the send confirmation dialog.
+     *
+     * @param checked Whether the user opted to skip future send confirmations.
+     */
     fun onDontAskAgainChanged(checked: Boolean) {
         _uiState.update { it.copy(dontAskAgainChecked = checked) }
     }
 
+    /**
+     * Dismisses any currently active dialog on the home screen and resets transient checkbox state.
+     */
     fun onDismissDialog() {
         _uiState.update { it.copy(activeDialog = HomeDialogType.NONE, dontAskAgainChecked = false) }
     }
 
+    /**
+     * Dismisses the missing-contacts dialog and emits [HomeEvent.NavigateToRegisterContact].
+     */
     fun onConfirmNoContactsDialog() {
         _uiState.update { it.copy(activeDialog = HomeDialogType.NONE) }
         viewModelScope.launch {
@@ -156,6 +233,12 @@ class HomeViewModel(
         }
     }
 
+    /**
+     * Confirms emergency alert dispatch from the confirmation dialog, persisting the
+     * [SettingKey.SEND_CONFIRMATION] preference if "don't ask again" was checked.
+     *
+     * @param defaultDangerMessage Fallback localized SOS message used when no custom message is configured.
+     */
     fun onConfirmSendAlert(defaultDangerMessage: String) {
         val disableFutureConfirmation = _uiState.value.dontAskAgainChecked
         _uiState.update { it.copy(activeDialog = HomeDialogType.NONE, dontAskAgainChecked = false) }
@@ -167,6 +250,12 @@ class HomeViewModel(
         }
     }
 
+    /**
+     * Refreshes the latest device location if available, resolves the effective SOS message,
+     * invokes [triggerEmergencyAlertUseCase], and emits a user-facing status message.
+     *
+     * @param defaultDangerMessage Fallback localized SOS message used when no custom message is configured.
+     */
     private fun dispatchEmergencyAlert(defaultDangerMessage: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isSending = true) }

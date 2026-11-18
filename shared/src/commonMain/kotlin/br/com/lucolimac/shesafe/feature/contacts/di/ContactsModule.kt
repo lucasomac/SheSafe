@@ -15,6 +15,13 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+/**
+ * Koin dependency injection module for the trusted emergency contacts feature.
+ *
+ * Provides a singleton [SecureContactRepositoryImpl] bound to [SecureContactRepository],
+ * factory definitions for all contact domain use cases, and ViewModel bindings for
+ * [SecureContactsViewModel] and [RegisterSecureContactViewModel].
+ */
 val contactsModule = module {
     singleOf(::SecureContactRepositoryImpl) bind SecureContactRepository::class
     factoryOf(::ObserveSecureContactsUseCase)

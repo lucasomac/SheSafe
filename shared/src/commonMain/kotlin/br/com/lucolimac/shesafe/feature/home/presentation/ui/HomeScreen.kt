@@ -50,6 +50,15 @@ import shesafe.shared.generated.resources.message_location_permission_rationale
 import shesafe.shared.generated.resources.request_help
 import shesafe.shared.generated.resources.title_home
 
+/**
+ * Stateful home screen composable coordinating runtime location permission requests, observing
+ * [HomeViewModel] UI state and one-shot events, and delegating layout rendering to [HomeContent].
+ *
+ * @param onNavigateToRegisterContact Callback invoked when the user chooses to add a trusted contact.
+ * @param onShowMessage Callback invoked to display a localized feedback message to the user.
+ * @param modifier Optional [Modifier] applied to the root layout.
+ * @param viewModel [HomeViewModel] managing location, SOS confirmation dialogs, and alert dispatch.
+ */
 @Composable
 fun HomeScreen(
     onNavigateToRegisterContact: () -> Unit,
@@ -96,6 +105,21 @@ fun HomeScreen(
     )
 }
 
+/**
+ * Stateless presentation composable for the home screen rendering the header, optional location
+ * permission rationale banner, interactive map slot, primary SOS help button, and modal dialogs.
+ *
+ * @param uiState Current [HomeUiState] controlling sending status, location, and active dialogs.
+ * @param hasLocationPermission Whether foreground location permission is currently granted.
+ * @param onRequestLocationPermission Callback invoked when the user taps the permission grant button.
+ * @param onRequestHelpClick Callback invoked when the primary SOS "Request Help" button is pressed.
+ * @param onConfirmNoContacts Callback invoked when confirming the missing-contacts dialog.
+ * @param onConfirmSendAlert Callback invoked when confirming SOS dispatch in the confirmation dialog.
+ * @param onDontAskAgainChanged Callback invoked when the "don't ask again" checkbox is toggled.
+ * @param onDismissDialog Callback invoked when any active modal dialog is dismissed or cancelled.
+ * @param modifier Optional [Modifier] applied to the root [Column].
+ * @param mapContent Slot composable rendering the underlying map view (defaults to [EmergencyMapView]).
+ */
 @Composable
 fun HomeContent(
     uiState: HomeUiState,
@@ -198,6 +222,9 @@ fun HomeContent(
     }
 }
 
+/**
+ * Light-theme Compose preview for [HomeContent] showing the location permission rationale banner.
+ */
 @Preview
 @Composable
 private fun HomeContentLightPreview() {
@@ -222,6 +249,9 @@ private fun HomeContentLightPreview() {
     }
 }
 
+/**
+ * Dark-theme Compose preview for [HomeContent] with location permission granted.
+ */
 @Preview
 @Composable
 private fun HomeContentDarkPreview() {

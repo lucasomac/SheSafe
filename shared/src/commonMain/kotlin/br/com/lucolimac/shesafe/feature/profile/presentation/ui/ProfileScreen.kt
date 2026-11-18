@@ -64,6 +64,16 @@ import shesafe.shared.generated.resources.settings_24px
 import shesafe.shared.generated.resources.title_last_sent
 import shesafe.shared.generated.resources.title_profile
 
+/**
+ * Stateful destination composable for the user profile screen, wiring [ProfileViewModel] state and
+ * one-shot [ProfileEvent] side effects to navigation and message callbacks.
+ *
+ * @param onNavigateToHelpRequests Callback invoked to open the full help requests history screen.
+ * @param onNavigateToLogin Callback invoked after the user signs out to return to the login flow.
+ * @param onShowMessage Callback invoked to surface transient user-facing feedback from a [StringResource].
+ * @param modifier Optional [Modifier] applied to the root surface.
+ * @param viewModel [ProfileViewModel] instance resolved via Koin by default.
+ */
 @Composable
 fun ProfileScreen(
     onNavigateToHelpRequests: () -> Unit,
@@ -97,6 +107,20 @@ fun ProfileScreen(
     )
 }
 
+/**
+ * Stateless UI content for the profile screen, rendering user identity, active SOS message, quick
+ * action icons, recent help requests, and modal bottom sheets for settings or message editing.
+ *
+ * @param uiState Current [ProfileUiState] snapshot driving the UI.
+ * @param onOpenSettings Callback invoked when the settings action button is tapped.
+ * @param onOpenHelpRequests Callback invoked when the help history action button is tapped.
+ * @param onOpenEditMessage Callback invoked when the edit SOS message action button is tapped.
+ * @param onLogout Callback invoked when the logout action button is tapped.
+ * @param onToggleSetting Callback invoked when a [SettingKey] switch is toggled in the settings sheet.
+ * @param onSaveHelpMessage Callback invoked when the user confirms a new custom SOS message.
+ * @param onDismissSheet Callback invoked when any active modal bottom sheet is dismissed.
+ * @param modifier Optional [Modifier] applied to the root [Surface].
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileContent(
@@ -265,6 +289,9 @@ fun ProfileContent(
     }
 }
 
+/**
+ * Light-theme Compose preview of [ProfileContent] displaying a signed-in user profile.
+ */
 @org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 private fun ProfileContentLightPreview() {
@@ -290,6 +317,9 @@ private fun ProfileContentLightPreview() {
     }
 }
 
+/**
+ * Dark-theme Compose preview of [ProfileContent] with default placeholder user details.
+ */
 @org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 private fun ProfileContentDarkPreview() {

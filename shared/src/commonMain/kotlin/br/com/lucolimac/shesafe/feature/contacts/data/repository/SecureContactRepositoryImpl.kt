@@ -20,15 +20,36 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
+/** Top-level Cloud Firestore collection storing per-user secure contact documents. */
 private const val COLLECTION_SECURE_CONTACTS = "secureContacts"
+
+/** Subcollection under each user document storing individual contact records. */
 private const val SUBCOLLECTION_CONTACTS = "contacts"
+
+/** Firestore document field name used to query contacts by phone number. */
 private const val FIELD_PHONE_NUMBER = "phoneNumber"
 
+/**
+ * Offline-first implementation of [SecureContactRepository] backed by Room (`SecureContactDao`)
+ * as the single source of truth and Cloud Firestore for cross-device synchronization.
+ *
+ * Writes are committed to Room immediately so emergency alerts remain functional offline,
+ * while remote Firestore mutations are attempted on a best-effort basis.
+ *
+ * @property contactDao Local Room DAO managing cached secure contact entities.
+ * @property authRepository Authentication repository identifying the active user's email scope.
+ */
 class SecureContactRepositoryImpl(
     private val contactDao: SecureContactDao,
     private val authRepository: AuthRepository,
 ) : SecureContactRepository {
 
+    /**
+     * Observes the active user's cached contacts in Room, automatically switching streams when
+     * the authenticated user changes and emitting an empty list when unauthenticated.
+     *
+     * @return A [Flow] emitting the mapped list of [SecureContact] domain models.
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeSecureContacts(): Flow<List<SecureContact>> =
         authRepository.observeCurrentUser().flatMapLatest { user ->
@@ -42,6 +63,14 @@ class SecureContactRepositoryImpl(
             }
         }
 
+    /**
+     * Fetches the user's contacts from Cloud Firestore and replaces the local Room cache.
+     *
+     * Falls back to existing Room records if the remote fetch fails and cached entries are available.
+     *
+     * @return [Resource.Success] with the latest or cached [SecureContact] list, or [Resource.Error]
+     * if unauthenticated or offline with an empty cache.
+     */
     override suspend fun refreshSecureContacts(): Resource<List<SecureContact>> {
         val email = authRepository.getCurrentUser()?.email
             ?: return Resource.Error(AppError.Auth.Unauthenticated)
@@ -74,6 +103,14 @@ class SecureContactRepositoryImpl(
         }
     }
 
+    /**
+     * Looks up a contact by [phoneNumber] in the local Room cache first, falling back to a
+     * Firestore query and caching the result locally when found remotely.
+     *
+     * @param phoneNumber Normalized digits-only phone number to search for.
+     * @return [Resource.Success] with the found [SecureContact], or [Resource.Error] if unauthenticated,
+     * missing ([AppError.Database.NotFound]), or unreadable.
+     */
     override suspend fun getSecureContactByPhone(phoneNumber: String): Resource<SecureContact> {
         val email = authRepository.getCurrentUser()?.email
             ?: return Resource.Error(AppError.Auth.Unauthenticated)
@@ -102,6 +139,13 @@ class SecureContactRepositoryImpl(
         }
     }
 
+    /**
+     * Inserts or updates [contact] in the local Room cache first for offline availability,
+     * then attempts to write the contact document to Cloud Firestore.
+     *
+     * @param contact The [SecureContact] to persist for the current user.
+     * @return [Resource.Success] once saved locally, or [Resource.Error] if unauthenticated or local write fails.
+     */
     override suspend fun registerSecureContact(contact: SecureContact): Resource<Unit> {
         val email = authRepository.getCurrentUser()?.email
             ?: return Resource.Error(AppError.Auth.Unauthenticated)
@@ -126,6 +170,14 @@ class SecureContactRepositoryImpl(
         }
     }
 
+    /**
+     * Replaces an existing contact identified by [originalPhoneNumber] with [contact] in Room,
+     * removing the old phone key if changed, and mirrors the update to Cloud Firestore.
+     *
+     * @param originalPhoneNumber Normalized phone number of the contact prior to modification.
+     * @param contact Updated [SecureContact] data to persist.
+     * @return [Resource.Success] once updated locally, or [Resource.Error] if unauthenticated or local write fails.
+     */
     override suspend fun updateSecureContact(
         originalPhoneNumber: String,
         contact: SecureContact,
@@ -164,6 +216,13 @@ class SecureContactRepositoryImpl(
         }
     }
 
+    /**
+     * Deletes the contact matching [phoneNumber] from the local Room cache and attempts to remove
+     * matching documents from Cloud Firestore.
+     *
+     * @param phoneNumber Normalized digits-only phone number of the contact to delete.
+     * @return [Resource.Success] once removed locally, or [Resource.Error] if unauthenticated or local delete fails.
+     */
     override suspend fun deleteSecureContact(phoneNumber: String): Resource<Unit> {
         val email = authRepository.getCurrentUser()?.email
             ?: return Resource.Error(AppError.Auth.Unauthenticated)

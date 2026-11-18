@@ -25,6 +25,15 @@ import org.koin.compose.viewmodel.koinViewModel
 import shesafe.shared.generated.resources.Res
 import shesafe.shared.generated.resources.message_nothing_send_yet
 
+/**
+ * Stateful destination composable displaying the full history of emergency help requests sent by the user.
+ *
+ * Collects [HelpRequestsViewModel.uiState] with lifecycle awareness and delegates rendering to
+ * [HelpRequestsContent].
+ *
+ * @param modifier Optional [Modifier] applied to the root container.
+ * @param viewModel [HelpRequestsViewModel] instance resolved from Koin by default.
+ */
 @Composable
 fun HelpRequestsScreen(
     modifier: Modifier = Modifier,
@@ -38,6 +47,14 @@ fun HelpRequestsScreen(
     )
 }
 
+/**
+ * Stateless UI content for the help requests history screen, rendering loading, error, empty, or
+ * populated list states.
+ *
+ * @param uiState Current immutable [HelpRequestsUiState] to render.
+ * @param onRetry Callback invoked when the user taps retry on the error banner.
+ * @param modifier Optional [Modifier] applied to the outer [Box].
+ */
 @Composable
 fun HelpRequestsContent(
     uiState: HelpRequestsUiState,
@@ -86,6 +103,9 @@ fun HelpRequestsContent(
     }
 }
 
+/**
+ * Light-theme Compose preview of [HelpRequestsContent] populated with a sample help request.
+ */
 @org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 private fun HelpRequestsLightPreview() {
@@ -107,6 +127,9 @@ private fun HelpRequestsLightPreview() {
     }
 }
 
+/**
+ * Dark-theme Compose preview of [HelpRequestsContent] in its empty state.
+ */
 @org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 private fun HelpRequestsEmptyDarkPreview() {

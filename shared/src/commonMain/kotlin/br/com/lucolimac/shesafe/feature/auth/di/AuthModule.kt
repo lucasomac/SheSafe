@@ -13,6 +13,12 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+/**
+ * Koin dependency injection module for the authentication feature.
+ *
+ * Registers [AuthRepositoryImpl] as a singleton [AuthRepository], factory bindings for all
+ * authentication use cases, and [AuthViewModel] for presentation-layer state management.
+ */
 val authModule = module {
     singleOf(::AuthRepositoryImpl) bind AuthRepository::class
     factoryOf(::ObserveCurrentUserUseCase)

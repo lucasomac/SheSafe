@@ -16,6 +16,10 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+/**
+ * Koin dependency injection module wiring repositories, SMS gateway, use cases, and ViewModel
+ * for the help requests and emergency alert dispatch feature.
+ */
 val helpRequestsModule = module {
     singleOf(::HelpRequestRepositoryImpl) bind HelpRequestRepository::class
     singleOf(::FirebaseSmsProviderConfigSource) bind SmsProviderConfigSource::class

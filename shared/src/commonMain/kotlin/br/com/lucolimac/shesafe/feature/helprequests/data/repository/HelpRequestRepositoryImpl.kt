@@ -20,14 +20,31 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
+/** Top-level Firestore collection storing per-user help request documents. */
 private const val COLLECTION_HELP_REQUESTS = "helpRequests"
+
+/** Subcollection under each user document holding individual [HelpRequestFirestoreDto] entries. */
 private const val SUBCOLLECTION_HELPS = "helps"
 
+/**
+ * Offline-first implementation of [HelpRequestRepository] backed by Room ([HelpRequestDao]) as the
+ * single source of truth and synchronized with Cloud Firestore.
+ *
+ * @param helpRequestDao Local Room DAO used to observe and cache help request entities.
+ * @param authRepository Repository providing the currently authenticated user's identity.
+ */
 class HelpRequestRepositoryImpl(
     private val helpRequestDao: HelpRequestDao,
     private val authRepository: AuthRepository,
 ) : HelpRequestRepository {
 
+    /**
+     * Observes the authenticated user's cached help requests ordered by Room query semantics.
+     *
+     * Emits an empty list whenever no user with a valid email is signed in.
+     *
+     * @return A reactive [Flow] of [HelpRequest] items for the active user.
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeHelpRequests(): Flow<List<HelpRequest>> =
         authRepository.observeCurrentUser().flatMapLatest { user ->
@@ -41,6 +58,12 @@ class HelpRequestRepositoryImpl(
             }
         }
 
+    /**
+     * Pulls the authenticated user's help requests from Cloud Firestore and replaces the local Room cache.
+     *
+     * @return A [Resource] containing the refreshed list sorted newest-first, or an [AppError] on auth
+     * or network failure while preserving cached Room entries.
+     */
     override suspend fun refreshHelpRequests(): Resource<List<HelpRequest>> {
         val email = authRepository.getCurrentUser()?.email
             ?: return Resource.Error(AppError.Auth.Unauthenticated)
@@ -67,6 +90,13 @@ class HelpRequestRepositoryImpl(
         }
     }
 
+    /**
+     * Persists a newly triggered [helpRequest] locally in Room immediately and attempts best-effort
+     * synchronization to Cloud Firestore.
+     *
+     * @param helpRequest The emergency help request record to store.
+     * @return [Resource.Success] once persisted locally, or [Resource.Error] if unauthenticated or local write fails.
+     */
     override suspend fun registerHelpRequest(helpRequest: HelpRequest): Resource<Unit> {
         val email = authRepository.getCurrentUser()?.email
             ?: return Resource.Error(AppError.Auth.Unauthenticated)

@@ -25,15 +25,39 @@ import dev.gitlive.firebase.remoteconfig.remoteConfig
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
 
+/** Firebase Remote Config parameter key selecting the active HTTP SMS provider. */
 private const val REMOTE_CONFIG_SMS_SERVER_KEY = "she_safe_api_server"
+
+/** Message type code required by the SMSDev API for standard transactional SMS dispatch. */
 private const val SMS_DEV_SEND_TYPE = 9
+
+/** Brazil E.164 country calling prefix prepended to domestic numbers for InfoBip delivery. */
 private const val BR_COUNTRY_PREFIX = "55"
 
+/**
+ * Abstraction that resolves which remote HTTP [SmsProviderType] should handle outbound emergency alerts.
+ */
 interface SmsProviderConfigSource {
+    /**
+     * Fetches and returns the currently active [SmsProviderType].
+     *
+     * @return The configured [SmsProviderType] for remote SMS dispatch.
+     */
     suspend fun getActiveProvider(): SmsProviderType
 }
 
+/**
+ * [SmsProviderConfigSource] backed by Firebase Remote Config.
+ *
+ * Defaults to [SmsProviderType.SMS_DEV] whenever Remote Config cannot be fetched or contains an
+ * unrecognized value.
+ */
 class FirebaseSmsProviderConfigSource : SmsProviderConfigSource {
+    /**
+     * Fetches the latest Firebase Remote Config values and maps `she_safe_api_server` to [SmsProviderType].
+     *
+     * @return [SmsProviderType.INFO_BIP] when configured explicitly, or [SmsProviderType.SMS_DEV] otherwise.
+     */
     override suspend fun getActiveProvider(): SmsProviderType {
         val rawValue = runCatching {
             val remote = Firebase.remoteConfig
@@ -47,6 +71,17 @@ class FirebaseSmsProviderConfigSource : SmsProviderConfigSource {
     }
 }
 
+/**
+ * Production implementation of [EmergencySmsGateway] that dispatches SOS messages through the
+ * remotely configured HTTP SMS provider and falls back to the platform [SmsService] on failure.
+ *
+ * @param smsDevService HTTP client for the SMSDev gateway.
+ * @param infoBipService HTTP client for the InfoBip gateway.
+ * @param nativeSmsService Platform-native SMS sender used as a fallback transport.
+ * @param providerConfigSource Source determining which HTTP SMS gateway is active.
+ * @param smsDevApiKey API key authenticating requests to SMSDev.
+ * @param infoBipApiKey API key authenticating requests to InfoBip.
+ */
 class EmergencySmsGatewayImpl(
     private val smsDevService: SmsDevService,
     private val infoBipService: InfoBipService,
@@ -56,6 +91,16 @@ class EmergencySmsGatewayImpl(
     private val infoBipApiKey: String = BuildKonfig.INFO_BIP_API_KEY,
 ) : EmergencySmsGateway {
 
+    /**
+     * Sends [message] to all [contacts] with valid digit-only phone numbers.
+     *
+     * Attempts delivery via the active HTTP provider first; if that fails, falls back to [nativeSmsService],
+     * preserving the original HTTP error if native SMS is unsupported or lacks runtime permission.
+     *
+     * @param contacts Trusted emergency contacts to notify.
+     * @param message Fully composed SOS message body.
+     * @return A [Resource] containing the [AlertDeliveryOutcome] or an [AppError] describing the failure.
+     */
     override suspend fun sendEmergencyAlert(
         contacts: List<SecureContact>,
         message: String,
@@ -93,6 +138,13 @@ class EmergencySmsGatewayImpl(
         }
     }
 
+    /**
+     * Dispatches [message] to [phones] via the SMSDev HTTP API.
+     *
+     * @param phones Sanitized digit-only recipient phone numbers.
+     * @param message Composed emergency message text.
+     * @return A [Resource] wrapping [AlertDeliveryOutcome.SentViaGateway] or an [AppError].
+     */
     private suspend fun sendViaSmsDev(
         phones: List<String>,
         message: String,
@@ -130,6 +182,14 @@ class EmergencySmsGatewayImpl(
         }
     }
 
+    /**
+     * Dispatches [message] to [phones] via the InfoBip HTTP API, ensuring each destination includes
+     * the Brazil country prefix (`55`).
+     *
+     * @param phones Sanitized digit-only recipient phone numbers.
+     * @param message Composed emergency message text.
+     * @return A [Resource] wrapping [AlertDeliveryOutcome.SentViaGateway] or an [AppError].
+     */
     private suspend fun sendViaInfoBip(
         phones: List<String>,
         message: String,
@@ -171,6 +231,13 @@ class EmergencySmsGatewayImpl(
         }
     }
 
+    /**
+     * Bridges the callback-based platform [SmsService] into a cancellable suspending call.
+     *
+     * @param phones Sanitized digit-only recipient phone numbers.
+     * @param message Composed emergency message text.
+     * @return A [Resource] describing the device-level SMS outcome or failure.
+     */
     private suspend fun sendViaNativeSms(
         phones: List<String>,
         message: String,

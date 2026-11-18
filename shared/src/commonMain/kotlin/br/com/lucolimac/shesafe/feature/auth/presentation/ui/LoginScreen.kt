@@ -31,6 +31,15 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
+/**
+ * Stateful login screen composable that initializes Google authentication, observes [AuthViewModel]
+ * state and side-effect events, and delegates rendering to [LoginContent].
+ *
+ * @param onNavigateToHome Callback invoked when authentication succeeds and navigation to home is requested.
+ * @param onShowMessage Callback invoked to display a localized feedback message to the user.
+ * @param modifier Optional [Modifier] applied to the root layout.
+ * @param viewModel [AuthViewModel] instance managing authentication state and events.
+ */
 @Composable
 fun LoginScreen(
     onNavigateToHome: () -> Unit,
@@ -74,6 +83,14 @@ fun LoginScreen(
     )
 }
 
+/**
+ * Stateless presentation composable for the login screen displaying branding, the Google Sign-In
+ * button or loading indicator, and inline authentication error messages.
+ *
+ * @param uiState Current [AuthUiState] driving loading and error presentation.
+ * @param onSignInClick Callback invoked when the user taps the Google Sign-In button.
+ * @param modifier Optional [Modifier] applied to the root [Column].
+ */
 @Composable
 fun LoginContent(
     uiState: AuthUiState,
@@ -113,6 +130,9 @@ fun LoginContent(
     }
 }
 
+/**
+ * Light-theme Compose preview for [LoginContent] in its idle sign-in state.
+ */
 @Preview
 @Composable
 private fun LoginContentLightPreview() {
@@ -124,6 +144,9 @@ private fun LoginContentLightPreview() {
     }
 }
 
+/**
+ * Dark-theme Compose preview for [LoginContent] in its loading state.
+ */
 @Preview
 @Composable
 private fun LoginContentDarkPreview() {

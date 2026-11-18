@@ -20,17 +20,43 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
+/**
+ * Immutable UI state representing the login and authentication screen.
+ *
+ * @property isAuthenticated Whether the user currently holds an active authenticated session.
+ * @property isLoading Whether an authentication request is currently in progress.
+ * @property errorResource Optional localized [StringResource] describing the latest sign-in error.
+ */
 data class AuthUiState(
     val isAuthenticated: Boolean = false,
     val isLoading: Boolean = false,
     val errorResource: StringResource? = null,
 )
 
+/**
+ * One-off UI side-effect events emitted by [AuthViewModel].
+ */
 sealed interface AuthEvent {
+    /**
+     * Instructs the UI to navigate from the login screen to the home destination.
+     */
     data object NavigateToHome : AuthEvent
+
+    /**
+     * Instructs the UI to display a transient user-facing feedback message.
+     *
+     * @property messageRes Localized [StringResource] for the message to display.
+     */
     data class ShowMessage(val messageRes: StringResource) : AuthEvent
 }
 
+/**
+ * ViewModel coordinating Google Sign-In authentication flows and session state observation.
+ *
+ * @param observeCurrentUserUseCase Use case observing real-time authentication state changes.
+ * @param getCurrentUserUseCase Use case synchronously reading the initial authentication snapshot.
+ * @property signInWithGoogleUseCase Use case exchanging Google OAuth tokens for a Firebase session.
+ */
 class AuthViewModel(
     observeCurrentUserUseCase: ObserveCurrentUserUseCase,
     getCurrentUserUseCase: GetCurrentUserUseCase,
@@ -40,6 +66,10 @@ class AuthViewModel(
     private val _uiState = MutableStateFlow(
         AuthUiState(isAuthenticated = getCurrentUserUseCase() != null),
     )
+
+    /**
+     * Reactive stream of [AuthUiState] observed by the login screen.
+     */
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<AuthEvent>(
@@ -47,6 +77,10 @@ class AuthViewModel(
         extraBufferCapacity = 64,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
+
+    /**
+     * Stream of one-shot [AuthEvent] side effects for navigation and user feedback.
+     */
     val events: SharedFlow<AuthEvent> = _events.asSharedFlow()
 
     init {
@@ -62,6 +96,12 @@ class AuthViewModel(
         }
     }
 
+    /**
+     * Exchanges raw Google Sign-In tokens with the authentication backend and updates UI state.
+     *
+     * @param idToken OpenID Connect ID token issued by Google.
+     * @param accessToken Optional OAuth 2.0 access token issued by Google.
+     */
     fun onGoogleTokensReceived(idToken: String, accessToken: String?) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorResource = null) }
@@ -78,6 +118,10 @@ class AuthViewModel(
         }
     }
 
+    /**
+     * Marks authentication as succeeded when an external authentication provider completes sign-in,
+     * clearing any error state and emitting [AuthEvent.NavigateToHome].
+     */
     fun onExternalAuthSuccess() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = false, isAuthenticated = true, errorResource = null) }
@@ -85,6 +129,11 @@ class AuthViewModel(
         }
     }
 
+    /**
+     * Handles an authentication failure reported by an external sign-in provider.
+     *
+     * @param reason Optional diagnostic failure message returned by the external provider.
+     */
     fun onExternalAuthFailure(reason: String?) {
         viewModelScope.launch {
             val res = AppError.Auth.SignInFailed(reason).toStringResource()

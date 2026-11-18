@@ -15,6 +15,10 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+/**
+ * Koin dependency injection module providing the profile preferences repository, custom help message
+ * and settings use cases, and [ProfileViewModel].
+ */
 val profileModule = module {
     singleOf(::ProfilePreferencesRepositoryImpl) bind ProfilePreferencesRepository::class
     factoryOf(::ObserveHelpMessageUseCase)
